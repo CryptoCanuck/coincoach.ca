@@ -16,7 +16,7 @@
 
 This phase replaces the three homepage placeholders (Market Pulse stats, the Gauge value, and Movers) with live data. It is self-contained, testable, and shippable.
 
-> **Status: ✅ COMPLETE** — implemented via subagent-driven development (commits `ae37bca`…`7de5410`). 34 unit tests pass, `tsc`/`build` clean, live data verified in dev (Market Cap $2.16T, Volume $119B, BTC dominance 56.1%). Two corrections were made vs. the original draft below: the compact formatter uses `decimal`+`$`prefix (currency style padded trailing zeros), and the Task 2 test dropped a redundant`@ts-expect-error` (an empty object is validly typed) — both reflected inline.
+> **Status: ✅ COMPLETE** — implemented via subagent-driven development (commits `ae37bca`…`7de5410`). 34 unit tests pass, `tsc`/`build` clean. Live data was verified in dev on **2026-06-06** (Market Cap $2.16T, Volume $119B, BTC dominance 56.1%). Two corrections were made vs. the original draft below: the compact formatter uses `decimal` + `$` prefix (currency style padded trailing zeros), and the Task 2 test dropped a redundant `@ts-expect-error` (an empty object is validly typed) — both reflected inline.
 
 ### File structure
 
