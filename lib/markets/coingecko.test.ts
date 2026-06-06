@@ -22,8 +22,20 @@ describe('mapCoins', () => {
   it('maps the CoinGecko payload to Coin objects with upper-case symbols', () => {
     const coins = mapCoins(sample)
     expect(coins).toEqual([
-      { symbol: 'BTC', name: 'Bitcoin', price: 68420, change24h: 2.13, image: 'https://assets.coingecko.com/btc.png' },
-      { symbol: 'ETH', name: 'Ethereum', price: 3512, change24h: -1.02, image: 'https://assets.coingecko.com/eth.png' },
+      {
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        price: 68420,
+        change24h: 2.13,
+        image: 'https://assets.coingecko.com/btc.png',
+      },
+      {
+        symbol: 'ETH',
+        name: 'Ethereum',
+        price: 3512,
+        change24h: -1.02,
+        image: 'https://assets.coingecko.com/eth.png',
+      },
     ])
   })
   it('returns [] for a non-array payload', () => {

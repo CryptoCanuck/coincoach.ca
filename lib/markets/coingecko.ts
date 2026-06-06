@@ -23,7 +23,8 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
     symbol: (c.symbol || '').toUpperCase(),
     name: c.name,
     price: c.current_price,
-    change24h: typeof c.price_change_percentage_24h === 'number' ? c.price_change_percentage_24h : 0,
+    change24h:
+      typeof c.price_change_percentage_24h === 'number' ? c.price_change_percentage_24h : 0,
     image: c.image,
   }))
 }
