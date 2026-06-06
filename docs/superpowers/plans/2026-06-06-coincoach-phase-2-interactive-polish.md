@@ -12,18 +12,18 @@
 
 **Conventions (from repo memory):** Yarn Berry via `corepack yarn` (yarn is not on PATH). Many small, logically-scoped commits. Commit messages are plain, sentence-style, with **no AI-attribution / Co-Authored-By trailers**. A pre-commit Prettier hook runs — let it format; if it reflows a file, re-stage and amend or include the formatted result.
 
-> **Status: ✅ COMPLETE** — implemented via subagent-driven development. All 34 unit tests still pass and `build` is clean; live data and the new markup were verified in dev on **2026-06-06** (ticker marquee renders the doubled coin list, Movers shows live Gainers/Losers, no empty-state fallback). Two refinements vs. the snippets below were made during code review and are reflected in the shipped files: `MoversTabs` colours the percent via `changeDirection()` (so a flat 0% renders neutral `text-ink-2`, matching the rest of the codebase) instead of the binary `change24h < 0` ternary; and `.ticker-track` drops the redundant `flex-wrap: nowrap` while wrapping **both** ticker copies in identical `<div className="flex">` children for symmetric, provably-seamless `-50%` looping.
+> **Status: ✅ COMPLETE** — implemented via subagent-driven development. All 34 unit tests still pass and `build` is clean; live data and the new markup were verified in dev on **2026-06-06** (ticker marquee renders the doubled coin list, Movers shows live Gainers/Losers, no empty-state fallback). Two refinements vs. the snippets below were made during code review and are reflected in the shipped files: `MoversTabs` colours the percent via `changeDirection()` (so a flat 0% renders neutral `text-ink-2`, matching the rest of the codebase) instead of the binary `change24h < 0` ternary; and `.ticker-track` drops the redundant `flex-wrap: nowrap` while wrapping **both** ticker copies in identical `<div className="flex">` children for symmetric, provably-seamless `-50%` looping. A later CodeRabbit pass (PR #5) upgraded `MoversTabs` from the toggle-button (`aria-pressed`) shape in the snippet below to the full WAI-ARIA **tabs** pattern (`role="tablist"/"tab"/"tabpanel"`, `aria-selected`, `aria-controls`, roving `tabIndex`, and Arrow/Home/End focus navigation); the snippet below is kept at the simpler original shape for readability — see `components/MoversTabs.tsx` for the shipped version.
 
 ---
 
 ## File structure
 
-| File                            | Responsibility                                                                                          |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| File                                 | Responsibility                                                                                         |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | `components/MoversTabs.tsx` (create) | `'use client'` leaf: receives `gainers`/`losers`, owns tab state, renders the active list + tab header |
 | `components/Movers.tsx` (modify)     | stays async server component; fetches both lists, renders `<MoversTabs .../>`                          |
 | `css/tailwind.css` (modify)          | add ticker marquee `@keyframes` + `.ticker-marquee*` utilities + reduced-motion override               |
-| `components/Ticker.tsx` (modify)     | render the coin list twice inside an animated, hover-pausable marquee track (label stays fixed)         |
+| `components/Ticker.tsx` (modify)     | render the coin list twice inside an animated, hover-pausable marquee track (label stays fixed)        |
 
 ---
 
@@ -43,7 +43,7 @@ Split the panel into a server fetch (`Movers`) and a client tab component (`Move
 
 import { useState } from 'react'
 import type { Coin } from '@/lib/markets/coingecko'
-import { formatPercent } from '@/lib/markets/format'
+import { changeDirection, formatPercent } from '@/lib/markets/format'
 import CoinLogo from './CoinLogo'
 
 type Tab = 'gainers' | 'losers'
@@ -81,19 +81,20 @@ export default function MoversTabs({ gainers, losers }: { gainers: Coin[]; loser
         <p className="text-ink-2 px-4 py-4 text-sm">Market data unavailable.</p>
       ) : (
         <div className="py-1.5">
-          {list.map((c) => (
-            <div key={`${c.symbol}-${c.name}`} className="flex items-center gap-2.5 px-4 py-2">
-              <CoinLogo sym={c.symbol} size={20} />
-              <span className="text-[13.5px] font-bold text-gray-100">{c.symbol}</span>
-              <span
-                className={`ml-auto text-[13.5px] font-bold ${
-                  c.change24h < 0 ? 'text-down' : 'text-up'
-                }`}
-              >
-                {formatPercent(c.change24h)}
-              </span>
-            </div>
-          ))}
+          {list.map((c) => {
+            const dir = changeDirection(c.change24h)
+            const changeClass =
+              dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-ink-2'
+            return (
+              <div key={`${c.symbol}-${c.name}`} className="flex items-center gap-2.5 px-4 py-2">
+                <CoinLogo sym={c.symbol} size={20} />
+                <span className="text-[13.5px] font-bold text-gray-100">{c.symbol}</span>
+                <span className={`ml-auto text-[13.5px] font-bold ${changeClass}`}>
+                  {formatPercent(c.change24h)}
+                </span>
+              </div>
+            )
+          })}
         </div>
       )}
     </div>
