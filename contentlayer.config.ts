@@ -24,6 +24,7 @@ import rehypePrismPlus from 'rehype-prism-plus'
 import rehypePresetMinify from 'rehype-preset-minify'
 import siteMetadata from './data/siteMetadata'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js'
+import { buildStructuredData } from './lib/structuredData'
 import prettier from 'prettier'
 
 const root = process.cwd()
@@ -109,21 +110,30 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    type: { type: 'enum', options: ['news', 'guide', 'breakdown', 'review'], required: true },
+    reviewedItem: { type: 'string' },
+    rating: { type: 'number' },
   },
   computedFields: {
     ...computedFields,
     structuredData: {
       type: 'json',
-      resolve: (doc) => ({
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: doc.title,
-        datePublished: doc.date,
-        dateModified: doc.lastmod || doc.date,
-        description: doc.summary,
-        image: doc.images ? doc.images[0] : siteMetadata.socialBanner,
-        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
-      }),
+      resolve: (doc) =>
+        buildStructuredData(
+          {
+            type: doc.type,
+            title: doc.title,
+            date: doc.date,
+            lastmod: doc.lastmod,
+            summary: doc.summary,
+            images: doc.images,
+            path: doc._raw.flattenedPath,
+            reviewedItem: doc.reviewedItem,
+            rating: doc.rating,
+          },
+          siteMetadata.siteUrl,
+          siteMetadata.socialBanner
+        ),
     },
   },
 }))
