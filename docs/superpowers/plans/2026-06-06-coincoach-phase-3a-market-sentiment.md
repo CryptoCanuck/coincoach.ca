@@ -8,9 +8,9 @@
 
 **Tech Stack:** Next 15 App Router (RSC + one leaf client component), TypeScript, Tailwind v4, Vitest. Data: alternative.me Fear & Greed (current + history, no key) + CoinGecko `/coins/markets` and `/coins/categories` (no key).
 
-### Proxy decision (per the open roadmap question — resolved: "derive a labelled proxy")
+## Proxy decision (per the open roadmap question — resolved: "derive a labelled proxy")
 
-Real per-coin / per-category *sentiment* has no free source, so we derive a **price-momentum proxy** and label it as such on the page (never presented as a social-sentiment feed):
+Real per-coin / per-category _sentiment_ has no free source, so we derive a **price-momentum proxy** and label it as such on the page (never presented as a social-sentiment feed):
 
 - **Score formula (single source of truth):** `sentimentScore(changePct) = clamp(round(50 + 4 * changePct), 0, 100)`. So `0%` 24h change → `50` (Neutral), `+12.5%` → `100` (Extreme Greed), `−12.5%` → `0` (Extreme Fear). Linear, symmetric, easy to explain.
 - **Per coin:** `changePct` = the coin's 24h **price** change (`change24h`, already fetched).
@@ -26,22 +26,22 @@ Real per-coin / per-category *sentiment* has no free source, so we derive a **pr
 
 ## File structure
 
-| File                                          | Responsibility                                                                 |
-| --------------------------------------------- | ------------------------------------------------------------------------------ |
-| `lib/markets/sentiment.ts` (modify)           | add `FearGreedPoint`, `mapFearGreedHistory`, `getFearGreedHistory`             |
-| `lib/markets/sentiment.test.ts` (modify)      | tests for `mapFearGreedHistory`                                                 |
-| `lib/markets/sentimentProxy.ts` (create)      | pure: `sentimentScore`, `sentimentZone`, `volatilityLabel`, `valueDaysAgo`, `coinSentimentList` |
-| `lib/markets/sentimentProxy.test.ts` (create) | tests for all of the above                                                      |
-| `lib/markets/categories.ts` (create)          | `CategorySentiment`, `mapCategories`, `getCategorySentiment`                    |
-| `lib/markets/categories.test.ts` (create)     | tests for `mapCategories`                                                       |
-| `components/Gauge.tsx` (modify)               | add an `'xl'` size (260×140) for the hero                                       |
-| `components/Breadcrumb.tsx` (create)          | reusable breadcrumb trail                                                       |
-| `components/SentRow.tsx` (create)             | one "Sentiment by Coin" row (logo, name, bar, score, zone label)               |
-| `components/SentimentHistoryChart.tsx` (create) | `'use client'`: inline-SVG area chart + 7D/30D/90D/1Y timeframe chips         |
-| `components/Header.tsx` (modify)             | add a **Sentiment** desktop nav link                                            |
-| `data/headerNavLinks.ts` (modify)            | add **Sentiment** to the mobile nav                                             |
-| `app/sentiment/page.tsx` (create)            | the page: hero, overview strip, by-coin, by-category, guide cards, Coach        |
-| `docs/redesign-roadmap.md` (modify)          | mark Phase 3a shipped                                                           |
+| File                                            | Responsibility                                                                                  |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `lib/markets/sentiment.ts` (modify)             | add `FearGreedPoint`, `mapFearGreedHistory`, `getFearGreedHistory`                              |
+| `lib/markets/sentiment.test.ts` (modify)        | tests for `mapFearGreedHistory`                                                                 |
+| `lib/markets/sentimentProxy.ts` (create)        | pure: `sentimentScore`, `sentimentZone`, `volatilityLabel`, `valueDaysAgo`, `coinSentimentList` |
+| `lib/markets/sentimentProxy.test.ts` (create)   | tests for all of the above                                                                      |
+| `lib/markets/categories.ts` (create)            | `CategorySentiment`, `mapCategories`, `getCategorySentiment`                                    |
+| `lib/markets/categories.test.ts` (create)       | tests for `mapCategories`                                                                       |
+| `components/Gauge.tsx` (modify)                 | add an `'xl'` size (260×140) for the hero                                                       |
+| `components/Breadcrumb.tsx` (create)            | reusable breadcrumb trail                                                                       |
+| `components/SentRow.tsx` (create)               | one "Sentiment by Coin" row (logo, name, bar, score, zone label)                                |
+| `components/SentimentHistoryChart.tsx` (create) | `'use client'`: inline-SVG area chart + 7D/30D/90D/1Y timeframe chips                           |
+| `components/Header.tsx` (modify)                | add a **Sentiment** desktop nav link                                                            |
+| `data/headerNavLinks.ts` (modify)               | add **Sentiment** to the mobile nav                                                             |
+| `app/sentiment/page.tsx` (create)               | the page: hero, overview strip, by-coin, by-category, guide cards, Coach                        |
+| `docs/redesign-roadmap.md` (modify)             | mark Phase 3a shipped                                                                           |
 
 ---
 
@@ -483,7 +483,10 @@ export interface Crumb {
 // Breadcrumb trail (design `.crumb`). The last item renders as plain current text.
 export default function Breadcrumb({ items }: { items: Crumb[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="text-ink-3 flex items-center gap-2 text-[13px] font-semibold">
+    <nav
+      aria-label="Breadcrumb"
+      className="text-ink-3 flex items-center gap-2 text-[13px] font-semibold"
+    >
       {items.map((item, i) => {
         const last = i === items.length - 1
         return (
@@ -493,7 +496,10 @@ export default function Breadcrumb({ items }: { items: Crumb[] }) {
                 {item.label}
               </Link>
             ) : (
-              <span className={last ? 'text-ink-2' : undefined} aria-current={last ? 'page' : undefined}>
+              <span
+                className={last ? 'text-ink-2' : undefined}
+                aria-current={last ? 'page' : undefined}
+              >
                 {item.label}
               </span>
             )}
@@ -547,7 +553,10 @@ export default function SentRow({
         <div className="text-ink-3 text-[11.5px] font-semibold">{symbol}</div>
       </div>
       <div className="bg-fill h-[7px] flex-1 overflow-hidden rounded-full">
-        <span className="block h-full rounded-full" style={{ width: `${score}%`, background: color }} />
+        <span
+          className="block h-full rounded-full"
+          style={{ width: `${score}%`, background: color }}
+        />
       </div>
       <div className="w-[42px] text-right text-[15px] font-extrabold" style={{ color }}>
         {score}
@@ -641,7 +650,9 @@ export default function SentimentHistoryChart({ data }: { data: FearGreedPoint[]
             ))}
             {(() => {
               const step = W / (series.length - 1)
-              const pts = series.map((p, i) => `${(i * step).toFixed(1)},${(H - (p.value / 100) * H).toFixed(1)}`)
+              const pts = series.map(
+                (p, i) => `${(i * step).toFixed(1)},${(H - (p.value / 100) * H).toFixed(1)}`
+              )
               const line = pts.join(' ')
               const area = `${pts.join(' ')} ${W},${H} 0,${H}`
               return (
