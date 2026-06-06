@@ -1,6 +1,6 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
-import ListLayout from '@/layouts/ListLayoutWithTags'
+import PostCard from '@/components/PostCard'
 import { filterByType, getSection } from '@/lib/sections'
 import type { PostType } from '@/lib/structuredData'
 import { genPageMetadata } from 'app/seo'
@@ -14,20 +14,23 @@ export function sectionMetadata(type: PostType): Metadata {
   }
 }
 
-// Section pages render all posts of a postType on a single archive page.
-// No pagination control is shown (totalPages: 1) because per-section
-// `/page/[n]` routes do not exist — revisit with real pagination routes
-// if a section grows large.
 export default function SectionPage({ type }: { type: PostType }) {
   const section = getSection(type)!
   const posts = filterByType(allCoreContent(sortPosts(allBlogs)), type)
 
   return (
-    <ListLayout
-      posts={posts}
-      initialDisplayPosts={posts}
-      pagination={{ currentPage: 1, totalPages: 1 }}
-      title={section.title}
-    />
+    <div className="py-8">
+      <h1 className="text-3xl font-extrabold tracking-tight text-gray-50">{section.title}</h1>
+      <p className="mt-2 text-gray-400">{section.description}</p>
+      {posts.length === 0 ? (
+        <p className="mt-8 text-gray-400">No posts yet.</p>
+      ) : (
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {posts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

@@ -5,6 +5,17 @@ All articles live in `data/blog/<slug>.mdx`. `postType` is required and must be 
 Articles are served at the canonical URL `/blog/<slug>`; the section pages
 (`/news`, `/guides`, `/breakdowns`, `/reviews`) are filtered archive views.
 
+## Cover images
+
+Each article may set an optional cover image used by cards and the article hero:
+
+```yaml
+images: ['/static/images/my-cover.jpg']
+```
+
+Place the file under `public/static/images/`. When `images` is omitted, a
+category-coloured gradient placeholder is shown automatically.
+
 ## News
 ```yaml
 ---

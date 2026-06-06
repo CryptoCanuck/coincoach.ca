@@ -25,3 +25,19 @@ describe('filterByType', () => {
     expect(filterByType(posts, 'breakdown')).toEqual([])
   })
 })
+
+describe('section presentation', () => {
+  it('gives every section a singular label and a chip class', () => {
+    for (const s of SECTIONS) {
+      expect(typeof s.label).toBe('string')
+      expect(s.label.length).toBeGreaterThan(0)
+      expect(s.chipClass).toMatch(/^bg-/)
+    }
+  })
+  it('maps types to expected labels', () => {
+    expect(getSection('news')?.label).toBe('News')
+    expect(getSection('guide')?.label).toBe('Guide')
+    expect(getSection('breakdown')?.label).toBe('Breakdown')
+    expect(getSection('review')?.label).toBe('Review')
+  })
+})
