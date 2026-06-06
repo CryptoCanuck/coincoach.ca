@@ -2,5 +2,21 @@ node_modules/
 .next/
 out/
 .env*
+!.env.example
 .contentlayer/
 .DS_Store
+*.tsbuildinfo
+public/search.json
+public/feed.xml
+public/tags/
+# generated per-section RSS feeds
+public/news/
+public/guides/
+public/breakdowns/
+public/reviews/
+
+# Yarn Berry — keep releases & config, ignore the offline cache and state
+.yarn/cache/
+.yarn/install-state.gz
+.yarn/build-state.yml
+.pnp.*
