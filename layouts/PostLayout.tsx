@@ -60,12 +60,16 @@ export default function PostLayout({ content, children }: LayoutProps) {
           <span>Share:</span>
           <a
             className="hover:text-accent"
+            target="_blank"
+            rel="noopener noreferrer"
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
           >
             X
           </a>
           <a
             className="hover:text-accent"
+            target="_blank"
+            rel="noopener noreferrer"
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
           >
             LinkedIn
