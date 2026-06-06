@@ -6,8 +6,10 @@ services:
     image: coincoach:latest
     container_name: coincoach
     restart: unless-stopped
+    # Host port 4600 is this project's external port (range 4600-4610 reserved
+    # for CoinCoach); the container keeps 3000 internally.
     ports:
-      - '3000:3000'
+      - '4600:3000'
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -33,4 +35,5 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-    # Place behind a reverse proxy (Caddy/nginx) terminating TLS for coincoach.ca
+    # Place behind a reverse proxy (Caddy/nginx) terminating TLS for coincoach.ca,
+    # proxying to host port 4600.
