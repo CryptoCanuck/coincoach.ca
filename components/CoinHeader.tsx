@@ -11,7 +11,7 @@ export default function CoinHeader({ coin }: { coin: CoinDetail }) {
       <CoinLogo sym={coin.symbol} size={56} />
       <div>
         <div className="flex items-center gap-2.5">
-          <span className="text-[26px] font-black tracking-tight text-gray-50">{coin.name}</span>
+          <h1 className="text-[26px] font-black tracking-tight text-gray-50">{coin.name}</h1>
           <span className="text-ink-3 text-sm font-bold">{coin.symbol}</span>
           {coin.rank !== null && (
             <span className="bg-amber/15 text-amber rounded-md px-2 py-0.5 text-[11px] font-bold">
