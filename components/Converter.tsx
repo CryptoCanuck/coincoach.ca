@@ -9,12 +9,12 @@ export default function Converter({ symbol, price }: { symbol: string; price: nu
   const onCoin = (v: string) => {
     setCoinAmt(v)
     const n = parseFloat(v)
-    setUsdAmt(Number.isFinite(n) ? (n * price).toFixed(2) : '')
+    setUsdAmt(Number.isFinite(n) && n >= 0 ? (n * price).toFixed(2) : '')
   }
   const onUsd = (v: string) => {
     setUsdAmt(v)
     const n = parseFloat(v)
-    setCoinAmt(Number.isFinite(n) && price ? (n / price).toFixed(8) : '')
+    setCoinAmt(Number.isFinite(n) && n >= 0 && price ? (n / price).toFixed(8) : '')
   }
 
   const rowClass = 'bg-fill-2 border-line flex h-11 items-center gap-2.5 rounded-lg border px-3'
