@@ -3,6 +3,7 @@ import { mapCoins, splitMovers } from './coingecko'
 
 const sample = [
   {
+    id: 'bitcoin',
     symbol: 'btc',
     name: 'Bitcoin',
     current_price: 68420,
@@ -10,6 +11,7 @@ const sample = [
     image: 'https://assets.coingecko.com/btc.png',
   },
   {
+    id: 'ethereum',
     symbol: 'eth',
     name: 'Ethereum',
     current_price: 3512,
@@ -23,6 +25,7 @@ describe('mapCoins', () => {
     const coins = mapCoins(sample)
     expect(coins).toEqual([
       {
+        id: 'bitcoin',
         symbol: 'BTC',
         name: 'Bitcoin',
         price: 68420,
@@ -30,6 +33,7 @@ describe('mapCoins', () => {
         image: 'https://assets.coingecko.com/btc.png',
       },
       {
+        id: 'ethereum',
         symbol: 'ETH',
         name: 'Ethereum',
         price: 3512,
@@ -52,14 +56,27 @@ describe('mapCoins', () => {
     const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: null, image: '' }])
     expect(coins[0].price).toBe(0)
   })
+  it('maps the CoinGecko id through', () => {
+    const out = mapCoins([
+      {
+        id: 'bitcoin',
+        symbol: 'btc',
+        name: 'Bitcoin',
+        current_price: 1,
+        price_change_percentage_24h: 2,
+        image: 'x',
+      },
+    ])
+    expect(out[0].id).toBe('bitcoin')
+  })
 })
 
 describe('splitMovers', () => {
   const coins = [
-    { symbol: 'A', name: 'A', price: 1, change24h: 5, image: '' },
-    { symbol: 'B', name: 'B', price: 1, change24h: -8, image: '' },
-    { symbol: 'C', name: 'C', price: 1, change24h: 2, image: '' },
-    { symbol: 'D', name: 'D', price: 1, change24h: -3, image: '' },
+    { id: 'a', symbol: 'A', name: 'A', price: 1, change24h: 5, image: '' },
+    { id: 'b', symbol: 'B', name: 'B', price: 1, change24h: -8, image: '' },
+    { id: 'c', symbol: 'C', name: 'C', price: 1, change24h: 2, image: '' },
+    { id: 'd', symbol: 'D', name: 'D', price: 1, change24h: -3, image: '' },
   ]
   it('returns the top-n gainers (desc) and losers (most negative first)', () => {
     const { gainers, losers } = splitMovers(coins, 2)
@@ -73,11 +90,11 @@ describe('splitMovers', () => {
   })
   it('does not overlap gainers and losers when there are fewer than 2n coins', () => {
     const five = [
-      { symbol: 'A', name: 'A', price: 1, change24h: 10, image: '' },
-      { symbol: 'B', name: 'B', price: 1, change24h: 5, image: '' },
-      { symbol: 'C', name: 'C', price: 1, change24h: 0, image: '' },
-      { symbol: 'D', name: 'D', price: 1, change24h: -5, image: '' },
-      { symbol: 'E', name: 'E', price: 1, change24h: -10, image: '' },
+      { id: 'a', symbol: 'A', name: 'A', price: 1, change24h: 10, image: '' },
+      { id: 'b', symbol: 'B', name: 'B', price: 1, change24h: 5, image: '' },
+      { id: 'c', symbol: 'C', name: 'C', price: 1, change24h: 0, image: '' },
+      { id: 'd', symbol: 'D', name: 'D', price: 1, change24h: -5, image: '' },
+      { id: 'e', symbol: 'E', name: 'E', price: 1, change24h: -10, image: '' },
     ]
     const { gainers, losers } = splitMovers(five, 4)
     expect(gainers.map((c) => c.symbol)).toEqual(['A', 'B', 'C', 'D'])

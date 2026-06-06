@@ -1,4 +1,5 @@
 export interface Coin {
+  id: string
   symbol: string
   name: string
   price: number
@@ -7,6 +8,7 @@ export interface Coin {
 }
 
 interface CoinGeckoMarket {
+  id?: string
   symbol: string
   name: string
   current_price?: number | null
@@ -17,6 +19,7 @@ interface CoinGeckoMarket {
 export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   if (!Array.isArray(payload)) return []
   return payload.map((c) => ({
+    id: c.id || '',
     symbol: (c.symbol || '').toUpperCase(),
     name: c.name,
     price: Number.isFinite(c.current_price) ? (c.current_price as number) : 0,
