@@ -1,0 +1,10 @@
+node_modules
+.next
+.contentlayer
+.git
+docs
+.env*
+out
+.yarn/cache
+.yarn/install-state.gz
+npm-debug.log*
