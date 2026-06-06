@@ -105,3 +105,66 @@ export async function getCoin(id: string): Promise<CoinDetail | null> {
     clearTimeout(timeoutId)
   }
 }
+
+export interface Candle {
+  time: number
+  open: number
+  high: number
+  low: number
+  close: number
+}
+
+export function mapOhlc(payload: number[][]): Candle[] {
+  if (!Array.isArray(payload)) return []
+  const out: Candle[] = []
+  for (const row of payload) {
+    if (!Array.isArray(row) || row.length < 5) continue
+    const [ms, open, high, low, close] = row
+    if (![ms, open, high, low, close].every((n) => Number.isFinite(n))) continue
+    out.push({ time: Math.floor(ms / 1000), open, high, low, close })
+  }
+  return out
+}
+
+// Std-dev of close-to-close percentage returns over the series, as a percent.
+// null when there aren't enough points to compute a return.
+export function priceVolatilityPct(candles: Candle[]): number | null {
+  if (candles.length < 2) return null
+  const returns: number[] = []
+  for (let i = 1; i < candles.length; i++) {
+    const prev = candles[i - 1].close
+    if (prev !== 0) returns.push(((candles[i].close - prev) / prev) * 100)
+  }
+  if (!returns.length) return null
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length
+  const variance = returns.reduce((a, b) => a + (b - mean) ** 2, 0) / returns.length
+  return Math.sqrt(variance)
+}
+
+const OHLC_DAYS = { '24H': 1, '7D': 7, '1M': 30, '1Y': 365 } as const
+export type Timeframe = keyof typeof OHLC_DAYS
+export const TIMEFRAMES = Object.keys(OHLC_DAYS) as Timeframe[]
+
+// Server-side, ISR-cached (5 min). [] on failure.
+export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
+  try {
+    const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
+      id
+    )}/ohlc?vs_currency=usd&days=${OHLC_DAYS[frame]}`
+    const res = await fetch(url, { next: { revalidate: 300 }, signal: controller.signal })
+    if (!res.ok) return []
+    return mapOhlc(await res.json())
+  } catch {
+    return []
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
+// All timeframes in parallel → a map the client chart switches between.
+export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
+  const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
+  return Object.fromEntries(entries) as Record<Timeframe, Candle[]>
+}

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mapCoinDetail } from './coins'
+import { mapOhlc, priceVolatilityPct } from './coins'
 
 const sample = {
   id: 'bitcoin',
@@ -64,5 +65,40 @@ describe('mapCoinDetail', () => {
     expect(bare.maxSupply).toBeNull()
     expect(bare.links).toEqual([])
     expect(bare.categories).toEqual([])
+  })
+})
+
+describe('mapOhlc', () => {
+  it('maps [ms,o,h,l,c] tuples to second-based candles', () => {
+    expect(
+      mapOhlc([
+        [1_600_000_000_000, 10, 12, 9, 11],
+        [1_600_086_400_000, 11, 13, 10, 12],
+      ])
+    ).toEqual([
+      { time: 1_600_000_000, open: 10, high: 12, low: 9, close: 11 },
+      { time: 1_600_086_400, open: 11, high: 13, low: 10, close: 12 },
+    ])
+  })
+  it('drops malformed tuples and returns [] for non-arrays', () => {
+    expect(mapOhlc([[1_600_000_000_000, 10, 12, 9]])).toEqual([])
+    // @ts-expect-error bad input
+    expect(mapOhlc(null)).toEqual([])
+  })
+})
+
+describe('priceVolatilityPct', () => {
+  it('returns the stddev of close-to-close returns as a percent', () => {
+    // flat closes → 0 volatility
+    const flat = [
+      { time: 1, open: 0, high: 0, low: 0, close: 100 },
+      { time: 2, open: 0, high: 0, low: 0, close: 100 },
+      { time: 3, open: 0, high: 0, low: 0, close: 100 },
+    ]
+    expect(priceVolatilityPct(flat)).toBe(0)
+  })
+  it('returns null with fewer than 2 candles', () => {
+    expect(priceVolatilityPct([])).toBeNull()
+    expect(priceVolatilityPct([{ time: 1, open: 0, high: 0, low: 0, close: 5 }])).toBeNull()
   })
 })
