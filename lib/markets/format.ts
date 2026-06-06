@@ -16,3 +16,11 @@ export function changeDirection(value: number | null | undefined): 'up' | 'down'
   if (typeof value !== 'number' || value === 0) return 'flat'
   return value > 0 ? 'up' : 'down'
 }
+
+export function formatCompactUsd(value: number): string {
+  const compact = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 2,
+  }).format(value)
+  return `$${compact}`
+}
