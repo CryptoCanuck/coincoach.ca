@@ -85,13 +85,13 @@ excluded) plus the markets data layer.
     of any type) — cover hero, category chip, headline, meta.
   - **Rail:** `TrendingList` (next ~4 most recent posts) + `TopCoins` widget.
 - **Topic bands:** one band per section (News, Guides, Token Breakdowns, Reviews),
-  each a 4-up `Card` grid of that section's latest posts with a "View all ›" link to
+  each a 4-up `PostCard` grid of that section's latest posts with a "View all ›" link to
   the section route. Bands render only if they have posts.
 
 ## Section / Listing Pages (`/news`, `/guides`, `/breakdowns`, `/reviews`)
 
 Replace the current `ListLayoutWithTags` usage in `app/_sectionPage.tsx` with a
-**card grid** (`Card` components, same as homepage bands), keeping the existing
+**card grid** (`PostCard` components, same as homepage bands), keeping the existing
 section title/description and the canonical section routing. Tags page and `/blog`
 list reuse the same card grid for consistency.
 
@@ -132,20 +132,20 @@ list reuse the same card grid for consistency.
 | `Ticker` | server | Top price strip from markets data |
 | `TopCoins` | server | Sidebar Top Coins widget from markets data |
 | `TrendingList` | server | Numbered list of recent posts |
-| `Card` | server | Post card: cover/fallback, category chip, title, meta |
+| `PostCard` | server | Post card: cover/fallback, category chip, title, meta |
 | `CategoryChip` | server | Colour-coded `postType` chip (from `SECTIONS`) |
 | `ArticleMeta` | server | author · date · reading time row |
 
-`Card`, `CategoryChip`, and the section colour map are shared by the homepage,
+`PostCard`, `CategoryChip`, and the section colour map are shared by the homepage,
 section pages, and article page to stay DRY.
 
 ## Content & Images
 
-- Posts gain an **optional** `coverImage` frontmatter field (already partially
-  present as `images`; reuse `images[0]` if set). When absent, cards/hero render a
+- Posts use the existing **optional** `images` frontmatter field for cover art
+  (`images[0]` if set). When absent, cards/hero render a
   **category-coloured gradient placeholder** (as in the mockup) so the design holds
   without imagery.
-- Update `docs/frontmatter-templates.md` to mention `coverImage`.
+- Update `docs/frontmatter-templates.md` to document the cover `images` field.
 - Seed posts get simple gradient fallbacks (no new image assets required for v1).
 
 ## Testing
