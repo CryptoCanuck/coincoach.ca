@@ -22,9 +22,10 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   return payload.map((c) => ({
     symbol: (c.symbol || '').toUpperCase(),
     name: c.name,
-    price: typeof c.current_price === 'number' ? c.current_price : 0,
-    change24h:
-      typeof c.price_change_percentage_24h === 'number' ? c.price_change_percentage_24h : 0,
+    price: Number.isFinite(c.current_price) ? (c.current_price as number) : 0,
+    change24h: Number.isFinite(c.price_change_percentage_24h)
+      ? (c.price_change_percentage_24h as number)
+      : 0,
     image: c.image,
   }))
 }
