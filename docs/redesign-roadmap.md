@@ -24,19 +24,19 @@ sample data — wire real data; match structure and styling.
 The global re-skin and homepage layout are in. See the chrome + homepage components
 under `components/` and `app/Main.tsx`.
 
-| Piece                                               | State                                                      |
-| --------------------------------------------------- | ---------------------------------------------------------- |
-| Amber/near-black palette + Figtree, 1440px shell    | ✅ `css/tailwind.css`, `LayoutWrapper`, `SectionContainer` |
+| Piece                                               | State                                                             |
+| --------------------------------------------------- | ----------------------------------------------------------------- |
+| Amber/near-black palette + Figtree, 1440px shell    | ✅ `css/tailwind.css`, `LayoutWrapper`, `SectionContainer`        |
 | Ticker (MARKET label + coin logos)                  | ✅ live CoinGecko, auto-scroll marquee (`Ticker.tsx`, `CoinLogo`) |
-| Header (logo, nav, search field, Ask-the-Coach CTA) | ✅ chrome; CTA is 🟡 (no handler)                          |
-| Sticky CatBar                                       | ✅ routes to sections/tags                                 |
-| Footer (columns + legal)                            | ✅                                                         |
-| Market Pulse: Gauge + 4 StatCards                   | ✅ live global stats + Fear & Greed (`MarketPulse`)        |
-| Explore by Category (8 tiles)                       | ✅ real sections + top tags w/ live counts                 |
-| Top Stories + CoinTable                             | ✅ real posts + live coins                                 |
-| Movers (gainers/losers)                             | ✅ live top-100 movers with Gainers/Losers toggle          |
-| CoachStrip                                          | 🟡 presentational, no backend                              |
-| Latest News + Load more                             | ✅ real posts (Load more → `/news`)                        |
+| Header (logo, nav, search field, Ask-the-Coach CTA) | ✅ chrome; CTA is 🟡 (no handler)                                 |
+| Sticky CatBar                                       | ✅ routes to sections/tags                                        |
+| Footer (columns + legal)                            | ✅                                                                |
+| Market Pulse: Gauge + 4 StatCards                   | ✅ live global stats + Fear & Greed (`MarketPulse`)               |
+| Explore by Category (8 tiles)                       | ✅ real sections + top tags w/ live counts                        |
+| Top Stories + CoinTable                             | ✅ real posts + live coins                                        |
+| Movers (gainers/losers)                             | ✅ live top-100 movers with Gainers/Losers toggle                 |
+| CoachStrip                                          | 🟡 presentational, no backend                                     |
+| Latest News + Load more                             | ✅ real posts (Load more → `/news`)                               |
 
 ---
 
@@ -46,33 +46,42 @@ Everything below is one `lib/markets/` expansion. Keep the current pattern:
 server-side fetch, `next: { revalidate }` ISR cache, `try/catch` → safe empty
 fallback, so CSP and graceful degradation hold.
 
-| Feed                                                                  | Source                                                  | Powers                                                | Notes                                                                                        |
-| --------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Global market stats — total cap, 24h vol, BTC dominance, active coins | CoinGecko `/global`                                     | ✅ Market Pulse StatCards                             | DONE — `lib/markets/global.ts` (`getGlobalStats`)                                            |
-| Fear & Greed index (current value)                                    | alternative.me `/fng/?limit=1`                          | ✅ homepage `Gauge`                                   | DONE — `lib/markets/sentiment.ts` (`getFearGreed`). History (`?limit=N`) still TODO for 3a   |
-| Per-coin & per-category sentiment                                     | ⚠ no free direct source                                 | Sentiment-by-coin / by-category, per-coin rail gauges | derive a proxy (e.g. from 24h %, RSI-like, volume) or pick a paid feed; document the formula |
-| Movers (true market gainers/losers)                                   | CoinGecko markets bigger `per_page`, sort by 24h change | ✅ Movers panel                                       | DONE — `splitMovers`/`getMovers` in `lib/markets/coingecko.ts` (top-100 proxy)               |
-| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                 | ⛔ Coin Detail                                        |                                                                                              |
-| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/market_chart?days=`              | ⛔ Coin Detail + Sentiment history                    | drives the timeframe chips                                                                   |
-| Coin logos (real)                                                     | CoinGecko `image` or a licensed icon CDN                | swap `CoinLogo` SVGs                                  | needs `next.config.js` `remotePatterns` + CSP `img-src`                                      |
+| Feed                                                                  | Source                                                  | Powers                                          | Notes                                                                                                                                                                                                      |
+| --------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Global market stats — total cap, 24h vol, BTC dominance, active coins | CoinGecko `/global`                                     | ✅ Market Pulse StatCards                       | DONE — `lib/markets/global.ts` (`getGlobalStats`)                                                                                                                                                          |
+| Fear & Greed index (current + history)                                | alternative.me `/fng/?limit=N`                          | ✅ homepage `Gauge` + `/sentiment` hero & chart | DONE — `lib/markets/sentiment.ts` (`getFearGreed`, `getFearGreedHistory`)                                                                                                                                  |
+| Per-coin & per-category sentiment                                     | ✅ documented momentum proxy                            | ✅ `/sentiment` by-coin / by-category           | DONE — `sentimentScore` = `clamp(round(50+4·Δ%),0,100)` in `lib/markets/sentimentProxy.ts`; coins use 24h price Δ, categories use `/coins/categories` market-cap Δ. Labelled as a proxy, not a social feed |
+| Movers (true market gainers/losers)                                   | CoinGecko markets bigger `per_page`, sort by 24h change | ✅ Movers panel                                 | DONE — `splitMovers`/`getMovers` in `lib/markets/coingecko.ts` (top-100 proxy)                                                                                                                             |
+| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                 | ⛔ Coin Detail                                  |                                                                                                                                                                                                            |
+| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/market_chart?days=`              | ⛔ Coin Detail + Sentiment history              | drives the timeframe chips                                                                                                                                                                                 |
+| Coin logos (real)                                                     | CoinGecko `image` or a licensed icon CDN                | swap `CoinLogo` SVGs                            | needs `next.config.js` `remotePatterns` + CSP `img-src`                                                                                                                                                    |
 
 ---
 
 ## Phase 2 — Interactive homepage polish
 
-| Item                                         | Where                   | Work                                                 |
-| -------------------------------------------- | ----------------------- | ---------------------------------------------------- |
-| Movers Gainers/Losers toggle                 | `components/Movers.tsx` | ✅ done — server fetch + `MoversTabs` client toggle   |
+| Item                                         | Where                   | Work                                                    |
+| -------------------------------------------- | ----------------------- | ------------------------------------------------------- |
+| Movers Gainers/Losers toggle                 | `components/Movers.tsx` | ✅ done — server fetch + `MoversTabs` client toggle     |
 | Ticker marquee (auto-scroll, pause on hover) | `components/Ticker.tsx` | ✅ done — pure-CSS marquee, hover-pause, reduced-motion |
-| Timeframe chips (history/charts)             | shared `TimeframeChips` | client; re-query series on change, single active     |
-| Watchlist toggle                             | new `lib`/client        | localStorage set; star toggles on coin rows / detail |
-| Converter (BTC↔USD)                          | Coin Detail rail        | client; recompute on input from live price           |
+| Timeframe chips (history/charts)             | shared `TimeframeChips` | client; re-query series on change, single active        |
+| Watchlist toggle                             | new `lib`/client        | localStorage set; star toggles on coin rows / detail    |
+| Converter (BTC↔USD)                          | Coin Detail rail        | client; recompute on input from live price              |
 
 ---
 
 ## Phase 3 — New pages
 
-### 3a. Market Sentiment — `/sentiment` (signature page) ⛔
+### 3a. Market Sentiment — `/sentiment` (signature page) ✅ (shipped)
+
+> **SHIPPED** — `app/sentiment/page.tsx` with a live whole-market Fear & Greed hero
+> (`Gauge` `xl` + `SentimentHistoryChart` 7D/30D/90D/1Y), overview strip
+> (Sentiment/Yesterday/Last Week/Volatility/BTC Dominance), Sentiment-by-Coin
+> (`SentRow`) and Sentiment-by-Category cards powered by the documented momentum
+> proxy, "What does this mean?" guide cards, and `CoachStrip`. **Sentiment** added to
+> the header + mobile nav. Per-coin/category readings carry a visible "momentum proxy —
+> not a social-sentiment feed" disclosure. Built subagent-driven from
+> `docs/superpowers/plans/2026-06-06-coincoach-phase-3a-market-sentiment.md`.
 
 The page the client specifically liked. Layout (`Market Sentiment.html`):
 
@@ -144,8 +153,8 @@ box all feed one assistant.
 
 - **Responsive:** at <~1100px collapse right rails below the main column; stack multi-col
   grids; header nav → drawer (`MobileNav` exists, restyle to the dark theme).
-- **Nav:** add **Charts** and **Sentiment** to `Header`/`SECTIONS`-driven nav once 3a/3b
-  ship (kept off now to avoid 404s).
+- **Nav:** **Sentiment** is now in the header + mobile nav (shipped with 3a). Add
+  **Charts** once 3b ships (kept off until then to avoid 404s).
 - **Category taxonomy:** the design's topic tiles (Bitcoin, Layer 2, NFTs…) imply a real
   topic taxonomy beyond the current tags — decide tags vs. a `topics` registry if we want
   dedicated category landing pages.
