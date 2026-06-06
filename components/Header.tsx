@@ -32,6 +32,15 @@ const Header = () => {
               {section.title}
             </Link>
           ))}
+          {/* Sentiment is a standalone feature page, not a content section, so it
+              isn't in SECTIONS (typed by PostType: news|guide|breakdown|review).
+              Kept in sync with the mobile nav in data/headerNavLinks.ts. */}
+          <Link
+            href="/sentiment"
+            className="text-[15px] font-semibold text-gray-300 transition-colors hover:text-white"
+          >
+            Sentiment
+          </Link>
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-3.5">

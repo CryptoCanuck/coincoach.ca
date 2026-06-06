@@ -4,6 +4,7 @@ const headerNavLinks = [
   { href: '/guides', title: 'Guides' },
   { href: '/breakdowns', title: 'Breakdowns' },
   { href: '/reviews', title: 'Reviews' },
+  { href: '/sentiment', title: 'Sentiment' },
   { href: '/tags', title: 'Tags' },
   { href: '/about', title: 'About' },
 ]
