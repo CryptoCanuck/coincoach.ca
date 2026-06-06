@@ -12,7 +12,8 @@ export const metadata = genPageMetadata({
 })
 
 export default async function ChartsPage() {
-  const coins = await getTopCoins()
+  // Only coins with an id can be linked to a /charts/[id] detail page.
+  const coins = (await getTopCoins()).filter((c) => c.id)
   return (
     <div className="py-7">
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Charts' }]} />

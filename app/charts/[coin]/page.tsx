@@ -28,11 +28,14 @@ export async function generateMetadata({ params }: { params: Promise<{ coin: str
 
 export default async function CoinDetailPage({ params }: { params: Promise<{ coin: string }> }) {
   const { coin: id } = await params
-  const [coin, ohlc, top] = await Promise.all([getCoin(id), getAllOhlc(id), getTopCoins()])
+  // Confirm the coin exists before firing the dependent (4 OHLC + markets) calls,
+  // so a bad/unknown id 404s without the extra CoinGecko load.
+  const coin = await getCoin(id)
   if (!coin) notFound()
+  const [ohlc, top] = await Promise.all([getAllOhlc(id), getTopCoins()])
 
   const volatility = priceVolatilityPct(ohlc['1M'] ?? [])
-  const similar = top.filter((c) => c.id !== coin.id).slice(0, 5)
+  const similar = top.filter((c) => c.id && c.id !== coin.id).slice(0, 5)
 
   const posts = allCoreContent(sortPosts(allBlogs))
   const sym = coin.symbol.toLowerCase()
