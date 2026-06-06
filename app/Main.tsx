@@ -47,7 +47,9 @@ export default function Home({ posts }: { posts: any[] }) {
 
       {/* Topic bands */}
       {SECTIONS.map((section) => {
-        const sectionPosts = filterByType(posts, section.type).slice(0, 4)
+        const sectionPosts = filterByType(posts, section.type)
+          .filter((p) => p.slug !== lead?.slug)
+          .slice(0, 4)
         if (sectionPosts.length === 0) return null
         return (
           <section key={section.type} className="border-line mt-6 border-t pt-5">
