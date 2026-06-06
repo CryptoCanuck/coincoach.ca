@@ -54,7 +54,8 @@ export function splitMovers(coins: Coin[], n = 4): { gainers: Coin[]; losers: Co
   return { gainers: sorted.slice(0, n), losers: sorted.slice(loserStart).reverse() }
 }
 
-// One fetch serves the ticker, the homepage table and the rail. ISR-cached.
+// Top 10 by market cap — shared by the ticker and the homepage coin table
+// (same URL, so Next dedupes the fetch). ISR-cached. Movers fetches separately.
 export async function getTopCoins(): Promise<Coin[]> {
   return fetchMarkets(10)
 }
