@@ -14,9 +14,6 @@ interface CoinGeckoMarket {
   image: string
 }
 
-const ENDPOINT =
-  'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&price_change_percentage=24h'
-
 export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   if (!Array.isArray(payload)) return []
   return payload.map((c) => ({
@@ -30,22 +27,39 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   }))
 }
 
-// Server-side, ISR-cached (revalidate every 60s). Returns [] on any failure so
-// the UI degrades gracefully and never throws during render.
-export async function getTopCoins(): Promise<Coin[]> {
+function marketsUrl(perPage: number): string {
+  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&price_change_percentage=24h`
+}
+
+async function fetchMarkets(perPage: number): Promise<Coin[]> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
   try {
-    const res = await fetch(ENDPOINT, {
+    const res = await fetch(marketsUrl(perPage), {
       next: { revalidate: 60 },
       signal: controller.signal,
     })
     if (!res.ok) return []
-    const data = await res.json()
-    return mapCoins(data)
+    return mapCoins(await res.json())
   } catch {
     return []
   } finally {
     clearTimeout(timeoutId)
   }
+}
+
+export function splitMovers(coins: Coin[], n = 4): { gainers: Coin[]; losers: Coin[] } {
+  const sorted = [...coins].sort((a, b) => b.change24h - a.change24h)
+  const loserStart = Math.max(n, sorted.length - n)
+  return { gainers: sorted.slice(0, n), losers: sorted.slice(loserStart).reverse() }
+}
+
+// One fetch serves the ticker, the homepage table and the rail. ISR-cached.
+export async function getTopCoins(): Promise<Coin[]> {
+  return fetchMarkets(10)
+}
+
+// Biggest movers among the top 100 by market cap.
+export async function getMovers(): Promise<{ gainers: Coin[]; losers: Coin[] }> {
+  return splitMovers(await fetchMarkets(100))
 }

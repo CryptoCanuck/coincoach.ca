@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapCoins } from './coingecko'
+import { mapCoins, splitMovers } from './coingecko'
 
 const sample = [
   {
@@ -51,5 +51,38 @@ describe('mapCoins', () => {
   it('coerces a missing/null price to 0', () => {
     const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: null, image: '' }])
     expect(coins[0].price).toBe(0)
+  })
+})
+
+describe('splitMovers', () => {
+  const coins = [
+    { symbol: 'A', name: 'A', price: 1, change24h: 5, image: '' },
+    { symbol: 'B', name: 'B', price: 1, change24h: -8, image: '' },
+    { symbol: 'C', name: 'C', price: 1, change24h: 2, image: '' },
+    { symbol: 'D', name: 'D', price: 1, change24h: -3, image: '' },
+  ]
+  it('returns the top-n gainers (desc) and losers (most negative first)', () => {
+    const { gainers, losers } = splitMovers(coins, 2)
+    expect(gainers.map((c) => c.symbol)).toEqual(['A', 'C'])
+    expect(losers.map((c) => c.symbol)).toEqual(['B', 'D'])
+  })
+  it('does not mutate the input array', () => {
+    const before = coins.map((c) => c.symbol)
+    splitMovers(coins, 2)
+    expect(coins.map((c) => c.symbol)).toEqual(before)
+  })
+  it('does not overlap gainers and losers when there are fewer than 2n coins', () => {
+    const five = [
+      { symbol: 'A', name: 'A', price: 1, change24h: 10, image: '' },
+      { symbol: 'B', name: 'B', price: 1, change24h: 5, image: '' },
+      { symbol: 'C', name: 'C', price: 1, change24h: 0, image: '' },
+      { symbol: 'D', name: 'D', price: 1, change24h: -5, image: '' },
+      { symbol: 'E', name: 'E', price: 1, change24h: -10, image: '' },
+    ]
+    const { gainers, losers } = splitMovers(five, 4)
+    expect(gainers.map((c) => c.symbol)).toEqual(['A', 'B', 'C', 'D'])
+    expect(losers.map((c) => c.symbol)).toEqual(['E'])
+    const overlap = gainers.filter((g) => losers.some((l) => l.symbol === g.symbol))
+    expect(overlap).toEqual([])
   })
 })
