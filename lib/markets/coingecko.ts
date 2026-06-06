@@ -9,7 +9,7 @@ export interface Coin {
 interface CoinGeckoMarket {
   symbol: string
   name: string
-  current_price: number
+  current_price?: number | null
   price_change_percentage_24h?: number | null
   image: string
 }
@@ -22,7 +22,7 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   return payload.map((c) => ({
     symbol: (c.symbol || '').toUpperCase(),
     name: c.name,
-    price: c.current_price,
+    price: typeof c.current_price === 'number' ? c.current_price : 0,
     change24h:
       typeof c.price_change_percentage_24h === 'number' ? c.price_change_percentage_24h : 0,
     image: c.image,

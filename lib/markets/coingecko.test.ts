@@ -48,4 +48,8 @@ describe('mapCoins', () => {
     const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: 1, image: '' }])
     expect(coins[0].change24h).toBe(0)
   })
+  it('coerces a missing/null price to 0', () => {
+    const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: null, image: '' }])
+    expect(coins[0].price).toBe(0)
+  })
 })
