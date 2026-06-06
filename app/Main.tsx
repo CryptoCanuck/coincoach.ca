@@ -2,8 +2,7 @@ import Link from '@/components/Link'
 import StoryCard from '@/components/StoryCard'
 import NewsRow from '@/components/NewsRow'
 import CatTile from '@/components/CatTile'
-import Gauge from '@/components/Gauge'
-import StatCard from '@/components/StatCard'
+import MarketPulse from '@/components/MarketPulse'
 import CoinTable from '@/components/CoinTable'
 import Movers from '@/components/Movers'
 import CoachStrip from '@/components/CoachStrip'
@@ -50,18 +49,7 @@ export default function Home({ posts }: { posts: any[] }) {
     <div className="space-y-8 py-6">
       {/* MARKET PULSE */}
       <section>
-        <div className="bg-surface border-line grid overflow-hidden rounded-[10px] border md:grid-cols-[260px_1fr]">
-          <div className="bg-fill-2 border-line border-b px-5 py-4 md:border-r md:border-b-0">
-            <div className="mb-1 text-[15px] font-extrabold text-gray-50">Market Sentiment</div>
-            <Gauge value={64} label="Greed" />
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4">
-            <StatCard label="Total Market Cap" value="$2.41T" sub="+1.8% (24h)" up />
-            <StatCard label="24h Volume" value="$96.2B" sub="+5.1%" up />
-            <StatCard label="BTC Dominance" value="54.3%" sub="-0.4%" up={false} />
-            <StatCard label="Active Coins" value="11,842" sub="+0.2%" up />
-          </div>
-        </div>
+        <MarketPulse />
       </section>
 
       {/* CATEGORY EXPLORER */}
