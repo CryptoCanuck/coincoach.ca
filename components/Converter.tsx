@@ -29,6 +29,7 @@ export default function Converter({ symbol, price }: { symbol: string; price: nu
         <input
           type="number"
           inputMode="decimal"
+          min="0"
           value={coinAmt}
           onChange={(e) => onCoin(e.target.value)}
           aria-label={`Amount in ${symbol}`}
@@ -40,6 +41,7 @@ export default function Converter({ symbol, price }: { symbol: string; price: nu
         <input
           type="number"
           inputMode="decimal"
+          min="0"
           value={usdAmt}
           onChange={(e) => onUsd(e.target.value)}
           aria-label="Amount in USD"

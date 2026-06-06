@@ -20,7 +20,7 @@ export default function PriceChart({
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
-  const [frame, setFrame] = useState<Timeframe>(frames.includes('1M') ? '1M' : frames[0])
+  const [frame, setFrame] = useState<Timeframe>(frames.includes('1M') ? '1M' : (frames[0] ?? '1M'))
 
   const hasData = frames.some((f) => (data[f]?.length ?? 0) > 0)
 
