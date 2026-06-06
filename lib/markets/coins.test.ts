@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapCoinDetail } from './coins'
-import { mapOhlc, priceVolatilityPct } from './coins'
+import { mapCoinDetail, mapOhlc, priceVolatilityPct } from './coins'
 
 const sample = {
   id: 'bitcoin',
@@ -62,9 +61,14 @@ describe('mapCoinDetail', () => {
     expect(mapCoinDetail(null)).toBeNull()
     const bare = mapCoinDetail({ id: 'x', symbol: 'x', name: 'X' })!
     expect(bare.price).toBe(0)
+    expect(bare.rank).toBeNull()
     expect(bare.maxSupply).toBeNull()
     expect(bare.links).toEqual([])
     expect(bare.categories).toEqual([])
+  })
+  it('drops null/empty categories', () => {
+    const d = mapCoinDetail({ id: 'x', symbol: 'x', name: 'X', categories: ['Foo', null, ''] })!
+    expect(d.categories).toEqual(['Foo'])
   })
 })
 
@@ -85,6 +89,9 @@ describe('mapOhlc', () => {
     // @ts-expect-error bad input
     expect(mapOhlc(null)).toEqual([])
   })
+  it('drops tuples containing a non-finite value', () => {
+    expect(mapOhlc([[1_600_000_000_000, 10, NaN, 9, 11]])).toEqual([])
+  })
 })
 
 describe('priceVolatilityPct', () => {
@@ -100,5 +107,21 @@ describe('priceVolatilityPct', () => {
   it('returns null with fewer than 2 candles', () => {
     expect(priceVolatilityPct([])).toBeNull()
     expect(priceVolatilityPct([{ time: 1, open: 0, high: 0, low: 0, close: 5 }])).toBeNull()
+  })
+  it('computes the stddev of varying close-to-close returns', () => {
+    // closes 100 → 110 (+10%) → 99 (-10%); mean 0, stddev 10
+    const c = [
+      { time: 1, open: 0, high: 0, low: 0, close: 100 },
+      { time: 2, open: 0, high: 0, low: 0, close: 110 },
+      { time: 3, open: 0, high: 0, low: 0, close: 99 },
+    ]
+    expect(priceVolatilityPct(c)).toBeCloseTo(10, 5)
+  })
+  it('returns null when every prior close is zero (no valid returns)', () => {
+    const c = [
+      { time: 1, open: 0, high: 0, low: 0, close: 0 },
+      { time: 2, open: 0, high: 0, low: 0, close: 5 },
+    ]
+    expect(priceVolatilityPct(c)).toBeNull()
   })
 })

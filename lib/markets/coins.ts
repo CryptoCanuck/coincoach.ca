@@ -164,6 +164,8 @@ export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
 }
 
 // All timeframes in parallel → a map the client chart switches between.
+// 4 CoinGecko calls per coin page (+1 for getCoin); relies on ISR (revalidate
+// 300) to stay within free-tier rate limits. Each frame fails independently to [].
 export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
   const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
   return Object.fromEntries(entries) as Record<Timeframe, Candle[]>
