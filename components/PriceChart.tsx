@@ -22,7 +22,18 @@ export default function PriceChart({
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
   const [frame, setFrame] = useState<Timeframe>(frames.includes('1M') ? '1M' : (frames[0] ?? '1M'))
 
-  const hasData = frames.some((f) => (data[f]?.length ?? 0) > 0)
+  const hasFrameData = (f: Timeframe) => (data[f]?.length ?? 0) > 0
+  const hasData = frames.some(hasFrameData)
+
+  // If the selected timeframe has no candles (e.g. that range's fetch was rate-limited
+  // while others succeeded), fall back to the first frame that does.
+  useEffect(() => {
+    if (!hasFrameData(frame)) {
+      const fallback = frames.find(hasFrameData)
+      if (fallback) setFrame(fallback)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame, frames, data])
 
   useEffect(() => {
     if (!containerRef.current || !hasData) return
@@ -66,21 +77,27 @@ export default function PriceChart({
           <span className="text-ink-3 text-[12.5px] font-semibold">USD · Candlestick</span>
         </div>
         <div className="ml-auto flex gap-1.5" role="group" aria-label="Chart timeframe">
-          {frames.map((f) => (
-            <button
-              key={f}
-              type="button"
-              aria-pressed={frame === f}
-              onClick={() => setFrame(f)}
-              className={
-                frame === f
-                  ? `${chipBase} bg-fill text-gray-50`
-                  : `${chipBase} text-ink-3 hover:text-ink-2`
-              }
-            >
-              {f}
-            </button>
-          ))}
+          {frames.map((f) => {
+            const empty = !hasFrameData(f)
+            return (
+              <button
+                key={f}
+                type="button"
+                aria-pressed={frame === f}
+                disabled={empty}
+                onClick={() => setFrame(f)}
+                className={
+                  empty
+                    ? `${chipBase} text-ink-3 cursor-not-allowed opacity-40`
+                    : frame === f
+                      ? `${chipBase} bg-fill text-gray-50`
+                      : `${chipBase} text-ink-3 hover:text-ink-2`
+                }
+              >
+                {f}
+              </button>
+            )
+          })}
         </div>
       </div>
       {hasData ? (
