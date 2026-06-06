@@ -53,7 +53,11 @@ describe('buildStructuredData', () => {
       ratingValue: 4,
       bestRating: 5,
     })
-    const without = buildStructuredData({ ...base, type: 'review', reviewedItem: 'X' }, siteUrl, banner)
+    const without = buildStructuredData(
+      { ...base, type: 'review', reviewedItem: 'X' },
+      siteUrl,
+      banner
+    )
     expect(without.reviewRating).toBeUndefined()
   })
 

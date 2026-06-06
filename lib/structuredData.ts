@@ -25,11 +25,7 @@ export function buildStructuredData(
   socialBanner: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Record<string, any> {
-  const image = doc.images
-    ? Array.isArray(doc.images)
-      ? doc.images[0]
-      : doc.images
-    : socialBanner
+  const image = doc.images ? (Array.isArray(doc.images) ? doc.images[0] : doc.images) : socialBanner
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sd: Record<string, any> = {
