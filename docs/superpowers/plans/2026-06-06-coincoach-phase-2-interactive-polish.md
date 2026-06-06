@@ -12,6 +12,8 @@
 
 **Conventions (from repo memory):** Yarn Berry via `corepack yarn` (yarn is not on PATH). Many small, logically-scoped commits. Commit messages are plain, sentence-style, with **no AI-attribution / Co-Authored-By trailers**. A pre-commit Prettier hook runs — let it format; if it reflows a file, re-stage and amend or include the formatted result.
 
+> **Status: ✅ COMPLETE** — implemented via subagent-driven development. All 34 unit tests still pass and `build` is clean; live data and the new markup were verified in dev on **2026-06-06** (ticker marquee renders the doubled coin list, Movers shows live Gainers/Losers, no empty-state fallback). Two refinements vs. the snippets below were made during code review and are reflected in the shipped files: `MoversTabs` colours the percent via `changeDirection()` (so a flat 0% renders neutral `text-ink-2`, matching the rest of the codebase) instead of the binary `change24h < 0` ternary; and `.ticker-track` drops the redundant `flex-wrap: nowrap` while wrapping **both** ticker copies in identical `<div className="flex">` children for symmetric, provably-seamless `-50%` looping.
+
 ---
 
 ## File structure
@@ -152,7 +154,6 @@ Turn the horizontally-scrollable ticker into a continuous marquee. The `MARKET �
   .ticker-track {
     display: flex;
     width: max-content;
-    flex-wrap: nowrap;
     animation: ticker-scroll 40s linear infinite;
   }
   .ticker-marquee:hover .ticker-track {
@@ -218,9 +219,11 @@ export default async function Ticker() {
         </span>
         <div className="ticker-marquee no-scrollbar flex-1">
           <div className="ticker-track">
-            {coins.map((c) => (
-              <TickerItem key={`a-${c.symbol}-${c.name}`} c={c} />
-            ))}
+            <div className="flex">
+              {coins.map((c) => (
+                <TickerItem key={`a-${c.symbol}-${c.name}`} c={c} />
+              ))}
+            </div>
             <div className="flex" aria-hidden="true">
               {coins.map((c) => (
                 <TickerItem key={`b-${c.symbol}-${c.name}`} c={c} />
