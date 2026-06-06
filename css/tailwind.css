@@ -251,4 +251,9 @@ input:-webkit-autofill:focus {
   .ticker-track {
     animation: none;
   }
+  /* With the animation off, the strip is manually scrollable — show the list
+     only once so users don't scroll past a duplicated copy. */
+  .ticker-track > div[aria-hidden='true'] {
+    display: none;
+  }
 }
