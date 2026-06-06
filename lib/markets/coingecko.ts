@@ -33,12 +33,19 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
 // Server-side, ISR-cached (revalidate every 60s). Returns [] on any failure so
 // the UI degrades gracefully and never throws during render.
 export async function getTopCoins(): Promise<Coin[]> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
   try {
-    const res = await fetch(ENDPOINT, { next: { revalidate: 60 } })
+    const res = await fetch(ENDPOINT, {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    })
     if (!res.ok) return []
     const data = await res.json()
     return mapCoins(data)
   } catch {
     return []
+  } finally {
+    clearTimeout(timeoutId)
   }
 }
