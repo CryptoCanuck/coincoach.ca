@@ -9,6 +9,11 @@ out/
 public/search.json
 public/feed.xml
 public/tags/
+# generated per-section RSS feeds
+public/news/
+public/guides/
+public/breakdowns/
+public/reviews/
 
 # Yarn Berry — keep releases & config, ignore the offline cache and state
 .yarn/cache/
