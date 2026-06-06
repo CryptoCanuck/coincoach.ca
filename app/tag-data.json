@@ -1,19 +1,11 @@
 {
-  "markdown": 1,
-  "code": 1,
-  "features": 1,
-  "next-js": 6,
-  "math": 1,
-  "ols": 1,
-  "github": 1,
-  "guide": 5,
-  "tailwind": 3,
-  "holiday": 1,
-  "canada": 1,
-  "images": 1,
-  "feature": 2,
-  "writings": 1,
-  "book": 1,
-  "reflection": 1,
-  "multi-author": 1
+  "ethereum": 1,
+  "smart-contracts": 1,
+  "wallets": 1,
+  "hardware-wallet": 1,
+  "security": 1,
+  "announcements": 1,
+  "staking": 1,
+  "proof-of-stake": 1,
+  "basics": 1
 }

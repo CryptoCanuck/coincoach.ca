@@ -110,7 +110,7 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
-    type: { type: 'enum', options: ['news', 'guide', 'breakdown', 'review'], required: true },
+    postType: { type: 'enum', options: ['news', 'guide', 'breakdown', 'review'], required: true },
     reviewedItem: { type: 'string' },
     rating: { type: 'number' },
   },
@@ -121,7 +121,7 @@ export const Blog = defineDocumentType(() => ({
       resolve: (doc) =>
         buildStructuredData(
           {
-            type: doc.type,
+            type: doc.postType as import('./lib/structuredData').PostType,
             title: doc.title,
             date: doc.date,
             lastmod: doc.lastmod,
