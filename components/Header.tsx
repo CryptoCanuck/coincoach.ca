@@ -32,6 +32,12 @@ const Header = () => {
               {section.title}
             </Link>
           ))}
+          <Link
+            href="/sentiment"
+            className="text-[15px] font-semibold text-gray-300 transition-colors hover:text-white"
+          >
+            Sentiment
+          </Link>
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-3.5">
