@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatUsd, formatPercent, changeDirection } from './format'
+import { formatUsd, formatPercent, changeDirection, formatCompactUsd } from './format'
 
 describe('formatUsd', () => {
   it('formats large prices with thousands separators and no decimals', () => {
@@ -31,5 +31,20 @@ describe('changeDirection', () => {
     expect(changeDirection(-0.1)).toBe('down')
     expect(changeDirection(0)).toBe('flat')
     expect(changeDirection(null)).toBe('flat')
+  })
+})
+
+describe('formatCompactUsd', () => {
+  it('formats trillions with up to 2 decimals', () => {
+    expect(formatCompactUsd(2_410_000_000_000)).toBe('$2.41T')
+  })
+  it('formats billions', () => {
+    expect(formatCompactUsd(96_200_000_000)).toBe('$96.2B')
+  })
+  it('formats millions', () => {
+    expect(formatCompactUsd(1_200_000)).toBe('$1.2M')
+  })
+  it('handles zero', () => {
+    expect(formatCompactUsd(0)).toBe('$0')
   })
 })

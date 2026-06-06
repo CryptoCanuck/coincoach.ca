@@ -1,12 +1,10 @@
-import { getTopCoins } from '@/lib/markets/coingecko'
+import { getMovers } from '@/lib/markets/coingecko'
 import { formatPercent } from '@/lib/markets/format'
 import CoinLogo from './CoinLogo'
 
-// Gainers/Losers. Derived from the top-coins feed for now (sorted by 24h change);
-// the Gainers/Losers tab toggle is a later, interactive phase.
+// Gainers among the top-100 by market cap. The Gainers/Losers tab toggle is Phase 2.
 export default async function Movers() {
-  const coins = await getTopCoins()
-  const gainers = [...coins].sort((a, b) => b.change24h - a.change24h).slice(0, 4)
+  const { gainers } = await getMovers()
 
   return (
     <div className="bg-surface border-line rounded-[10px] border">

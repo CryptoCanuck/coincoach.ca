@@ -1,5 +1,7 @@
-// Fear & Greed semicircular gauge. Static `value` for now — a live sentiment feed
-// is a later phase. Arc runs red → amber → green; needle + readout colour by zone.
+// Fear & Greed semicircular gauge. Renders whatever `value` (0–100) it's given —
+// the homepage passes a live Fear & Greed reading; other call sites may pass a
+// static value until their feed exists. Arc red → amber → green; needle + readout
+// colour by zone.
 export default function Gauge({
   value = 64,
   label = 'Greed',
