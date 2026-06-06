@@ -27,14 +27,14 @@ under `components/` and `app/Main.tsx`.
 | Piece                                               | State                                                      |
 | --------------------------------------------------- | ---------------------------------------------------------- |
 | Amber/near-black palette + Figtree, 1440px shell    | ✅ `css/tailwind.css`, `LayoutWrapper`, `SectionContainer` |
-| Ticker (MARKET label + coin logos)                  | ✅ live CoinGecko (`components/Ticker.tsx`, `CoinLogo`)    |
+| Ticker (MARKET label + coin logos)                  | ✅ live CoinGecko, auto-scroll marquee (`Ticker.tsx`, `CoinLogo`) |
 | Header (logo, nav, search field, Ask-the-Coach CTA) | ✅ chrome; CTA is 🟡 (no handler)                          |
 | Sticky CatBar                                       | ✅ routes to sections/tags                                 |
 | Footer (columns + legal)                            | ✅                                                         |
 | Market Pulse: Gauge + 4 StatCards                   | ✅ live global stats + Fear & Greed (`MarketPulse`)        |
 | Explore by Category (8 tiles)                       | ✅ real sections + top tags w/ live counts                 |
 | Top Stories + CoinTable                             | ✅ real posts + live coins                                 |
-| Movers (gainers/losers)                             | ✅ live top-100 movers (Gainers/Losers toggle → Phase 2)   |
+| Movers (gainers/losers)                             | ✅ live top-100 movers with Gainers/Losers toggle          |
 | CoachStrip                                          | 🟡 presentational, no backend                              |
 | Latest News + Load more                             | ✅ real posts (Load more → `/news`)                        |
 
@@ -62,8 +62,8 @@ fallback, so CSP and graceful degradation hold.
 
 | Item                                         | Where                   | Work                                                 |
 | -------------------------------------------- | ----------------------- | ---------------------------------------------------- |
-| Movers Gainers/Losers toggle                 | `components/Movers.tsx` | make a client component; two lists, tab state        |
-| Ticker marquee (auto-scroll, pause on hover) | `components/Ticker.tsx` | CSS animation or small client wrapper                |
+| Movers Gainers/Losers toggle                 | `components/Movers.tsx` | ✅ done — server fetch + `MoversTabs` client toggle   |
+| Ticker marquee (auto-scroll, pause on hover) | `components/Ticker.tsx` | ✅ done — pure-CSS marquee, hover-pause, reduced-motion |
 | Timeframe chips (history/charts)             | shared `TimeframeChips` | client; re-query series on change, single active     |
 | Watchlist toggle                             | new `lib`/client        | localStorage set; star toggles on coin rows / detail |
 | Converter (BTC↔USD)                          | Coin Detail rail        | client; recompute on input from live price           |
