@@ -6,8 +6,6 @@ import type { PostType } from '@/lib/structuredData'
 import { genPageMetadata } from 'app/seo'
 import type { Metadata } from 'next'
 
-const POSTS_PER_PAGE = 5
-
 export function sectionMetadata(type: PostType): Metadata {
   const section = getSection(type)!
   return {
@@ -16,17 +14,19 @@ export function sectionMetadata(type: PostType): Metadata {
   }
 }
 
+// Section pages render all posts of a postType on a single archive page.
+// No pagination control is shown (totalPages: 1) because per-section
+// `/page/[n]` routes do not exist — revisit with real pagination routes
+// if a section grows large.
 export default function SectionPage({ type }: { type: PostType }) {
   const section = getSection(type)!
   const posts = filterByType(allCoreContent(sortPosts(allBlogs)), type)
-  const pagination = { currentPage: 1, totalPages: Math.ceil(posts.length / POSTS_PER_PAGE) }
-  const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE)
 
   return (
     <ListLayout
       posts={posts}
-      initialDisplayPosts={initialDisplayPosts}
-      pagination={pagination}
+      initialDisplayPosts={posts}
+      pagination={{ currentPage: 1, totalPages: 1 }}
       title={section.title}
     />
   )
