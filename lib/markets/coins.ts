@@ -56,17 +56,30 @@ function stripHtml(html: string): string {
     .trim()
 }
 
+// Only expose http(s) links — these render as clickable external anchors, so a
+// stray `javascript:`/other scheme from the API must not reach the UI.
+function safeHttpUrl(raw: string | undefined): string {
+  if (!raw) return ''
+  const trimmed = raw.trim()
+  try {
+    const protocol = new URL(trimmed).protocol
+    return protocol === 'http:' || protocol === 'https:' ? trimmed : ''
+  } catch {
+    return ''
+  }
+}
+
 export function mapCoinDetail(payload: CoinGeckoCoin): CoinDetail | null {
   if (!payload || typeof payload !== 'object' || !payload.id) return null
   const m = payload.market_data ?? {}
   const l = payload.links ?? {}
 
   const linkDefs: ResourceLink[] = [
-    { label: 'Website', href: l.homepage?.[0] ?? '' },
-    { label: 'Whitepaper', href: l.whitepaper ?? '' },
-    { label: 'Explorer', href: l.blockchain_site?.[0] ?? '' },
-    { label: 'GitHub', href: l.repos_url?.github?.[0] ?? '' },
-    { label: 'Reddit', href: l.subreddit_url ?? '' },
+    { label: 'Website', href: safeHttpUrl(l.homepage?.[0]) },
+    { label: 'Whitepaper', href: safeHttpUrl(l.whitepaper) },
+    { label: 'Explorer', href: safeHttpUrl(l.blockchain_site?.[0]) },
+    { label: 'GitHub', href: safeHttpUrl(l.repos_url?.github?.[0]) },
+    { label: 'Reddit', href: safeHttpUrl(l.subreddit_url) },
   ]
 
   return {

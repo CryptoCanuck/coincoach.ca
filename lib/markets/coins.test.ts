@@ -56,6 +56,19 @@ describe('mapCoinDetail', () => {
       { label: 'Reddit', href: 'https://reddit.com/r/bitcoin' },
     ])
   })
+  it('rejects non-http(s) link schemes', () => {
+    const d = mapCoinDetail({
+      id: 'x',
+      symbol: 'x',
+      name: 'X',
+      links: {
+        // eslint-disable-next-line no-script-url
+        homepage: ['javascript:alert(1)'],
+        whitepaper: 'https://example.com/wp.pdf',
+      },
+    })!
+    expect(d.links).toEqual([{ label: 'Whitepaper', href: 'https://example.com/wp.pdf' }])
+  })
   it('returns null and coerces missing fields safely', () => {
     // @ts-expect-error bad input
     expect(mapCoinDetail(null)).toBeNull()
