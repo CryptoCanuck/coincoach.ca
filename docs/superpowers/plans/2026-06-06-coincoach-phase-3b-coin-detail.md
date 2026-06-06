@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next 15 App Router (RSC + client leaves), TypeScript, Tailwind v4, Vitest, lightweight-charts v5.2. Data: CoinGecko `/coins/markets`, `/coins/{id}`, `/coins/{id}/ohlc` (no key).
 
-### Decisions (resolved with the user)
+## Decisions (resolved with the user)
 
 - **Routing key:** CoinGecko `id` (`/charts/bitcoin`). `Coin` gains `id`; `mapCoins` reads it from the markets payload.
 - **Chart tech:** lightweight-charts v5 candlestick. v5 API: `createChart(el, opts)` → `chart.addSeries(CandlestickSeries, {...})` → `series.setData([{ time, open, high, low, close }])` with `time` as **UNIX seconds (number)**; responsive via `autoSize: true`; cleanup via `chart.remove()`.
@@ -23,23 +23,23 @@
 
 ## File structure
 
-| File                                       | Responsibility                                                               |
-| ------------------------------------------ | --------------------------------------------------------------------------- |
-| `lib/markets/coingecko.ts` (modify)        | add `id` to `Coin` + `mapCoins`                                             |
-| `lib/markets/coingecko.test.ts` (modify)   | assert `id` mapping                                                          |
-| `lib/markets/coins.ts` (create)            | `CoinDetail`/`Candle` types, `mapCoinDetail`, `getCoin`, `mapOhlc`, `getOhlc`, `priceVolatilityPct` |
-| `lib/markets/coins.test.ts` (create)       | tests for `mapCoinDetail`, `mapOhlc`, `priceVolatilityPct`                  |
-| `components/PriceChart.tsx` (create)       | `'use client'` lightweight-charts candlestick + timeframe chips             |
-| `components/WatchlistButton.tsx` (create)  | `'use client'` localStorage star toggle                                     |
-| `components/Converter.tsx` (create)        | `'use client'` coin↔USD converter                                          |
-| `components/CoinHeader.tsx` (create)       | coin header (logo, name, rank, price, change, actions)                      |
-| `components/KeyStats.tsx` (create)         | the Key Stats statgrid                                                       |
-| `components/SimilarCoins.tsx` (create)     | rail list of other coins linking to their detail pages                      |
-| `components/Header.tsx` (modify)           | add a **Charts** desktop nav link                                           |
-| `data/headerNavLinks.ts` (modify)          | add **Charts** to the mobile nav                                            |
-| `app/charts/page.tsx` (create)             | `/charts` index (table of coins → detail)                                   |
-| `app/charts/[coin]/page.tsx` (create)      | the Coin Detail page + `generateMetadata`                                   |
-| `docs/redesign-roadmap.md` (modify)        | mark Phase 3b shipped                                                       |
+| File                                      | Responsibility                                                                                      |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `lib/markets/coingecko.ts` (modify)       | add `id` to `Coin` + `mapCoins`                                                                     |
+| `lib/markets/coingecko.test.ts` (modify)  | assert `id` mapping                                                                                 |
+| `lib/markets/coins.ts` (create)           | `CoinDetail`/`Candle` types, `mapCoinDetail`, `getCoin`, `mapOhlc`, `getOhlc`, `priceVolatilityPct` |
+| `lib/markets/coins.test.ts` (create)      | tests for `mapCoinDetail`, `mapOhlc`, `priceVolatilityPct`                                          |
+| `components/PriceChart.tsx` (create)      | `'use client'` lightweight-charts candlestick + timeframe chips                                     |
+| `components/WatchlistButton.tsx` (create) | `'use client'` localStorage star toggle                                                             |
+| `components/Converter.tsx` (create)       | `'use client'` coin↔USD converter                                                                   |
+| `components/CoinHeader.tsx` (create)      | coin header (logo, name, rank, price, change, actions)                                              |
+| `components/KeyStats.tsx` (create)        | the Key Stats statgrid                                                                              |
+| `components/SimilarCoins.tsx` (create)    | rail list of other coins linking to their detail pages                                              |
+| `components/Header.tsx` (modify)          | add a **Charts** desktop nav link                                                                   |
+| `data/headerNavLinks.ts` (modify)         | add **Charts** to the mobile nav                                                                    |
+| `app/charts/page.tsx` (create)            | `/charts` index (table of coins → detail)                                                           |
+| `app/charts/[coin]/page.tsx` (create)     | the Coin Detail page + `generateMetadata`                                                           |
+| `docs/redesign-roadmap.md` (modify)       | mark Phase 3b shipped                                                                               |
 
 ---
 
@@ -414,9 +414,7 @@ export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
 
 // All timeframes in parallel → a map the client chart switches between.
 export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
-  const entries = await Promise.all(
-    TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const)
-  )
+  const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
   return Object.fromEntries(entries) as Record<Timeframe, Candle[]>
 }
 ```
@@ -510,7 +508,9 @@ export default function PriceChart({
               aria-pressed={frame === f}
               onClick={() => setFrame(f)}
               className={
-                frame === f ? `${chipBase} bg-fill text-gray-50` : `${chipBase} text-ink-3 hover:text-ink-2`
+                frame === f
+                  ? `${chipBase} bg-fill text-gray-50`
+                  : `${chipBase} text-ink-3 hover:text-ink-2`
               }
             >
               {f}
@@ -637,9 +637,9 @@ export default function Converter({ symbol, price }: { symbol: string; price: nu
     setCoinAmt(Number.isFinite(n) && price ? (n / price).toFixed(8) : '')
   }
 
-  const rowClass =
-    'bg-fill-2 border-line flex h-11 items-center gap-2.5 rounded-lg border px-3'
-  const inputClass = 'ml-auto w-full bg-transparent text-right text-sm font-bold text-gray-50 outline-none'
+  const rowClass = 'bg-fill-2 border-line flex h-11 items-center gap-2.5 rounded-lg border px-3'
+  const inputClass =
+    'ml-auto w-full bg-transparent text-right text-sm font-bold text-gray-50 outline-none'
 
   return (
     <div className="bg-surface border-line rounded-[10px] border p-4">
@@ -924,7 +924,9 @@ export default async function ChartsPage() {
                   <span className="text-sm font-bold text-gray-100">{c.name}</span>
                   <span className="text-ink-3 text-[11px] font-semibold">{c.symbol}</span>
                 </div>
-                <span className="ml-auto text-sm font-bold text-gray-100">{formatUsd(c.price)}</span>
+                <span className="ml-auto text-sm font-bold text-gray-100">
+                  {formatUsd(c.price)}
+                </span>
                 <span className={`w-[64px] text-right text-[13px] font-bold ${changeClass}`}>
                   {formatPercent(c.change24h)}
                 </span>
@@ -998,7 +1000,9 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
   const sym = coin.symbol.toLowerCase()
   const nameLower = coin.name.toLowerCase()
   const coinNews = posts
-    .filter((p) => (p.tags ?? []).some((t) => t.toLowerCase() === sym || t.toLowerCase() === nameLower))
+    .filter((p) =>
+      (p.tags ?? []).some((t) => t.toLowerCase() === sym || t.toLowerCase() === nameLower)
+    )
     .slice(0, 4)
 
   return (
@@ -1032,7 +1036,7 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
                     <Link
                       key={l.label}
                       href={l.href}
-                      className="border-line bg-fill-2 text-ink hover:text-gray-50 rounded-lg border px-3 py-1.5 text-[13px] font-semibold"
+                      className="border-line bg-fill-2 text-ink rounded-lg border px-3 py-1.5 text-[13px] font-semibold hover:text-gray-50"
                     >
                       {l.label} ↗
                     </Link>
@@ -1074,7 +1078,7 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
                   <Link
                     key={p.slug}
                     href={`/blog/${p.slug}`}
-                    className="border-line-2 hover:text-gray-50 text-ink-2 border-b py-2.5 text-[13.5px] font-semibold last:border-b-0"
+                    className="border-line-2 text-ink-2 border-b py-2.5 text-[13.5px] font-semibold last:border-b-0 hover:text-gray-50"
                   >
                     {p.title}
                   </Link>
