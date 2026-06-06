@@ -1,0 +1,15 @@
+services:
+  coincoach:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: coincoach:latest
+    container_name: coincoach
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # - BUTTONDOWN_API_KEY=${BUTTONDOWN_API_KEY}
+    # Place behind a reverse proxy (Caddy/nginx) terminating TLS for coincoach.ca
