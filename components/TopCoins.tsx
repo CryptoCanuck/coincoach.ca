@@ -13,17 +13,17 @@ export default async function TopCoins() {
       ) : (
         coins.map((c) => {
           const dir = changeDirection(c.change24h)
+          const changeClass =
+            dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-gray-400'
           return (
             <div
-              key={c.symbol}
+              key={`${c.symbol}-${c.name}`}
               className="border-line flex items-center justify-between border-b py-1.5 text-sm last:border-b-0"
             >
               <span className="font-semibold text-gray-100">{c.name}</span>
               <span className="text-gray-300">
                 {formatUsd(c.price)}{' '}
-                <span className={dir === 'down' ? 'text-down' : 'text-up'}>
-                  {formatPercent(c.change24h)}
-                </span>
+                <span className={changeClass}>{formatPercent(c.change24h)}</span>
               </span>
             </div>
           )
