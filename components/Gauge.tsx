@@ -9,14 +9,19 @@ export default function Gauge({
 }: {
   value?: number
   label?: string
-  size?: 'lg' | 'sm'
+  size?: 'lg' | 'sm' | 'xl'
 }) {
   const clamped = Math.max(0, Math.min(100, value))
   const angle = -90 + (clamped / 100) * 180
   const arcLen = (clamped / 100) * 270
   const positive = clamped >= 50
   const gid = `gauge-grad-${size}-${clamped}`
-  const dims = size === 'lg' ? { w: 200, h: 108, needle: 92 } : { w: 160, h: 90, needle: 72 }
+  const dims =
+    size === 'xl'
+      ? { w: 260, h: 140, needle: 120 }
+      : size === 'lg'
+        ? { w: 200, h: 108, needle: 92 }
+        : { w: 160, h: 90, needle: 72 }
 
   return (
     <div className="flex flex-col items-center">
@@ -60,7 +65,7 @@ export default function Gauge({
       <div className="mt-1.5 text-center">
         <div
           className={`leading-none font-black ${positive ? 'text-up' : 'text-down'} ${
-            size === 'lg' ? 'text-[38px]' : 'text-[28px]'
+            size === 'xl' ? 'text-[48px]' : size === 'lg' ? 'text-[38px]' : 'text-[28px]'
           }`}
         >
           {clamped}
