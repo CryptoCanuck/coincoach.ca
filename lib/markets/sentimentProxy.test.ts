@@ -34,6 +34,13 @@ describe('sentimentZone', () => {
     expect(sentimentZone(80).color).toBe('#7BC23A')
     expect(sentimentZone(10).color).toBe('#EB5E45')
   })
+  it('is inclusive at each threshold boundary', () => {
+    expect(sentimentZone(75).label).toBe('Extreme Greed')
+    expect(sentimentZone(50).label).toBe('Greed')
+    expect(sentimentZone(35).label).toBe('Neutral')
+    expect(sentimentZone(20).label).toBe('Fear')
+    expect(sentimentZone(0).label).toBe('Extreme Fear')
+  })
 })
 
 describe('volatilityLabel', () => {
