@@ -54,6 +54,21 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
       writeFileSync(path.join(rssPath, page), rss)
     }
   }
+
+  // Per-section feeds (news, guide, breakdown, review)
+  const sections = ['news', 'guide', 'breakdown', 'review']
+  const routeForType = { news: 'news', guide: 'guides', breakdown: 'breakdowns', review: 'reviews' }
+  if (publishPosts.length > 0) {
+    for (const type of sections) {
+      const sectionPosts = sortPosts(publishPosts.filter((post) => post.postType === type))
+      if (sectionPosts.length === 0) continue
+      const route = routeForType[type]
+      const rss = generateRss(config, sectionPosts, `${route}/${page}`)
+      const rssPath = path.join(outputFolder, route)
+      mkdirSync(rssPath, { recursive: true })
+      writeFileSync(path.join(rssPath, page), rss)
+    }
+  }
 }
 
 const rss = () => {
