@@ -4,16 +4,19 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-// You might need to insert additional domains in script-src if you are using external services
+// Tightened for v1: comments (giscus) and analytics (umami) are disabled, and the
+// newsletter (Buttondown) + search (Kbar) are same-origin, so no third-party hosts
+// are needed. 'unsafe-inline'/'unsafe-eval' remain because Next.js requires them.
+// Add hosts here if you later enable analytics, comments, or external embeds.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app analytics.umami.is;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
   style-src 'self' 'unsafe-inline';
-  img-src * blob: data:;
-  media-src *.s3.amazonaws.com;
-  connect-src *;
+  img-src 'self' blob: data: https:;
+  media-src 'self';
+  connect-src 'self';
   font-src 'self';
-  frame-src giscus.app
+  frame-src 'none'
 `
 
 const securityHeaders = [
