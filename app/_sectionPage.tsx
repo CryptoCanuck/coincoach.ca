@@ -10,7 +10,10 @@ const POSTS_PER_PAGE = 5
 
 export function sectionMetadata(type: PostType): Metadata {
   const section = getSection(type)!
-  return genPageMetadata({ title: section.title, description: section.description })
+  return {
+    ...genPageMetadata({ title: section.title, description: section.description }),
+    alternates: { canonical: section.route },
+  }
 }
 
 export default function SectionPage({ type }: { type: PostType }) {
