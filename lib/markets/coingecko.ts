@@ -18,16 +18,23 @@ interface CoinGeckoMarket {
 
 export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   if (!Array.isArray(payload)) return []
-  return payload.map((c) => ({
-    id: c.id || '',
-    symbol: (c.symbol || '').toUpperCase(),
-    name: c.name,
-    price: Number.isFinite(c.current_price) ? (c.current_price as number) : 0,
-    change24h: Number.isFinite(c.price_change_percentage_24h)
-      ? (c.price_change_percentage_24h as number)
-      : 0,
-    image: c.image,
-  }))
+  // Drop entries without an id — every coin links to /charts/[id], and an empty
+  // id would produce a broken `/charts/` route downstream.
+  return payload.flatMap((c) => {
+    if (!c?.id) return []
+    return [
+      {
+        id: c.id,
+        symbol: (c.symbol || '').toUpperCase(),
+        name: c.name,
+        price: Number.isFinite(c.current_price) ? (c.current_price as number) : 0,
+        change24h: Number.isFinite(c.price_change_percentage_24h)
+          ? (c.price_change_percentage_24h as number)
+          : 0,
+        image: c.image,
+      },
+    ]
+  })
 }
 
 function marketsUrl(perPage: number): string {

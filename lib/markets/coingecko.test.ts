@@ -49,12 +49,20 @@ describe('mapCoins', () => {
     expect(mapCoins({})).toEqual([])
   })
   it('coerces missing change to 0', () => {
-    const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: 1, image: '' }])
+    const coins = mapCoins([{ id: 'x', symbol: 'x', name: 'X', current_price: 1, image: '' }])
     expect(coins[0].change24h).toBe(0)
   })
   it('coerces a missing/null price to 0', () => {
-    const coins = mapCoins([{ symbol: 'x', name: 'X', current_price: null, image: '' }])
+    const coins = mapCoins([{ id: 'x', symbol: 'x', name: 'X', current_price: null, image: '' }])
     expect(coins[0].price).toBe(0)
+  })
+  it('drops entries with a missing or empty id', () => {
+    const coins = mapCoins([
+      { id: 'bitcoin', symbol: 'btc', name: 'Bitcoin', current_price: 1, image: '' },
+      { id: '', symbol: 'noid', name: 'NoId', current_price: 1, image: '' },
+      { symbol: 'missing', name: 'Missing', current_price: 1, image: '' },
+    ])
+    expect(coins.map((c) => c.id)).toEqual(['bitcoin'])
   })
   it('maps the CoinGecko id through', () => {
     const out = mapCoins([
