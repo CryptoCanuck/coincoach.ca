@@ -16,6 +16,8 @@
 
 This phase replaces the three homepage placeholders (Market Pulse stats, the Gauge value, and Movers) with live data. It is self-contained, testable, and shippable.
 
+> **Status: ✅ COMPLETE** — implemented via subagent-driven development (commits `ae37bca`…`7de5410`). 34 unit tests pass, `tsc`/`build` clean, live data verified in dev (Market Cap $2.16T, Volume $119B, BTC dominance 56.1%). Two corrections were made vs. the original draft below: the compact formatter uses `decimal`+`$`prefix (currency style padded trailing zeros), and the Task 2 test dropped a redundant`@ts-expect-error` (an empty object is validly typed) — both reflected inline.
+
 ### File structure
 
 | File                                     | Responsibility                                                       |
@@ -73,12 +75,13 @@ Expected: FAIL — `formatCompactUsd is not a function`.
 
 ```ts
 export function formatCompactUsd(value: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  // `decimal` (not `currency`) compact defaults to 0 min fraction digits, so no
+  // trailing-zero padding (`$96.2B`, not the currency style's `$96.20B`).
+  const compact = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     maximumFractionDigits: 2,
   }).format(value)
+  return `$${compact}`
 }
 ```
 
@@ -134,7 +137,6 @@ describe('mapGlobal', () => {
   it('returns null for a malformed payload', () => {
     // @ts-expect-error testing bad input
     expect(mapGlobal(null)).toBeNull()
-    // @ts-expect-error testing bad input
     expect(mapGlobal({})).toBeNull()
   })
   it('coerces missing numeric fields to 0', () => {

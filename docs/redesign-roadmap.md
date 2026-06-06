@@ -31,10 +31,10 @@ under `components/` and `app/Main.tsx`.
 | Header (logo, nav, search field, Ask-the-Coach CTA) | ✅ chrome; CTA is 🟡 (no handler)                          |
 | Sticky CatBar                                       | ✅ routes to sections/tags                                 |
 | Footer (columns + legal)                            | ✅                                                         |
-| Market Pulse: Gauge + 4 StatCards                   | 🟡 Gauge=64, stats hard-coded                              |
+| Market Pulse: Gauge + 4 StatCards                   | ✅ live global stats + Fear & Greed (`MarketPulse`)        |
 | Explore by Category (8 tiles)                       | ✅ real sections + top tags w/ live counts                 |
 | Top Stories + CoinTable                             | ✅ real posts + live coins                                 |
-| Movers (gainers/losers)                             | 🟡 derived from top-10 by mcap; no tab toggle              |
+| Movers (gainers/losers)                             | ✅ live top-100 movers (Gainers/Losers toggle → Phase 2)   |
 | CoachStrip                                          | 🟡 presentational, no backend                              |
 | Latest News + Load more                             | ✅ real posts (Load more → `/news`)                        |
 
@@ -46,15 +46,15 @@ Everything below is one `lib/markets/` expansion. Keep the current pattern:
 server-side fetch, `next: { revalidate }` ISR cache, `try/catch` → safe empty
 fallback, so CSP and graceful degradation hold.
 
-| Feed                                                                  | Source                                                                                 | Powers                                                | Notes                                                                                        |
-| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Global market stats — total cap, 24h vol, BTC dominance, active coins | CoinGecko `/global`                                                                    | 🟡 Market Pulse StatCards                             | straightforward map; add `getGlobalStats()`                                                  |
-| Fear & Greed index (current + 30/90/365-day history)                  | alternative.me `/fng/?limit=N`                                                         | 🟡 every `Gauge` + Sentiment page history chart       | free, no key; returns whole-market value only                                                |
-| Per-coin & per-category sentiment                                     | ⚠ no free direct source                                                                | Sentiment-by-coin / by-category, per-coin rail gauges | derive a proxy (e.g. from 24h %, RSI-like, volume) or pick a paid feed; document the formula |
-| Movers (true market gainers/losers)                                   | CoinGecko markets `order=...`/bigger `per_page`, sort by `price_change_percentage_24h` | 🟡 Movers panel                                       | widen the existing fetch or add `getMovers()`                                                |
-| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                                                | ⛔ Coin Detail                                        |                                                                                              |
-| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/market_chart?days=`                                             | ⛔ Coin Detail + Sentiment history                    | drives the timeframe chips                                                                   |
-| Coin logos (real)                                                     | CoinGecko `image` or a licensed icon CDN                                               | swap `CoinLogo` SVGs                                  | needs `next.config.js` `remotePatterns` + CSP `img-src`                                      |
+| Feed                                                                  | Source                                                  | Powers                                                | Notes                                                                                        |
+| --------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Global market stats — total cap, 24h vol, BTC dominance, active coins | CoinGecko `/global`                                     | ✅ Market Pulse StatCards                             | DONE — `lib/markets/global.ts` (`getGlobalStats`)                                            |
+| Fear & Greed index (current value)                                    | alternative.me `/fng/?limit=1`                          | ✅ homepage `Gauge`                                   | DONE — `lib/markets/sentiment.ts` (`getFearGreed`). History (`?limit=N`) still TODO for 3a   |
+| Per-coin & per-category sentiment                                     | ⚠ no free direct source                                 | Sentiment-by-coin / by-category, per-coin rail gauges | derive a proxy (e.g. from 24h %, RSI-like, volume) or pick a paid feed; document the formula |
+| Movers (true market gainers/losers)                                   | CoinGecko markets bigger `per_page`, sort by 24h change | ✅ Movers panel                                       | DONE — `splitMovers`/`getMovers` in `lib/markets/coingecko.ts` (top-100 proxy)               |
+| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                 | ⛔ Coin Detail                                        |                                                                                              |
+| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/market_chart?days=`              | ⛔ Coin Detail + Sentiment history                    | drives the timeframe chips                                                                   |
+| Coin logos (real)                                                     | CoinGecko `image` or a licensed icon CDN                | swap `CoinLogo` SVGs                                  | needs `next.config.js` `remotePatterns` + CSP `img-src`                                      |
 
 ---
 
