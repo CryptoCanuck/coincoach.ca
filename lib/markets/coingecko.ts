@@ -41,6 +41,12 @@ function marketsUrl(perPage: number): string {
   return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&price_change_percentage=24h`
 }
 
+// Markets endpoint scoped to specific CoinGecko ids (article "coins in this story").
+export function marketsByIdsUrl(ids: string[]): string {
+  const idParam = encodeURIComponent(ids.join(','))
+  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idParam}&order=market_cap_desc&price_change_percentage=24h`
+}
+
 async function fetchMarkets(perPage: number): Promise<Coin[]> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
@@ -64,6 +70,11 @@ export function splitMovers(coins: Coin[], n = 4): { gainers: Coin[]; losers: Co
   return { gainers: sorted.slice(0, n), losers: sorted.slice(loserStart).reverse() }
 }
 
+// Find a coin by its CoinGecko id (used by the inline article coin card). null if absent.
+export function pickCoin(coins: Coin[], id: string): Coin | null {
+  return coins.find((c) => c.id === id) ?? null
+}
+
 // Top 10 by market cap — shared by the ticker and the homepage coin table
 // (same URL, so Next dedupes the fetch). ISR-cached. Movers fetches separately.
 export async function getTopCoins(): Promise<Coin[]> {
@@ -73,4 +84,24 @@ export async function getTopCoins(): Promise<Coin[]> {
 // Biggest movers among the top 100 by market cap.
 export async function getMovers(): Promise<{ gainers: Coin[]; losers: Coin[] }> {
   return splitMovers(await fetchMarkets(100))
+}
+
+// Live data for a specific set of coins (by id), server-side + ISR-cached (60s).
+// [] for an empty id list or on failure. Reuses mapCoins (drops empty-id rows).
+export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
+  if (!ids.length) return []
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
+  try {
+    const res = await fetch(marketsByIdsUrl(ids), {
+      next: { revalidate: 60 },
+      signal: controller.signal,
+    })
+    if (!res.ok) return []
+    return mapCoins(await res.json())
+  } catch {
+    return []
+  } finally {
+    clearTimeout(timeoutId)
+  }
 }

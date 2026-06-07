@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapCoins, splitMovers } from './coingecko'
+import { mapCoins, splitMovers, marketsByIdsUrl, pickCoin } from './coingecko'
 
 const sample = [
   {
@@ -109,5 +109,26 @@ describe('splitMovers', () => {
     expect(losers.map((c) => c.symbol)).toEqual(['E'])
     const overlap = gainers.filter((g) => losers.some((l) => l.symbol === g.symbol))
     expect(overlap).toEqual([])
+  })
+})
+
+describe('marketsByIdsUrl', () => {
+  it('joins ids with commas and url-encodes them', () => {
+    expect(marketsByIdsUrl(['bitcoin', 'ethereum'])).toBe(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum&order=market_cap_desc&price_change_percentage=24h'
+    )
+  })
+})
+
+describe('pickCoin', () => {
+  const coins = [
+    { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', price: 1, change24h: 1, image: '' },
+    { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', price: 2, change24h: 2, image: '' },
+  ]
+  it('returns the coin matching the id', () => {
+    expect(pickCoin(coins, 'ethereum')?.symbol).toBe('ETH')
+  })
+  it('returns null when no coin matches', () => {
+    expect(pickCoin(coins, 'dogecoin')).toBeNull()
   })
 })
