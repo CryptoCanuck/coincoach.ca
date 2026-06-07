@@ -1,6 +1,6 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
-import Link from 'next/link'
+import Link from '@/components/Link'
 import Breadcrumb from '@/components/Breadcrumb'
 import CatTile from '@/components/CatTile'
 import { TOPICS, postsForTopic } from '@/lib/topics'
