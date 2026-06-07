@@ -13,6 +13,11 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      # CoinGecko market data: set COINGECKO_API_KEY (free Demo key) in the
+      # Portainer stack environment. Without it the public API rate-limits (429)
+      # and prices/charts fail. COINGECKO_API_PLAN=pro only for a paid Pro key.
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY}
+      - COINGECKO_API_PLAN=${COINGECKO_API_PLAN}
       # - BUTTONDOWN_API_KEY=${BUTTONDOWN_API_KEY}
     healthcheck:
       test:
