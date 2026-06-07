@@ -20,6 +20,7 @@ import {
   TIMEFRAMES,
 } from '@/lib/markets/coins'
 import { getTopCoins } from '@/lib/markets/coingecko'
+import MarketDataUnavailable from '@/components/MarketDataUnavailable'
 import FreshnessNote from '@/components/FreshnessNote'
 import { sentimentScore } from '@/lib/markets/sentimentProxy'
 import { genPageMetadata } from 'app/seo'
@@ -42,11 +43,17 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
   const result = await getCoinDetail(id)
   if (result.status === 'not-found') notFound()
   if (result.status === 'unavailable') {
-    // Transient CoinGecko outage (429/timeout). Throw rather than render a soft
-    // panel inline: that keeps ISR serving the last *good* page (stale-while-
-    // revalidate) instead of caching the failure for the whole revalidate window.
-    // app/charts/[coin]/error.tsx renders the retry UI for a cold (uncached) page.
-    throw new Error('market-data-unavailable')
+    // Transient CoinGecko outage (429/timeout) — distinct from a genuinely unknown
+    // coin (which 404s). The route is dynamic, so this soft panel isn't page-cached:
+    // once the (non-200) upstream recovers, the next request renders full data.
+    return (
+      <div className="py-2">
+        <div className="pt-5">
+          <Breadcrumb items={[{ label: 'Charts', href: '/charts' }, { label: id }]} />
+        </div>
+        <MarketDataUnavailable label={id} />
+      </div>
+    )
   }
   const coin = result.coin
   const [ohlc, top] = await Promise.all([getAllOhlc(id), getTopCoins()])
