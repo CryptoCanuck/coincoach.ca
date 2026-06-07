@@ -12,10 +12,25 @@ import SimilarCoins from '@/components/SimilarCoins'
 import CoinContent from '@/components/CoinContent'
 import { relatedPostsForCoin } from '@/lib/coinContent'
 import Gauge from '@/components/Gauge'
-import { getCoin, getAllOhlc, priceVolatilityPct, TIMEFRAMES } from '@/lib/markets/coins'
-import { getTopCoins } from '@/lib/markets/coingecko'
+import {
+  getCoin,
+  getCoinDetail,
+  getAllOhlc,
+  priceVolatilityPct,
+  TIMEFRAMES,
+} from '@/lib/markets/coins'
+import { getTopCoins, getMarketTable } from '@/lib/markets/coingecko'
+import MarketDataUnavailable from '@/components/MarketDataUnavailable'
+import FreshnessNote from '@/components/FreshnessNote'
 import { sentimentScore } from '@/lib/markets/sentimentProxy'
 import { genPageMetadata } from 'app/seo'
+
+// Prebuild the most-trafficked coin pages; the long tail renders on demand
+// (dynamicParams defaults to true).
+export async function generateStaticParams() {
+  const top = await getMarketTable(15)
+  return top.map((c) => ({ coin: c.id }))
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ coin: string }> }) {
   const { coin: id } = await params
@@ -32,8 +47,19 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
   const { coin: id } = await params
   // Confirm the coin exists before firing the dependent (4 OHLC + markets) calls,
   // so a bad/unknown id 404s without the extra CoinGecko load.
-  const coin = await getCoin(id)
-  if (!coin) notFound()
+  const result = await getCoinDetail(id)
+  if (result.status === 'not-found') notFound()
+  if (result.status === 'unavailable') {
+    return (
+      <div className="py-2">
+        <div className="pt-5">
+          <Breadcrumb items={[{ label: 'Charts', href: '/charts' }, { label: id }]} />
+        </div>
+        <MarketDataUnavailable label={id} />
+      </div>
+    )
+  }
+  const coin = result.coin
   const [ohlc, top] = await Promise.all([getAllOhlc(id), getTopCoins()])
 
   const volatility = priceVolatilityPct(ohlc['1M'] ?? [])
@@ -54,7 +80,12 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
       <div className="mt-6 grid gap-7 lg:grid-cols-[1fr_360px]">
         {/* LEFT */}
         <div className="flex flex-col gap-6">
-          <PriceChart data={ohlc} frames={TIMEFRAMES} />
+          <div className="flex flex-col gap-1.5">
+            <div className="flex justify-end">
+              <FreshnessNote />
+            </div>
+            <PriceChart data={ohlc} frames={TIMEFRAMES} />
+          </div>
 
           <div>
             <SectionHeading title="Key Stats" />
