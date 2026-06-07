@@ -34,7 +34,7 @@ export default function Page() {
             <Link
               key={t}
               href={`/tags/${slug(t)}`}
-              aria-label={`View posts tagged ${t}`}
+              aria-label={`View posts tagged ${t.split('-').join(' ')} (${tagCounts[t]} posts)`}
               className="bg-surface border-line text-ink-2 hover:border-accent flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold capitalize transition-colors hover:text-gray-50"
             >
               {t.split('-').join(' ')}
