@@ -192,3 +192,27 @@ box all feed one assistant.
 4. **Article enhancement** (Phase 4).
 5. **AI Coach** (Phase 5) — the differentiator; can start in parallel any time.
 6. Interactivity (Phase 2) and responsive polish folded in alongside.
+
+---
+
+## Post-Phase-4 build-out — CryptoSlate gap analysis (2026-06-06)
+
+A fresh CryptoSlate review identified sections to scaffold before the AI Coach. User
+approved building all four units below (Coach deferred to last). Off-brand/heavy items
+skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
+
+- **Unit A — Markets hub ✅ SHIPPED:** grew `/charts` into a full sortable coin table
+  (`MarketsTable`) with Top/Gainers/Losers/Volume tabs, client search, 24h/7d %, market cap,
+  volume, and a 7-day `Sparkline`. New `getMarketTable`/`MarketCoin`/`mapMarketCoins`/
+  `downsampleSparkline` in `lib/markets/coingecko.ts` (server-fetch, ISR 120s; client sorts/
+  filters locally — CSP intact). Removed the leftover starter `/projects` page (+ `Card`,
+  `projectsData`) and relabeled nav "Charts" → "Markets". `/charts` added to the sitemap.
+  Plan: `docs/superpowers/plans/2026-06-06-coincoach-unit-a-markets-hub.md`.
+- **Unit B — Coin asset hubs:** `/charts/[coin]` to also surface "Latest news & guides about
+  this coin" via the `coins:` frontmatter + tag match.
+- **Unit C — Topics taxonomy:** curated `topics` registry (`lib/topics.ts`, like `lib/sections.ts`)
+  + `/topics` + `/topics/[topic]` landing pages (Regulation, ETFs, DeFi, Macro, Layer 2, NFTs…);
+  freeform tags stay for long-tail. Resolves the "tags vs topics" cross-cutting item above.
+- **Unit D — Glossary + Learn hub:** new glossary content type + structured Learn (paths/series/
+  difficulty). Content-model decision still open.
+- **Then AI Coach (was Phase 5) LAST** — needs LLM credentials first.

@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest'
-import { mapCoins, splitMovers, marketsByIdsUrl, pickCoin } from './coingecko'
+import {
+  mapCoins,
+  splitMovers,
+  marketsByIdsUrl,
+  pickCoin,
+  marketTableUrl,
+  mapMarketCoins,
+  downsampleSparkline,
+} from './coingecko'
 
 const sample = [
   {
@@ -133,5 +141,74 @@ describe('pickCoin', () => {
   })
   it('returns null when no coin matches', () => {
     expect(pickCoin(coins, 'dogecoin')).toBeNull()
+  })
+})
+
+describe('marketTableUrl', () => {
+  it('requests markets with 24h+7d change and sparkline', () => {
+    expect(marketTableUrl(100)).toBe(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&price_change_percentage=24h,7d&sparkline=true'
+    )
+  })
+})
+
+describe('downsampleSparkline', () => {
+  it('returns finite points unchanged when at or below the target', () => {
+    expect(downsampleSparkline([1, 2, 3], 24)).toEqual([1, 2, 3])
+  })
+  it('drops non-finite points', () => {
+    expect(downsampleSparkline([1, NaN, 3], 24)).toEqual([1, 3])
+  })
+  it('downsamples to the target count when longer', () => {
+    const input = Array.from({ length: 100 }, (_, i) => i)
+    expect(downsampleSparkline(input, 10)).toHaveLength(10)
+  })
+})
+
+describe('mapMarketCoins', () => {
+  const row = {
+    id: 'bitcoin',
+    market_cap_rank: 1,
+    symbol: 'btc',
+    name: 'Bitcoin',
+    image: 'https://x/btc.png',
+    current_price: 67000,
+    price_change_percentage_24h: 2.5,
+    price_change_percentage_7d_in_currency: -3.1,
+    market_cap: 1_300_000_000_000,
+    total_volume: 40_000_000_000,
+    sparkline_in_7d: { price: [1, 2, 3] },
+  }
+  it('maps a market row to a MarketCoin', () => {
+    expect(mapMarketCoins([row])).toEqual([
+      {
+        id: 'bitcoin',
+        rank: 1,
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        image: 'https://x/btc.png',
+        price: 67000,
+        change24h: 2.5,
+        change7d: -3.1,
+        marketCap: 1_300_000_000_000,
+        volume: 40_000_000_000,
+        sparkline: [1, 2, 3],
+      },
+    ])
+  })
+  it('drops rows with no id and coerces non-finite numbers to 0', () => {
+    const out = mapMarketCoins([
+      { symbol: 'x', name: 'X' },
+      { id: 'y', symbol: 'y', name: 'Y', current_price: null, market_cap_rank: null },
+    ])
+    expect(out).toHaveLength(1)
+    expect(out[0].id).toBe('y')
+    expect(out[0].price).toBe(0)
+    expect(out[0].rank).toBeNull()
+    expect(out[0].sparkline).toEqual([])
+  })
+  it('returns [] for a non-array payload', () => {
+    // @ts-expect-error bad input
+    expect(mapMarketCoins(null)).toEqual([])
   })
 })
