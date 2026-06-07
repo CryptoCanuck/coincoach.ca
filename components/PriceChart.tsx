@@ -30,6 +30,7 @@ export default function PriceChart({
   const [frame, setFrame] = useState<Timeframe>(initialFrame)
   const [loadingFrame, setLoadingFrame] = useState<Timeframe | null>(null)
   const [erroredFrame, setErroredFrame] = useState<Timeframe | null>(null)
+  const inflightRef = useRef<Set<Timeframe>>(new Set())
 
   const current = useMemo(() => byFrame[frame] ?? [], [byFrame, frame])
   const hasCurrent = current.length > 0
@@ -39,8 +40,10 @@ export default function PriceChart({
   const selectFrame = useCallback(
     (f: Timeframe) => {
       setFrame(f)
-      // Already have it (default frame or a previously fetched one) → just switch.
-      if (byFrame[f]) return
+      // Already have it (default frame or a previously fetched one), or a request
+      // for it is already in flight → just switch, don't refetch.
+      if (byFrame[f] || inflightRef.current.has(f)) return
+      inflightRef.current.add(f)
       setLoadingFrame(f)
       setErroredFrame(null)
       // Trailing slash: the site uses trailingSlash, so this avoids a 308 hop.
@@ -53,7 +56,10 @@ export default function PriceChart({
           setByFrame((m) => ({ ...m, [f]: candles }))
         })
         .catch(() => setErroredFrame(f))
-        .finally(() => setLoadingFrame((cur) => (cur === f ? null : cur)))
+        .finally(() => {
+          inflightRef.current.delete(f)
+          setLoadingFrame((cur) => (cur === f ? null : cur))
+        })
     },
     [coinId, byFrame]
   )
