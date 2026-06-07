@@ -16,8 +16,7 @@ export default function CoinsInStory({ coins }: { coins: Coin[] }) {
       <div className="py-1">
         {coins.map((c, i) => {
           const dir = changeDirection(c.change24h)
-          const changeClass =
-            dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-ink-2'
+          const changeClass = dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-ink-2'
           return (
             <Link
               key={c.id}
