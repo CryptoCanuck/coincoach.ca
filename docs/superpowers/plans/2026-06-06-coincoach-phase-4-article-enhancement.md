@@ -92,9 +92,9 @@ import { mapCoins, splitMovers, marketsByIdsUrl, pickCoin } from './coingecko'
 
 ```ts
 describe('marketsByIdsUrl', () => {
-  it('joins ids with commas and url-encodes them', () => {
+  it('encodes each id but keeps literal comma separators', () => {
     expect(marketsByIdsUrl(['bitcoin', 'ethereum'])).toBe(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum&order=market_cap_desc&price_change_percentage=24h'
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum&order=market_cap_desc&price_change_percentage=24h'
     )
   })
 })
@@ -125,7 +125,9 @@ In `lib/markets/coingecko.ts`, add the URL builder near `marketsUrl` (after the 
 ```ts
 // Markets endpoint scoped to specific CoinGecko ids (article "coins in this story").
 export function marketsByIdsUrl(ids: string[]): string {
-  const idParam = encodeURIComponent(ids.join(','))
+  // Encode each id but keep literal commas — CoinGecko expects a bare
+  // comma-separated list (an encoded %2C would be read as a single unknown id).
+  const idParam = ids.map(encodeURIComponent).join(',')
   return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idParam}&order=market_cap_desc&price_change_percentage=24h`
 }
 ```

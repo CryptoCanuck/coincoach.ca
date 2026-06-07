@@ -91,11 +91,14 @@ export async function getMovers(): Promise<{ gainers: Coin[]; losers: Coin[] }> 
 // Live data for a specific set of coins (by id), server-side + ISR-cached (60s).
 // [] for an empty id list or on failure. Reuses mapCoins (drops empty-id rows).
 export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
-  if (!ids.length) return []
+  // Trim, drop blanks, and dedupe so messy `coins:` frontmatter can't trigger a
+  // wasted call (e.g. ['', '  ']) or a bloated ids param with repeats.
+  const normalizedIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))]
+  if (!normalizedIds.length) return []
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
   try {
-    const res = await fetch(marketsByIdsUrl(ids), {
+    const res = await fetch(marketsByIdsUrl(normalizedIds), {
       next: { revalidate: 60 },
       signal: controller.signal,
     })
