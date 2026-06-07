@@ -2,22 +2,35 @@ import Link from '@/components/Link'
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-start justify-start md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6">
-      <div className="space-x-2 pt-6 pb-8 md:space-y-5">
-        <h1 className="text-6xl leading-9 font-extrabold tracking-tight text-gray-900 md:border-r-2 md:px-6 md:text-8xl md:leading-14 dark:text-gray-100">
-          404
-        </h1>
-      </div>
-      <div className="max-w-md">
-        <p className="mb-4 text-xl leading-normal font-bold md:text-2xl">
-          Sorry we couldn't find this page.
-        </p>
-        <p className="mb-8">But dont worry, you can find plenty of other things on our homepage.</p>
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <p className="text-accent text-[80px] leading-none font-black tracking-tight sm:text-[110px]">
+        404
+      </p>
+      <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-gray-50 sm:text-3xl">
+        Page not found
+      </h1>
+      <p className="text-ink-2 mt-3 max-w-md text-sm font-medium">
+        We couldn&apos;t find the page you were looking for. It may have moved, or the link might be
+        out of date.
+      </p>
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
         <Link
           href="/"
-          className="focus:shadow-outline-blue inline rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm leading-5 font-medium text-white shadow-xs transition-colors duration-150 hover:bg-blue-700 focus:outline-hidden dark:hover:bg-blue-500"
+          className="bg-accent rounded-lg px-4 py-2 text-sm font-bold text-[#2a1c05] transition-opacity hover:opacity-90"
         >
-          Back to homepage
+          Back to home
+        </Link>
+        <Link
+          href="/charts"
+          className="bg-surface border-line text-ink-2 hover:border-accent hover:text-ink rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
+        >
+          Browse markets
+        </Link>
+        <Link
+          href="/learn"
+          className="bg-surface border-line text-ink-2 hover:border-accent hover:text-ink rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
+        >
+          Start learning
         </Link>
       </div>
     </div>
