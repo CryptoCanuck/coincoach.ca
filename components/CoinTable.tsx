@@ -16,7 +16,7 @@ export default async function CoinTable({
     <div className="bg-surface border-line rounded-[10px] border">
       <div className="border-line flex items-center justify-between border-b px-4 py-3.5">
         <div className="text-[15px] font-extrabold text-gray-50">{title}</div>
-        <Link href="/projects" className="text-blue text-xs font-bold">
+        <Link href="/charts" className="text-blue text-xs font-bold">
           View all ›
         </Link>
       </div>

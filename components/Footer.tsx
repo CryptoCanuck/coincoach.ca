@@ -9,13 +9,13 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: 'Guides', href: '/guides' },
       { label: 'Token Breakdowns', href: '/breakdowns' },
       { label: 'Reviews', href: '/reviews' },
+      { label: 'Markets', href: '/charts' },
     ],
   },
   {
     heading: 'Topics',
     links: [
       { label: 'All Topics', href: '/tags' },
-      { label: 'Projects', href: '/projects' },
       { label: 'Blog Archive', href: '/blog' },
     ],
   },
