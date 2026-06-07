@@ -48,7 +48,7 @@ export default function MarketsTable({ coins }: { coins: MarketCoin[] }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
-        <div className="flex gap-2">
+        <div className="flex gap-2" role="group" aria-label="Sort coins by">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -102,7 +102,7 @@ export default function MarketsTable({ coins }: { coins: MarketCoin[] }) {
                 i < rows.length - 1 ? 'border-line-2 border-b' : ''
               }`}
             >
-              <span className="text-ink-3 w-6 text-xs font-bold">{c.rank ?? i + 1}</span>
+              <span className="text-ink-3 w-6 text-xs font-bold">{c.rank ?? '–'}</span>
               <CoinLogo sym={c.symbol} size={24} />
               <div className="flex min-w-0 flex-col leading-tight">
                 <span className="truncate text-sm font-bold text-gray-100">{c.name}</span>
