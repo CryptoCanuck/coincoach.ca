@@ -49,8 +49,8 @@ export function publishedLessons<T extends { draft?: boolean }>(lessons: T[]): T
 export function sortLessons<T extends { order?: number; title: string }>(lessons: T[]): T[] {
   if (!Array.isArray(lessons)) return []
   return [...lessons].sort((a, b) => {
-    const ao = Number.isFinite(a.order) ? (a.order as number) : Number.MAX_SAFE_INTEGER
-    const bo = Number.isFinite(b.order) ? (b.order as number) : Number.MAX_SAFE_INTEGER
+    const ao = Number.isFinite(a.order) ? a.order! : Number.MAX_SAFE_INTEGER
+    const bo = Number.isFinite(b.order) ? b.order! : Number.MAX_SAFE_INTEGER
     if (ao !== bo) return ao - bo
     return a.title.localeCompare(b.title, 'en', { sensitivity: 'base' })
   })
@@ -84,7 +84,7 @@ export function relatedLessons<T extends { slug: string; related?: string[] }>(
   lessons: T[],
   lesson: T
 ): T[] {
-  if (!lesson || !Array.isArray(lesson.related)) return []
+  if (!Array.isArray(lessons) || !lesson || !Array.isArray(lesson.related)) return []
   return lesson.related
     .map((slug) => lessons.find((l) => l.slug === slug))
     .filter((l): l is T => Boolean(l))

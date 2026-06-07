@@ -52,6 +52,13 @@ describe('sortLessons', () => {
     sortLessons(sample)
     expect(sample).toEqual(copy)
   })
+  it('breaks ties in equal order by title', () => {
+    const tied = [
+      { slug: 'z', title: 'Zeta', difficulty: 'beginner', order: 1 },
+      { slug: 'a', title: 'Alpha', difficulty: 'beginner', order: 1 },
+    ]
+    expect(sortLessons(tied).map((l) => l.slug)).toEqual(['a', 'z'])
+  })
 })
 
 describe('lessonsByTier', () => {
@@ -87,6 +94,10 @@ describe('relatedLessons', () => {
   it('returns empty when related is missing', () => {
     expect(relatedLessons(sample, getLesson(sample, 'mid')!)).toEqual([])
   })
+  it('returns empty for an empty related array', () => {
+    const noRelated = { slug: 'x', title: 'X', difficulty: 'beginner', related: [] as string[] }
+    expect(relatedLessons(sample, noRelated)).toEqual([])
+  })
 })
 
 describe('tiers', () => {
@@ -97,5 +108,6 @@ describe('tiers', () => {
   })
   it('falls back gracefully for an unknown key', () => {
     expect(tierMeta('unknown').label).toBe('Unknown')
+    expect(tierMeta('').label).toBe('Unknown')
   })
 })
