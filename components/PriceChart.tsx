@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   createChart,
   CandlestickSeries,
@@ -11,32 +11,56 @@ import {
 import type { Candle, Timeframe } from '@/lib/markets/coins'
 
 export default function PriceChart({
+  coinId,
   data,
   frames,
+  initialFrame,
 }: {
+  coinId: string
+  // Seeded with only the default frame's candles; other frames are fetched on demand.
   data: Record<string, Candle[]>
   frames: Timeframe[]
+  initialFrame: Timeframe
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
-  const [frame, setFrame] = useState<Timeframe>(frames.includes('1M') ? '1M' : (frames[0] ?? '1M'))
 
-  const hasFrameData = (f: Timeframe) => (data[f]?.length ?? 0) > 0
-  const hasData = frames.some(hasFrameData)
+  const [byFrame, setByFrame] = useState<Record<string, Candle[]>>(data)
+  const [frame, setFrame] = useState<Timeframe>(initialFrame)
+  const [loadingFrame, setLoadingFrame] = useState<Timeframe | null>(null)
+  const [erroredFrame, setErroredFrame] = useState<Timeframe | null>(null)
 
-  // If the selected timeframe has no candles (e.g. that range's fetch was rate-limited
-  // while others succeeded), fall back to the first frame that does.
+  const current = useMemo(() => byFrame[frame] ?? [], [byFrame, frame])
+  const hasCurrent = current.length > 0
+  const isLoading = loadingFrame === frame && !hasCurrent
+  const isErrored = erroredFrame === frame && !hasCurrent
+
+  const selectFrame = useCallback(
+    (f: Timeframe) => {
+      setFrame(f)
+      // Already have it (default frame or a previously fetched one) → just switch.
+      if (byFrame[f]) return
+      setLoadingFrame(f)
+      setErroredFrame(null)
+      // Trailing slash: the site uses trailingSlash, so this avoids a 308 hop.
+      fetch(`/api/ohlc/${encodeURIComponent(coinId)}/?frame=${f}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('bad status')
+          return res.json()
+        })
+        .then((candles: Candle[]) => {
+          setByFrame((m) => ({ ...m, [f]: candles }))
+        })
+        .catch(() => setErroredFrame(f))
+        .finally(() => setLoadingFrame((cur) => (cur === f ? null : cur)))
+    },
+    [coinId, byFrame]
+  )
+
+  // Create the chart once.
   useEffect(() => {
-    if (!hasFrameData(frame)) {
-      const fallback = frames.find(hasFrameData)
-      if (fallback) setFrame(fallback)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frame, frames, data])
-
-  useEffect(() => {
-    if (!containerRef.current || !hasData) return
+    if (!containerRef.current) return
     const chart = createChart(containerRef.current, {
       autoSize: true,
       layout: { background: { color: 'transparent' }, textColor: '#97a3b2', fontFamily: 'inherit' },
@@ -59,14 +83,15 @@ export default function PriceChart({
       chartRef.current = null
       seriesRef.current = null
     }
-  }, [hasData])
+  }, [])
 
+  // Push the current frame's candles to the chart whenever they change.
   useEffect(() => {
     const series = seriesRef.current
     if (!series) return
-    series.setData((data[frame] ?? []).map((c) => ({ ...c, time: c.time as UTCTimestamp })))
+    series.setData(current.map((c) => ({ ...c, time: c.time as UTCTimestamp })))
     chartRef.current?.timeScale().fitContent()
-  }, [frame, data])
+  }, [current])
 
   const chipBase = 'rounded-md px-2.5 py-1 text-[12px] font-bold'
   return (
@@ -77,34 +102,36 @@ export default function PriceChart({
           <span className="text-ink-3 text-[12.5px] font-semibold">USD · Candlestick</span>
         </div>
         <div className="ml-auto flex gap-1.5" role="group" aria-label="Chart timeframe">
-          {frames.map((f) => {
-            const empty = !hasFrameData(f)
-            return (
-              <button
-                key={f}
-                type="button"
-                aria-pressed={frame === f}
-                disabled={empty}
-                onClick={() => setFrame(f)}
-                className={
-                  empty
-                    ? `${chipBase} text-ink-3 cursor-not-allowed opacity-40`
-                    : frame === f
-                      ? `${chipBase} bg-fill text-gray-50`
-                      : `${chipBase} text-ink-3 hover:text-ink-2`
-                }
-              >
-                {f}
-              </button>
-            )
-          })}
+          {frames.map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={frame === f}
+              onClick={() => selectFrame(f)}
+              className={
+                frame === f
+                  ? `${chipBase} bg-fill text-gray-50`
+                  : `${chipBase} text-ink-3 hover:text-ink-2`
+              }
+            >
+              {f}
+              {loadingFrame === f ? <span className="text-ink-3 ml-1 animate-pulse">·</span> : null}
+            </button>
+          ))}
         </div>
       </div>
-      {hasData ? (
-        <div ref={containerRef} className="h-[300px] w-full" />
-      ) : (
-        <p className="text-ink-3 py-24 text-center text-sm">Chart data unavailable.</p>
-      )}
+      <div className="relative h-[300px] w-full">
+        <div ref={containerRef} className="h-full w-full" />
+        {!hasCurrent && (
+          <p className="text-ink-3 absolute inset-0 flex items-center justify-center text-center text-sm">
+            {isLoading
+              ? 'Loading chart…'
+              : isErrored
+                ? 'Could not load this range.'
+                : 'Chart data unavailable.'}
+          </p>
+        )}
+      </div>
     </div>
   )
 }
