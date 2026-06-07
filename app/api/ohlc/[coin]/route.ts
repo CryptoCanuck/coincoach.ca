@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getOhlc, TIMEFRAMES, type Timeframe } from '@/lib/markets/coins'
+import { getOhlcResult, TIMEFRAMES, type Timeframe } from '@/lib/markets/coins'
 
 // Same-origin endpoint the PriceChart calls to lazy-load a timeframe the server
 // didn't prefetch. Keeps the coin page's initial server render down to one OHLC
@@ -12,8 +12,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ coin: st
   if (!frame || !TIMEFRAMES.includes(frame as Timeframe)) {
     return NextResponse.json({ error: 'invalid frame' }, { status: 400 })
   }
-  const candles = await getOhlc(coin, frame as Timeframe)
-  return NextResponse.json(candles, {
+  const result = await getOhlcResult(coin, frame as Timeframe)
+  if (!result.ok) {
+    // Transient CoinGecko outage — surface it (uncached) so the client shows a
+    // retry state rather than caching an empty chart as a success.
+    return NextResponse.json({ error: 'upstream unavailable' }, { status: 502 })
+  }
+  return NextResponse.json(result.candles, {
     headers: { 'Cache-Control': 'public, max-age=300, s-maxage=600' },
   })
 }
