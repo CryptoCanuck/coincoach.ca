@@ -631,6 +631,6 @@ git commit -m "Remove leftover projects page and surface Markets in nav"
 
 ## Notes / risks for the executor
 
-- The client `MarketsTable` imports the `MarketCoin` **type** and `pickCoin` is NOT needed here; only format helpers + `MarketCoin` type are imported from the data layer — type-only import keeps the server fetch code out of the client bundle conceptually (and `coingecko.ts` has no `server-only` marker, so even value imports are safe).
+- The client `MarketsTable` uses `import type { MarketCoin }` and value-imports only the pure format helpers — never the server fetchers (`getMarketTable` etc.). Keep this boundary strict in client components: prefer `import type` from data modules, and avoid value-importing anything from server/data-fetch modules so server-only code can never leak into the client bundle.
 - Keep the sparkline column and the 7d/mktcap/volume columns `hidden lg:*` so the table stays usable on mobile (rank + coin + price + 24h only on small screens).
 - After all tasks: final holistic review, then **superpowers:finishing-a-development-branch** → PR (branch `unit-a-markets-hub`) → wait for CodeRabbit → triage → merge.
