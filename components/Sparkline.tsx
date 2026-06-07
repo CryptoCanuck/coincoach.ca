@@ -1,6 +1,12 @@
 // Tiny 7-day price sparkline (inline SVG). Green when the period ends up, red
 // when down. Renders nothing for fewer than 2 points.
-export default function Sparkline({ data, className = '' }: { data: number[]; className?: string }) {
+export default function Sparkline({
+  data,
+  className = '',
+}: {
+  data: number[]
+  className?: string
+}) {
   if (!data || data.length < 2) return null
   const w = 80
   const h = 24
