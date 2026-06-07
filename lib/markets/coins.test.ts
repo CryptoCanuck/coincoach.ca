@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { mapCoinDetail, mapOhlc, priceVolatilityPct } from './coins'
+import { mapCoinDetail, mapOhlc, priceVolatilityPct, classifyCoin } from './coins'
 
 const sample = {
   id: 'bitcoin',
@@ -136,5 +136,32 @@ describe('priceVolatilityPct', () => {
       { time: 2, open: 0, high: 0, low: 0, close: 5 },
     ]
     expect(priceVolatilityPct(c)).toBeNull()
+  })
+})
+
+const validPayload = {
+  id: 'bitcoin',
+  symbol: 'btc',
+  name: 'Bitcoin',
+  market_data: { current_price: { usd: 1 } },
+}
+
+describe('classifyCoin', () => {
+  it('returns ok with the mapped coin on a successful, mappable response', () => {
+    const r = classifyCoin({ ok: true, data: validPayload })
+    expect(r.status).toBe('ok')
+    if (r.status === 'ok') expect(r.coin.id).toBe('bitcoin')
+  })
+  it('returns not-found when the payload cannot be mapped (no id)', () => {
+    expect(classifyCoin({ ok: true, data: {} }).status).toBe('not-found')
+  })
+  it('returns not-found on a 404', () => {
+    expect(classifyCoin({ ok: false, status: 404 }).status).toBe('not-found')
+  })
+  it('returns unavailable on a 429 (rate limit)', () => {
+    expect(classifyCoin({ ok: false, status: 429 }).status).toBe('unavailable')
+  })
+  it('returns unavailable on a network error / timeout (null status)', () => {
+    expect(classifyCoin({ ok: false, status: null }).status).toBe('unavailable')
   })
 })
