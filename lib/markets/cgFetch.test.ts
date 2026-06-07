@@ -21,6 +21,11 @@ describe('cgHeaders', () => {
     process.env.COINGECKO_API_PLAN = 'pro'
     expect(cgHeaders()).toEqual({ 'x-cg-pro-api-key': 'CG-test' })
   })
+  it('treats the plan case-insensitively (PRO)', () => {
+    process.env.COINGECKO_API_KEY = 'CG-test'
+    process.env.COINGECKO_API_PLAN = 'PRO'
+    expect(cgHeaders()).toEqual({ 'x-cg-pro-api-key': 'CG-test' })
+  })
 })
 
 describe('cgUrl', () => {

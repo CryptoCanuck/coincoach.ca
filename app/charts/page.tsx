@@ -15,7 +15,7 @@ export default async function MarketsPage() {
   return (
     <div className="py-7">
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Markets' }]} />
-      <div className="mt-5 flex items-center justify-between gap-3">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-[34px] font-black tracking-tight text-gray-50">Markets</h1>
         <FreshnessNote />
       </div>

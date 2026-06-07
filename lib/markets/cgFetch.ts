@@ -8,7 +8,7 @@
 // Default is Demo; set COINGECKO_API_PLAN=pro to switch.
 
 function isPro(): boolean {
-  return process.env.COINGECKO_API_PLAN === 'pro'
+  return process.env.COINGECKO_API_PLAN?.toLowerCase() === 'pro'
 }
 
 export function cgHeaders(): Record<string, string> {
