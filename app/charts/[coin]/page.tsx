@@ -19,18 +19,10 @@ import {
   priceVolatilityPct,
   TIMEFRAMES,
 } from '@/lib/markets/coins'
-import { getTopCoins, getMarketTable } from '@/lib/markets/coingecko'
-import MarketDataUnavailable from '@/components/MarketDataUnavailable'
+import { getTopCoins } from '@/lib/markets/coingecko'
 import FreshnessNote from '@/components/FreshnessNote'
 import { sentimentScore } from '@/lib/markets/sentimentProxy'
 import { genPageMetadata } from 'app/seo'
-
-// Prebuild the most-trafficked coin pages; the long tail renders on demand
-// (dynamicParams defaults to true).
-export async function generateStaticParams() {
-  const top = await getMarketTable(15)
-  return top.map((c) => ({ coin: c.id }))
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ coin: string }> }) {
   const { coin: id } = await params
@@ -50,14 +42,11 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
   const result = await getCoinDetail(id)
   if (result.status === 'not-found') notFound()
   if (result.status === 'unavailable') {
-    return (
-      <div className="py-2">
-        <div className="pt-5">
-          <Breadcrumb items={[{ label: 'Charts', href: '/charts' }, { label: id }]} />
-        </div>
-        <MarketDataUnavailable label={id} />
-      </div>
-    )
+    // Transient CoinGecko outage (429/timeout). Throw rather than render a soft
+    // panel inline: that keeps ISR serving the last *good* page (stale-while-
+    // revalidate) instead of caching the failure for the whole revalidate window.
+    // app/charts/[coin]/error.tsx renders the retry UI for a cold (uncached) page.
+    throw new Error('market-data-unavailable')
   }
   const coin = result.coin
   const [ohlc, top] = await Promise.all([getAllOhlc(id), getTopCoins()])
