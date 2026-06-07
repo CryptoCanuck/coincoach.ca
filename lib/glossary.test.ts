@@ -74,6 +74,10 @@ describe('relatedEntries', () => {
     const related = relatedEntries(sample, staking)
     expect(related.map((e) => e.slug)).toEqual(['proof-of-stake'])
   })
+  it('drops related slugs that resolve to nothing', () => {
+    const entry: T = { slug: 'x', term: 'X', category: 'defi', related: ['nope', 'bitcoin'] }
+    expect(relatedEntries(sample, entry).map((e) => e.slug)).toEqual(['bitcoin'])
+  })
   it('returns empty when related is missing', () => {
     expect(relatedEntries(sample, getGlossaryTerm(sample, 'bitcoin')!)).toEqual([])
   })
