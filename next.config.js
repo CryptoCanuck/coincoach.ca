@@ -4,17 +4,20 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-// Tightened for v1: comments (giscus) and analytics (umami) are disabled, and the
-// newsletter (Buttondown) + search (Kbar) are same-origin, so no third-party hosts
-// are needed. 'unsafe-inline'/'unsafe-eval' remain because Next.js requires them.
-// Add hosts here if you later enable analytics, comments, or external embeds.
+// Comments (giscus) are disabled; newsletter (Buttondown) + search (Kbar) are
+// same-origin. Google Analytics (GA4) is enabled, so Google's hosts are allowed
+// below: gtag.js loads from googletagmanager.com (script-src) and sends hits to
+// google-analytics.com / analytics.google.com (connect-src; GA4 also uses regional
+// subdomains like region1.google-analytics.com, hence the wildcards). img-src
+// already permits https: for any beacon pixels. 'unsafe-inline'/'unsafe-eval'
+// remain because Next.js (and gtag's inline init) require them.
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https:;
   media-src 'self';
-  connect-src 'self';
+  connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com;
   font-src 'self';
   frame-src 'none'
 `
