@@ -65,12 +65,12 @@ export default function PostLayout({
   ]
 
   return (
-    <article className="py-[18px]">
+    <div className="py-[18px]">
       <Breadcrumb items={crumbs} />
 
       <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">
         {/* MAIN COLUMN */}
-        <div className="min-w-0">
+        <article className="min-w-0">
           <CategoryChip type={postType} />
           <h1 className="mt-3.5 max-w-[760px] text-[34px] leading-[1.1] font-black tracking-tight text-gray-50 sm:text-[40px]">
             {title}
@@ -118,18 +118,18 @@ export default function PostLayout({
           {related.length > 0 && (
             <div className="mt-9">
               <SectionHeading title="Related Stories" />
-              <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
                 {related.map((post) => (
                   <StoryCard key={post.slug} post={post} />
                 ))}
               </div>
             </div>
           )}
-        </div>
+        </article>
 
         {/* SIDEBAR */}
         <ArticleSidebar fearGreed={fearGreed} coins={coins} trending={trending} />
       </div>
-    </article>
+    </div>
   )
 }
