@@ -22,13 +22,13 @@ export default function NotFound() {
         </Link>
         <Link
           href="/charts"
-          className="bg-surface border-line text-ink-2 hover:border-accent rounded-lg border px-4 py-2 text-sm font-semibold transition-colors hover:text-gray-50"
+          className="bg-surface border-line text-ink-2 hover:border-accent hover:text-ink rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
         >
           Browse markets
         </Link>
         <Link
           href="/learn"
-          className="bg-surface border-line text-ink-2 hover:border-accent rounded-lg border px-4 py-2 text-sm font-semibold transition-colors hover:text-gray-50"
+          className="bg-surface border-line text-ink-2 hover:border-accent hover:text-ink rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
         >
           Start learning
         </Link>
