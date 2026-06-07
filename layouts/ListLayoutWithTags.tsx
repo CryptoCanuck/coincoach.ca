@@ -105,7 +105,7 @@ export default function ListLayoutWithTags({
                     ) : (
                       <Link
                         href={`/tags/${slug(t)}`}
-                        aria-label={`View posts tagged ${t.split('-').join(' ')}`}
+                        aria-label={`View posts tagged ${t.split('-').join(' ')} (${tagCounts[t]} posts)`}
                         className="text-ink-3 hover:text-ink text-[12.5px] font-semibold uppercase transition-colors"
                       >
                         {label}

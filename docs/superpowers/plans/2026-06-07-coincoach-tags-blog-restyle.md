@@ -26,7 +26,7 @@
 
 ---
 
-### Task 1: Restyle the `/tags` index page
+## Task 1: Restyle the `/tags` index page
 
 **Files:**
 - Modify (full rewrite): `app/tags/page.tsx`
@@ -72,7 +72,7 @@ export default function Page() {
             <Link
               key={t}
               href={`/tags/${slug(t)}`}
-              aria-label={`View posts tagged ${t}`}
+              aria-label={`View posts tagged ${t.split('-').join(' ')} (${tagCounts[t]} posts)`}
               className="bg-surface border-line text-ink-2 hover:border-accent flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold capitalize transition-colors hover:text-gray-50"
             >
               {t.split('-').join(' ')}
@@ -116,7 +116,7 @@ git commit -m "Restyle tags index to Direction-B chip cloud"
 
 ---
 
-### Task 2: Restyle the shared blog/tag listing layout (hybrid)
+## Task 2: Restyle the shared blog/tag listing layout (hybrid)
 
 **Files:**
 - Modify (full rewrite): `layouts/ListLayoutWithTags.tsx`
@@ -204,7 +204,7 @@ export default function ListLayoutWithTags({
   const tagCounts = tagData as Record<string, number>
   const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a])
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
-  const activeTag = decodeURI(pathname.split('/tags/')[1] ?? '')
+  const activeTag = decodeURI(pathname.split('/tags/')[1]?.split('/')[0] ?? '')
 
   return (
     <div className="py-7">
@@ -235,7 +235,7 @@ export default function ListLayoutWithTags({
                     ) : (
                       <Link
                         href={`/tags/${slug(t)}`}
-                        aria-label={`View posts tagged ${t}`}
+                        aria-label={`View posts tagged ${t.split('-').join(' ')} (${tagCounts[t]} posts)`}
                         className="text-ink-3 hover:text-ink text-[12.5px] font-semibold uppercase transition-colors"
                       >
                         {label}
