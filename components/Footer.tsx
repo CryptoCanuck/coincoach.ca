@@ -16,6 +16,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: 'Topics',
     links: [
       { label: 'Topics', href: '/topics' },
+      { label: 'Glossary', href: '/glossary' },
       { label: 'All Tags', href: '/tags' },
       { label: 'Blog Archive', href: '/blog' },
     ],
