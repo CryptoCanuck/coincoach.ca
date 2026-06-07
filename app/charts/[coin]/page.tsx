@@ -15,10 +15,16 @@ import Gauge from '@/components/Gauge'
 import {
   getCoin,
   getCoinDetail,
-  getAllOhlc,
+  getOhlc,
   priceVolatilityPct,
   TIMEFRAMES,
+  type Timeframe,
 } from '@/lib/markets/coins'
+
+// The chart opens on this frame; PriceChart lazy-loads the others on click via
+// /api/ohlc/[coin]. Server-fetching only this one keeps the coin page to ~3
+// CoinGecko calls (detail + this frame + top coins) instead of 6.
+const DEFAULT_FRAME: Timeframe = '1M'
 import { getTopCoins } from '@/lib/markets/coingecko'
 import MarketDataUnavailable from '@/components/MarketDataUnavailable'
 import FreshnessNote from '@/components/FreshnessNote'
@@ -56,9 +62,9 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
     )
   }
   const coin = result.coin
-  const [ohlc, top] = await Promise.all([getAllOhlc(id), getTopCoins()])
+  const [defaultCandles, top] = await Promise.all([getOhlc(id, DEFAULT_FRAME), getTopCoins()])
 
-  const volatility = priceVolatilityPct(ohlc['1M'] ?? [])
+  const volatility = priceVolatilityPct(defaultCandles)
   const similar = top.filter((c) => c.id && c.id !== coin.id).slice(0, 5)
 
   const posts = allCoreContent(sortPosts(allBlogs))
@@ -80,7 +86,12 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
             <div className="flex justify-end">
               <FreshnessNote />
             </div>
-            <PriceChart data={ohlc} frames={TIMEFRAMES} />
+            <PriceChart
+              coinId={coin.id}
+              data={{ [DEFAULT_FRAME]: defaultCandles }}
+              frames={TIMEFRAMES}
+              initialFrame={DEFAULT_FRAME}
+            />
           </div>
 
           <div>

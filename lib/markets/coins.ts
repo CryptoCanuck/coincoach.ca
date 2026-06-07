@@ -180,16 +180,18 @@ export async function getCoin(id: string): Promise<CoinDetail | null> {
   return r.status === 'ok' ? r.coin : null
 }
 
-// Server-side, ISR-cached (10 min). [] on failure.
-export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
+// Distinguishes a genuine (possibly empty) response from an upstream failure, so
+// callers (e.g. the lazy-load route) can surface a transient outage instead of
+// caching it as an empty success. Server-side, ISR-cached (10 min).
+export type OhlcResult = { ok: true; candles: Candle[] } | { ok: false }
+
+export async function getOhlcResult(id: string, frame: Timeframe): Promise<OhlcResult> {
   const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 600 })
-  return r.ok ? mapOhlc(r.data) : []
+  return r.ok ? { ok: true, candles: mapOhlc(r.data) } : { ok: false }
 }
 
-// All timeframes in parallel → a map the client chart switches between.
-// 4 CoinGecko calls per coin page (+1 for getCoin); relies on the API key + ISR
-// (revalidate 600) to stay within rate limits. Each frame fails independently to [].
-export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
-  const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
-  return Object.fromEntries(entries) as Record<Timeframe, Candle[]>
+// Convenience wrapper: candles, or [] on failure.
+export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
+  const res = await getOhlcResult(id, frame)
+  return res.ok ? res.candles : []
 }
