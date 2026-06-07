@@ -1,41 +1,48 @@
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
 import { slug } from 'github-slugger'
 import tagData from 'app/tag-data.json'
+import Breadcrumb from '@/components/Breadcrumb'
 import { genPageMetadata } from 'app/seo'
 
-export const metadata = genPageMetadata({ title: 'Tags', description: 'Things I blog about' })
+export const metadata = genPageMetadata({
+  title: 'Tags',
+  description: 'Browse every tag across CoinCoach news, guides, breakdowns and reviews.',
+  alternates: { canonical: '/tags' },
+})
 
-export default async function Page() {
+export default function Page() {
   const tagCounts = tagData as Record<string, number>
-  const tagKeys = Object.keys(tagCounts)
-  const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
+  const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a])
+
   return (
-    <>
-      <div className="flex flex-col items-start justify-start divide-y divide-gray-200 md:mt-24 md:flex-row md:items-center md:justify-center md:space-x-6 md:divide-y-0 dark:divide-gray-700">
-        <div className="space-x-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:border-r-2 md:px-6 md:text-6xl md:leading-14 dark:text-gray-100">
-            Tags
-          </h1>
+    <div className="py-7">
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Tags' }]} />
+      <h1 className="mt-5 text-[34px] font-black tracking-tight text-gray-50">Tags</h1>
+      <p className="text-ink-2 mt-1.5 text-sm font-medium">
+        Every tag across our coverage. Prefer a curated view? Browse{' '}
+        <Link href="/topics" className="text-blue font-semibold">
+          topics
+        </Link>
+        .
+      </p>
+
+      {sortedTags.length === 0 ? (
+        <p className="text-ink-2 mt-8 text-sm">No tags found.</p>
+      ) : (
+        <div className="mt-6 flex flex-wrap gap-2.5">
+          {sortedTags.map((t) => (
+            <Link
+              key={t}
+              href={`/tags/${slug(t)}`}
+              aria-label={`View posts tagged ${t.split('-').join(' ')} (${tagCounts[t]} posts)`}
+              className="bg-surface border-line text-ink-2 hover:border-accent flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold capitalize transition-colors hover:text-gray-50"
+            >
+              {t.split('-').join(' ')}
+              <span className="text-ink-3 text-[11px] font-bold">{tagCounts[t]}</span>
+            </Link>
+          ))}
         </div>
-        <div className="flex max-w-lg flex-wrap">
-          {tagKeys.length === 0 && 'No tags found.'}
-          {sortedTags.map((t) => {
-            return (
-              <div key={t} className="mt-2 mr-5 mb-2">
-                <Tag text={t} />
-                <Link
-                  href={`/tags/${slug(t)}`}
-                  className="-ml-2 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300"
-                  aria-label={`View posts tagged ${t}`}
-                >
-                  {` (${tagCounts[t]})`}
-                </Link>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </>
+      )}
+    </div>
   )
 }
