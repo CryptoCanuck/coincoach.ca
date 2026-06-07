@@ -36,7 +36,11 @@ export default function LearnPage() {
         {groups.map(({ tier, lessons }) => (
           <section key={tier.key}>
             <div className="flex items-center gap-2.5">
-              <span className="h-3 w-3 rounded-full" style={{ background: tier.color }} />
+              <span
+                aria-hidden="true"
+                className="h-3 w-3 rounded-full"
+                style={{ background: tier.color }}
+              />
               <h2 className="text-xl font-extrabold text-gray-50">{tier.label}</h2>
             </div>
             <p className="text-ink-3 mt-1 text-[13px] font-medium">{tier.description}</p>

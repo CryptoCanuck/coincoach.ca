@@ -11,7 +11,7 @@ export default function LessonCard({
   slug: string
   title: string
   summary?: string
-  difficulty: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
   readingTime: number
 }) {
   const meta = tierMeta(difficulty)
