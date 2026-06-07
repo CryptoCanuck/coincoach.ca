@@ -213,9 +213,12 @@ skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
   (`lib/coinContent.ts`) matching posts by exact `coins:` frontmatter id OR a tag equal to the
   coin symbol/name. Replaced the old tag-only sidebar titles-list. Plan:
   `docs/superpowers/plans/2026-06-06-coincoach-unit-b-coin-hubs.md`.
-- **Unit C — Topics taxonomy:** curated `topics` registry (`lib/topics.ts`, like `lib/sections.ts`)
-  + `/topics` + `/topics/[topic]` landing pages (Regulation, ETFs, DeFi, Macro, Layer 2, NFTs…);
-  freeform tags stay for long-tail. Resolves the "tags vs topics" cross-cutting item above.
+- **Unit C — Topics taxonomy ✅ SHIPPED:** curated `topics` registry (`lib/topics.ts`, 12 topics,
+  each mapping a slug/label/description/color to a tag-slug set) + tested pure `postsForTopic`
+  + `/topics` index (CatTile grid w/ counts) + static `/topics/[topic]` landing pages. Surfaced in
+  header nav (relabeled Tags→Topics), CatBar, Footer, and sitemap; freeform `/tags` stays for
+  long-tail (Footer "All Tags"). Resolves the "tags vs topics" cross-cutting item above. Plan:
+  `docs/superpowers/plans/2026-06-06-coincoach-unit-c-topics-taxonomy.md`.
 - **Unit D — Glossary + Learn hub:** new glossary content type + structured Learn (paths/series/
   difficulty). Content-model decision still open.
 - **Then AI Coach (was Phase 5) LAST** — needs LLM credentials first.
