@@ -168,9 +168,10 @@ export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetch {
   return outcome.status === 404 ? { status: 'not-found' } : { status: 'unavailable' }
 }
 
-// Server-side, ISR-cached (5 min). Distinguishes unknown vs temporarily-down.
+// Server-side, ISR-cached (10 min). Distinguishes unknown vs temporarily-down.
+// Longer TTL keeps revalidations (and thus rate-limit windows) infrequent.
 export async function getCoinDetail(id: string): Promise<CoinFetch> {
-  return classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 300 }))
+  return classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 600 }))
 }
 
 // Thin wrapper for callers (e.g. generateMetadata) that only need the coin or null.
@@ -179,15 +180,15 @@ export async function getCoin(id: string): Promise<CoinDetail | null> {
   return r.status === 'ok' ? r.coin : null
 }
 
-// Server-side, ISR-cached (5 min). [] on failure.
+// Server-side, ISR-cached (10 min). [] on failure.
 export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
-  const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 300 })
+  const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 600 })
   return r.ok ? mapOhlc(r.data) : []
 }
 
 // All timeframes in parallel → a map the client chart switches between.
-// 4 CoinGecko calls per coin page (+1 for getCoin); relies on ISR (revalidate
-// 300) to stay within free-tier rate limits. Each frame fails independently to [].
+// 4 CoinGecko calls per coin page (+1 for getCoin); relies on the API key + ISR
+// (revalidate 600) to stay within rate limits. Each frame fails independently to [].
 export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
   const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
   return Object.fromEntries(entries) as Record<Timeframe, Candle[]>

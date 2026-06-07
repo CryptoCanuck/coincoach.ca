@@ -104,7 +104,7 @@ export default function MarketsTable({ coins }: { coins: MarketCoin[] }) {
             >
               <span className="text-ink-3 w-6 text-xs font-bold">{c.rank ?? '–'}</span>
               <CoinLogo sym={c.symbol} size={24} />
-              <div className="flex min-w-0 flex-col leading-tight">
+              <div className="flex min-w-0 flex-1 flex-col leading-tight">
                 <span className="truncate text-sm font-bold text-gray-100">{c.name}</span>
                 <span className="text-ink-3 text-[11px] font-semibold">{c.symbol}</span>
               </div>
