@@ -2,7 +2,7 @@ import { allGlossaries } from 'contentlayer/generated'
 import Breadcrumb from '@/components/Breadcrumb'
 import Link from '@/components/Link'
 import GlossaryFilter, { type GlossaryItem } from '@/components/GlossaryFilter'
-import { publishedGlossary, sortGlossary } from '@/lib/glossary'
+import { publishedGlossary } from '@/lib/glossary'
 import { genPageMetadata } from 'app/seo'
 
 export const metadata = genPageMetadata({
@@ -13,7 +13,7 @@ export const metadata = genPageMetadata({
 })
 
 export default function GlossaryPage() {
-  const terms: GlossaryItem[] = sortGlossary(publishedGlossary(allGlossaries)).map((t) => ({
+  const terms: GlossaryItem[] = publishedGlossary(allGlossaries).map((t) => ({
     slug: t.slug,
     term: t.term,
     category: t.category,
