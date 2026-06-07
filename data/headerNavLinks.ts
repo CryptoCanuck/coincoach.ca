@@ -7,6 +7,7 @@ const headerNavLinks = [
   { href: '/sentiment', title: 'Sentiment' },
   { href: '/charts', title: 'Markets' },
   { href: '/topics', title: 'Topics' },
+  { href: '/glossary', title: 'Glossary' },
   { href: '/about', title: 'About' },
 ]
 
