@@ -208,8 +208,11 @@ skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
   filters locally — CSP intact). Removed the leftover starter `/projects` page (+ `Card`,
   `projectsData`) and relabeled nav "Charts" → "Markets". `/charts` added to the sitemap.
   Plan: `docs/superpowers/plans/2026-06-06-coincoach-unit-a-markets-hub.md`.
-- **Unit B — Coin asset hubs:** `/charts/[coin]` to also surface "Latest news & guides about
-  this coin" via the `coins:` frontmatter + tag match.
+- **Unit B — Coin asset hubs ✅ SHIPPED:** `/charts/[coin]` now surfaces a "{coin} news & guides"
+  `StoryCard` section (main column) via a tested pure `relatedPostsForCoin` helper
+  (`lib/coinContent.ts`) matching posts by exact `coins:` frontmatter id OR a tag equal to the
+  coin symbol/name. Replaced the old tag-only sidebar titles-list. Plan:
+  `docs/superpowers/plans/2026-06-06-coincoach-unit-b-coin-hubs.md`.
 - **Unit C — Topics taxonomy:** curated `topics` registry (`lib/topics.ts`, like `lib/sections.ts`)
   + `/topics` + `/topics/[topic]` landing pages (Regulation, ETFs, DeFi, Macro, Layer 2, NFTs…);
   freeform tags stay for long-tail. Resolves the "tags vs topics" cross-cutting item above.
