@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { allBlogs, allGlossaries } from 'contentlayer/generated'
+import { allBlogs, allGlossaries, allLessons } from 'contentlayer/generated'
 import siteMetadata from '@/data/siteMetadata'
 import { SECTIONS } from '@/lib/sections'
 import { TOPICS } from '@/lib/topics'
@@ -17,10 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
 
   const lastModified = new Date().toISOString().split('T')[0]
-  const staticRoutes = ['', 'blog', 'tags', 'charts', 'topics', 'glossary'].map((route) => ({
-    url: `${siteUrl}/${route}`,
-    lastModified,
-  }))
+  const staticRoutes = ['', 'blog', 'tags', 'charts', 'topics', 'glossary', 'learn'].map(
+    (route) => ({
+      url: `${siteUrl}/${route}`,
+      lastModified,
+    })
+  )
   const sectionRoutes = SECTIONS.map((section) => ({
     url: `${siteUrl}${section.route}`,
     lastModified,
@@ -35,6 +37,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}/glossary/${t.slug}`,
       lastModified,
     }))
+  const lessonRoutes = allLessons
+    .filter((l) => !l.draft)
+    .map((l) => ({
+      url: `${siteUrl}/learn/${l.slug}`,
+      lastModified,
+    }))
 
-  return [...staticRoutes, ...sectionRoutes, ...topicRoutes, ...glossaryRoutes, ...blogRoutes]
+  return [
+    ...staticRoutes,
+    ...sectionRoutes,
+    ...topicRoutes,
+    ...glossaryRoutes,
+    ...lessonRoutes,
+    ...blogRoutes,
+  ]
 }

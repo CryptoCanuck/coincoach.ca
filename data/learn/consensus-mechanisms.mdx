@@ -1,0 +1,15 @@
+---
+title: 'Consensus Mechanisms: PoW vs PoS'
+summary: 'How decentralized networks agree on one shared history without a referee.'
+difficulty: 'advanced'
+order: 1
+related: ['how-transactions-work', 'staking-and-yield']
+---
+
+Consensus is how a decentralized network agrees on which transactions are valid and in what order — without a central referee. Two mechanisms dominate.
+
+**Proof of Work (PoW)**, used by Bitcoin, has miners compete to solve a hard computational puzzle. The winner proposes the next block and earns a reward. Rewriting history would require redoing all that work faster than the rest of the network combined, which is prohibitively expensive. The cost is enormous energy use.
+
+**Proof of Stake (PoS)**, used by Ethereum and most newer chains, replaces computation with economic stake. Validators put up collateral and are chosen to propose and attest to blocks; dishonest behaviour gets their stake **slashed**. The security model is different: instead of physical energy cost, the deterrent is financial — an attacker would need to acquire and risk an enormous amount of staked capital, and the network could still coordinate to burn it. It also uses a fraction of the energy.
+
+Both aim for the same outcome — making it far more costly to attack the network than to follow the rules — but they differ sharply in energy use, hardware requirements, and how new participants get involved.
