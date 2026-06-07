@@ -35,7 +35,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         <Link
           href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
           rel="prev"
-          className={`${pill} border-line bg-surface text-ink-2 hover:border-accent hover:text-gray-50`}
+          className={`${pill} border-line bg-surface text-ink-2 hover:border-accent hover:text-ink`}
         >
           ‹ Previous
         </Link>
@@ -51,7 +51,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
         <Link
           href={`/${basePath}/page/${currentPage + 1}`}
           rel="next"
-          className={`${pill} border-line bg-surface text-ink-2 hover:border-accent hover:text-gray-50`}
+          className={`${pill} border-line bg-surface text-ink-2 hover:border-accent hover:text-ink`}
         >
           Next ›
         </Link>
@@ -74,7 +74,7 @@ export default function ListLayoutWithTags({
   const tagCounts = tagData as Record<string, number>
   const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a])
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
-  const activeTag = decodeURI(pathname.split('/tags/')[1] ?? '')
+  const activeTag = decodeURI(pathname.split('/tags/')[1]?.split('/')[0] ?? '')
 
   return (
     <div className="py-7">
@@ -89,7 +89,7 @@ export default function ListLayoutWithTags({
             ) : (
               <Link
                 href="/blog"
-                className="text-ink-2 text-[13px] font-extrabold uppercase hover:text-gray-50"
+                className="text-ink-2 text-[13px] font-extrabold uppercase hover:text-ink"
               >
                 All Posts
               </Link>
