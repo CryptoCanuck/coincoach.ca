@@ -1,3 +1,5 @@
+import { cgFetch, type CgOutcome } from './cgFetch'
+
 export interface ResourceLink {
   label: string
   href: string
@@ -101,24 +103,6 @@ export function mapCoinDetail(payload: CoinGeckoCoin): CoinDetail | null {
   }
 }
 
-// Server-side, ISR-cached (5 min). null on failure.
-export async function getCoin(id: string): Promise<CoinDetail | null> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
-      id
-    )}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-    const res = await fetch(url, { next: { revalidate: 300 }, signal: controller.signal })
-    if (!res.ok) return null
-    return mapCoinDetail(await res.json())
-  } catch {
-    return null
-  } finally {
-    clearTimeout(timeoutId)
-  }
-}
-
 export interface Candle {
   time: number
   open: number
@@ -158,22 +142,47 @@ const OHLC_DAYS = { '24H': 1, '7D': 7, '1M': 30, '1Y': 365 } as const
 export type Timeframe = keyof typeof OHLC_DAYS
 export const TIMEFRAMES = Object.keys(OHLC_DAYS) as Timeframe[]
 
+export function coinUrl(id: string): string {
+  return `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
+    id
+  )}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
+}
+
+export function ohlcUrl(id: string, frame: Timeframe): string {
+  return `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/ohlc?vs_currency=usd&days=${OHLC_DAYS[frame]}`
+}
+
+export type CoinFetch =
+  | { status: 'ok'; coin: CoinDetail }
+  | { status: 'not-found' }
+  | { status: 'unavailable' }
+
+// Pure: maps a raw cgFetch outcome to a UI-ready status. CoinGecko returns 404
+// for an unknown id (real not-found); 429/5xx/timeout (null) is a transient
+// outage the page should show softly rather than 404.
+export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetch {
+  if (outcome.ok) {
+    const coin = mapCoinDetail(outcome.data)
+    return coin ? { status: 'ok', coin } : { status: 'not-found' }
+  }
+  return outcome.status === 404 ? { status: 'not-found' } : { status: 'unavailable' }
+}
+
+// Server-side, ISR-cached (5 min). Distinguishes unknown vs temporarily-down.
+export async function getCoinDetail(id: string): Promise<CoinFetch> {
+  return classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 300 }))
+}
+
+// Thin wrapper for callers (e.g. generateMetadata) that only need the coin or null.
+export async function getCoin(id: string): Promise<CoinDetail | null> {
+  const r = await getCoinDetail(id)
+  return r.status === 'ok' ? r.coin : null
+}
+
 // Server-side, ISR-cached (5 min). [] on failure.
 export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const url = `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
-      id
-    )}/ohlc?vs_currency=usd&days=${OHLC_DAYS[frame]}`
-    const res = await fetch(url, { next: { revalidate: 300 }, signal: controller.signal })
-    if (!res.ok) return []
-    return mapOhlc(await res.json())
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 300 })
+  return r.ok ? mapOhlc(r.data) : []
 }
 
 // All timeframes in parallel → a map the client chart switches between.

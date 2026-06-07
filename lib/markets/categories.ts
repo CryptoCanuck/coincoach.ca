@@ -1,3 +1,4 @@
+import { cgFetch } from './cgFetch'
 import { sentimentScore } from './sentimentProxy'
 
 export interface CategorySentiment {
@@ -28,18 +29,9 @@ export function mapCategories(payload: CoinGeckoCategory[], limit: number): Cate
 
 // Server-side, ISR-cached (10 min). [] on failure.
 export async function getCategorySentiment(limit = 8): Promise<CategorySentiment[]> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/categories', {
-      next: { revalidate: 600 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return []
-    return mapCategories(await res.json(), limit)
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const r = await cgFetch<CoinGeckoCategory[]>(
+    'https://api.coingecko.com/api/v3/coins/categories',
+    { revalidate: 600 }
+  )
+  return r.ok ? mapCategories(r.data, limit) : []
 }

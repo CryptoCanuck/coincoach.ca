@@ -221,10 +221,33 @@ skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
   `docs/superpowers/plans/2026-06-06-coincoach-unit-c-topics-taxonomy.md`.
 - **Unit D — Glossary + Learn hub** (content-model decisions resolved: glossary = MDX-per-term;
   Learn = curated registry over existing guides):
-  - **Glossary ✅ BUILT (this branch):** new `Glossary` Contentlayer doc type (`data/glossary/*.mdx`),
+  - **Glossary ✅ SHIPPED (PR #12):** new `Glossary` Contentlayer doc type (`data/glossary/*.mdx`),
     20 seeded starter terms, pure helpers (`lib/glossary.ts`, tested), `/glossary` A–Z index with a
     client search + category filter, `/glossary/[term]` MDX detail pages with related-term chips, and
     nav/footer/CatBar/sitemap wiring. Plan: `docs/superpowers/plans/2026-06-06-coincoach-unit-d-glossary.md`.
-  - **Learn hub — next:** a curated `lib/learn.ts` paths registry (Beginner→Advanced) over existing
-    guides + `/learn` index and `/learn/[path]` pages. Ships as a separate PR.
+  - **Learn hub — PAUSED (resumes after data hardening):** a curated `lib/learn.ts` paths registry
+    (Beginner→Advanced) over existing guides + `/learn` index and `/learn/[path]` pages. Separate PR.
+
+### ⚠️ Market data reliability — hardening (2026-06-06, interrupts the unit queue)
+
+User-reported prod bug: only `/charts/bitcoin` loaded (rest 404), charts were empty, prices frozen.
+**Root cause:** every `lib/markets/*` call hit the **unauthenticated** `api.coingecko.com`, which 429s
+after a few rapid calls; `getCoin` mapped any non-200 → `null` → the coin page `notFound()`, so a
+rate-limited coin was indistinguishable from a nonexistent one. Decision (user): get a free **Demo API
+key**, harden the data layer **before** resuming new sections, keep ~60s ISR liveness + an honest
+"Updated" label.
+
+- **Data reliability ✅ BUILT (this branch `data-layer-hardening`):** one keyed `lib/markets/cgFetch.ts`
+  helper (attaches `x-cg-demo-api-key` when `COINGECKO_API_KEY` is set; Demo default, `COINGECKO_API_PLAN=pro`
+  switches host+header) routes **every** CoinGecko call. `getCoinDetail` returns `ok | not-found | unavailable`
+  so a transient outage (429/timeout) renders a soft `MarketDataUnavailable` panel instead of a hard 404.
+  `generateStaticParams` prebuilds the top 15 coins (long tail on-demand). `FreshnessNote` shows
+  "Updated HH:MM UTC". 111 tests. Verified live with the key: previously-404 coins now 200; bogus ids
+  still 404. The key lives only in env (Portainer / gitignored `.env.local`), never in git.
+  Plan: `docs/superpowers/plans/2026-06-06-coincoach-market-data-reliability.md`.
+- **Data — call reduction (next, separate PR):** lazy-load non-default OHLC timeframes via a same-origin
+  `/api/ohlc/[coin]` route so the coin page drops from ~6 CoinGecko calls to ~2 (PriceChart fetches other
+  frames on demand; CSP-safe). Deferred from the reliability PR to keep it focused.
+- **Deploy step:** set `COINGECKO_API_KEY` in the Portainer env for the master container.
+
 - **Then AI Coach (was Phase 5) LAST** — needs LLM credentials first.

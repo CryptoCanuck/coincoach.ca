@@ -1,3 +1,5 @@
+import { cgFetch } from './cgFetch'
+
 export interface Coin {
   id: string
   symbol: string
@@ -52,20 +54,8 @@ export function marketsByIdsUrl(ids: string[]): string {
 }
 
 async function fetchMarkets(perPage: number): Promise<Coin[]> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch(marketsUrl(perPage), {
-      next: { revalidate: 60 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return []
-    return mapCoins(await res.json())
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const r = await cgFetch<CoinGeckoMarket[]>(marketsUrl(perPage), { revalidate: 60 })
+  return r.ok ? mapCoins(r.data) : []
 }
 
 export function splitMovers(coins: Coin[], n = 4): { gainers: Coin[]; losers: Coin[] } {
@@ -97,20 +87,8 @@ export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
   // wasted call (e.g. ['', '  ']) or a bloated ids param with repeats.
   const normalizedIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))]
   if (!normalizedIds.length) return []
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch(marketsByIdsUrl(normalizedIds), {
-      next: { revalidate: 60 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return []
-    return mapCoins(await res.json())
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const r = await cgFetch<CoinGeckoMarket[]>(marketsByIdsUrl(normalizedIds), { revalidate: 60 })
+  return r.ok ? mapCoins(r.data) : []
 }
 
 export interface MarketCoin {
@@ -181,18 +159,6 @@ export function mapMarketCoins(payload: CoinGeckoMarketRow[]): MarketCoin[] {
 // Top `perPage` coins by market cap with 24h/7d change + sparkline. Server-side,
 // ISR-cached (120s). [] on failure.
 export async function getMarketTable(perPage = 100): Promise<MarketCoin[]> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch(marketTableUrl(perPage), {
-      next: { revalidate: 120 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return []
-    return mapMarketCoins(await res.json())
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const r = await cgFetch<CoinGeckoMarketRow[]>(marketTableUrl(perPage), { revalidate: 120 })
+  return r.ok ? mapMarketCoins(r.data) : []
 }
