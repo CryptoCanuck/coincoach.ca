@@ -161,6 +161,9 @@ describe('classifyCoin', () => {
   it('returns unavailable on a 429 (rate limit)', () => {
     expect(classifyCoin({ ok: false, status: 429 }).status).toBe('unavailable')
   })
+  it('returns unavailable on a 5xx server error', () => {
+    expect(classifyCoin({ ok: false, status: 503 }).status).toBe('unavailable')
+  })
   it('returns unavailable on a network error / timeout (null status)', () => {
     expect(classifyCoin({ ok: false, status: null }).status).toBe('unavailable')
   })
