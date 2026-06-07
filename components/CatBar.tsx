@@ -12,6 +12,7 @@ const ITEMS: { label: string; href: string }[] = [
   { label: 'Markets', href: '/charts' },
   { label: 'Topics', href: '/topics' },
   { label: 'Glossary', href: '/glossary' },
+  { label: 'Learn', href: '/learn' },
 ]
 
 export default function CatBar() {
