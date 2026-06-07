@@ -113,10 +113,13 @@ describe('splitMovers', () => {
 })
 
 describe('marketsByIdsUrl', () => {
-  it('joins ids with commas and url-encodes them', () => {
+  it('encodes each id but keeps literal comma separators', () => {
     expect(marketsByIdsUrl(['bitcoin', 'ethereum'])).toBe(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2Cethereum&order=market_cap_desc&price_change_percentage=24h'
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum&order=market_cap_desc&price_change_percentage=24h'
     )
+  })
+  it('url-encodes unsafe characters within an id', () => {
+    expect(marketsByIdsUrl(['a b'])).toContain('&ids=a%20b&')
   })
 })
 
@@ -126,7 +129,7 @@ describe('pickCoin', () => {
     { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', price: 2, change24h: 2, image: '' },
   ]
   it('returns the coin matching the id', () => {
-    expect(pickCoin(coins, 'ethereum')?.symbol).toBe('ETH')
+    expect(pickCoin(coins, 'ethereum')).toEqual(coins[1])
   })
   it('returns null when no coin matches', () => {
     expect(pickCoin(coins, 'dogecoin')).toBeNull()
