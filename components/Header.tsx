@@ -41,6 +41,12 @@ const Header = () => {
           >
             Sentiment
           </Link>
+          <Link
+            href="/charts"
+            className="text-[15px] font-semibold text-gray-300 transition-colors hover:text-white"
+          >
+            Charts
+          </Link>
         </nav>
 
         <div className="flex flex-1 items-center justify-end gap-3.5">

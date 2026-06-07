@@ -52,21 +52,21 @@ fallback, so CSP and graceful degradation hold.
 | Fear & Greed index (current + history)                                | alternative.me `/fng/?limit=N`                          | ✅ homepage `Gauge` + `/sentiment` hero & chart | DONE — `lib/markets/sentiment.ts` (`getFearGreed`, `getFearGreedHistory`)                                                                                                                                  |
 | Per-coin & per-category sentiment                                     | ✅ documented momentum proxy                            | ✅ `/sentiment` by-coin / by-category           | DONE — `sentimentScore` = `clamp(round(50+4·Δ%),0,100)` in `lib/markets/sentimentProxy.ts`; coins use 24h price Δ, categories use `/coins/categories` market-cap Δ. Labelled as a proxy, not a social feed |
 | Movers (true market gainers/losers)                                   | CoinGecko markets bigger `per_page`, sort by 24h change | ✅ Movers panel                                 | DONE — `splitMovers`/`getMovers` in `lib/markets/coingecko.ts` (top-100 proxy)                                                                                                                             |
-| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                 | ⛔ Coin Detail                                  |                                                                                                                                                                                                            |
-| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/market_chart?days=`              | ⛔ Coin Detail + Sentiment history              | drives the timeframe chips                                                                                                                                                                                 |
+| Per-coin detail (stats, supply, ATH/ATL, links)                       | CoinGecko `/coins/{id}`                                 | ✅ Coin Detail                                  | DONE — `lib/markets/coins.ts` (`getCoin`/`mapCoinDetail`)                                                                                                                                                  |
+| OHLC / price series per timeframe                                     | CoinGecko `/coins/{id}/ohlc?days=`                      | ✅ Coin Detail candlestick chart                | DONE — `getOhlc`/`getAllOhlc`/`mapOhlc` in `coins.ts` (24H/7D/1M/1Y). Sentiment history uses F&G history instead                                                                                           |
 | Coin logos (real)                                                     | CoinGecko `image` or a licensed icon CDN                | swap `CoinLogo` SVGs                            | needs `next.config.js` `remotePatterns` + CSP `img-src`                                                                                                                                                    |
 
 ---
 
 ## Phase 2 — Interactive homepage polish
 
-| Item                                         | Where                   | Work                                                    |
-| -------------------------------------------- | ----------------------- | ------------------------------------------------------- |
-| Movers Gainers/Losers toggle                 | `components/Movers.tsx` | ✅ done — server fetch + `MoversTabs` client toggle     |
-| Ticker marquee (auto-scroll, pause on hover) | `components/Ticker.tsx` | ✅ done — pure-CSS marquee, hover-pause, reduced-motion |
-| Timeframe chips (history/charts)             | shared `TimeframeChips` | client; re-query series on change, single active        |
-| Watchlist toggle                             | new `lib`/client        | localStorage set; star toggles on coin rows / detail    |
-| Converter (BTC↔USD)                          | Coin Detail rail        | client; recompute on input from live price              |
+| Item                                         | Where                                  | Work                                                    |
+| -------------------------------------------- | -------------------------------------- | ------------------------------------------------------- |
+| Movers Gainers/Losers toggle                 | `components/Movers.tsx`                | ✅ done — server fetch + `MoversTabs` client toggle     |
+| Ticker marquee (auto-scroll, pause on hover) | `components/Ticker.tsx`                | ✅ done — pure-CSS marquee, hover-pause, reduced-motion |
+| Timeframe chips (history/charts)             | `SentimentHistoryChart` / `PriceChart` | ✅ done — client chip switch on both charts (3a/3b)     |
+| Watchlist toggle                             | `WatchlistButton`                      | ✅ done — localStorage star on the coin header (3b)     |
+| Converter (coin↔USD)                         | Coin Detail rail                       | ✅ done — `Converter` client component (3b)             |
 
 ---
 
@@ -95,7 +95,18 @@ The page the client specifically liked. Layout (`Market Sentiment.html`):
 - **"What does this mean?"** 3 explainer/guide cards (link to guides) → CoachStrip → Footer.
 - Data: Phase 1 F&G current+history + per-coin/per-category (proxy). Add `Sentiment` nav item.
 
-### 3b. Coin Detail — `/charts/[coin]` (or `/coins/[id]`) ⛔
+### 3b. Coin Detail — `/charts/[coin]` ✅ (shipped)
+
+> **SHIPPED** — `/charts` index + `/charts/[coin]` (keyed on CoinGecko `id`). Coin
+> header (logo, name as `h1`, rank, price + 24h change, `WatchlistButton`, static
+> "Ask about X"), **lightweight-charts v5 candlestick** (`PriceChart`, 24H/7D/1M/1Y
+> chips — `1H`/`ALL` dropped for free-tier OHLC granularity/payload), `KeyStats`
+> (incl. a derived 30d volatility), About + resource links, right rail (per-coin
+> momentum gauge via `sentimentScore`, `Converter`, `SimilarCoins`, coin-tagged news).
+> Feeds: `lib/markets/coins.ts` (`getCoin`, `getAllOhlc`, `priceVolatilityPct`) +
+> `id` added to `Coin`. All fetches server-side (chart candle sets pre-fetched and
+> passed to the client; no client fetching). **Charts** added to header + mobile nav.
+> Plan: `docs/superpowers/plans/2026-06-06-coincoach-phase-3b-coin-detail.md`.
 
 Layout (`Coin Detail.html`):
 
@@ -153,8 +164,7 @@ box all feed one assistant.
 
 - **Responsive:** at <~1100px collapse right rails below the main column; stack multi-col
   grids; header nav → drawer (`MobileNav` exists, restyle to the dark theme).
-- **Nav:** **Sentiment** is now in the header + mobile nav (shipped with 3a). Add
-  **Charts** once 3b ships (kept off until then to avoid 404s).
+- **Nav:** **Sentiment** (3a) and **Charts** (3b) are both in the header + mobile nav.
 - **Category taxonomy:** the design's topic tiles (Bitcoin, Layer 2, NFTs…) imply a real
   topic taxonomy beyond the current tags — decide tags vs. a `topics` registry if we want
   dedicated category landing pages.

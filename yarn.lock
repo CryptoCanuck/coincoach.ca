@@ -5485,6 +5485,7 @@ __metadata:
     hast-util-from-html-isomorphic: ^2.0.0
     husky: ^9.1.7
     image-size: 2.0.2
+    lightweight-charts: ^5.2.0
     lint-staged: ^16.2.7
     next: 15.5.12
     next-contentlayer2: 0.5.8
@@ -6935,6 +6936,13 @@ __metadata:
   version: 3.0.2
   resolution: "extend@npm:3.0.2"
   checksum: a50a8309ca65ea5d426382ff09f33586527882cf532931cb08ca786ea3146c0553310bda688710ff61d7668eba9f96b923fe1420cdf56a2c3eaf30fcab87b515
+  languageName: node
+  linkType: hard
+
+"fancy-canvas@npm:2.1.0":
+  version: 2.1.0
+  resolution: "fancy-canvas@npm:2.1.0"
+  checksum: 2463ca8a9254fb4cc69bbe33a2996b2a0ba8f725721d51464d9e87b4f3c3e8759e2289b0d592f56265501d5cff0b363bb7c72bb9c38212c19114dbd006ec8959
   languageName: node
   linkType: hard
 
@@ -8645,6 +8653,15 @@ __metadata:
     lightningcss-win32-x64-msvc:
       optional: true
   checksum: 6e5ef66e7d7e57af8712ed7125968d31d8120a84cc530d7483d1cbc17b06a10f1187e63054b7a5cdd16d345429007cf7be46464bd7b327be7080f8604f246c73
+  languageName: node
+  linkType: hard
+
+"lightweight-charts@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "lightweight-charts@npm:5.2.0"
+  dependencies:
+    fancy-canvas: 2.1.0
+  checksum: 3bf493835b7ce73e420fc1a614d2d365d8cc5f29ae9b49e3859b50cb6994a6b0fe77f29306df11e391b05c12f816b9d6ec641731c80e16b04d28bc92829f7840
   languageName: node
   linkType: hard
 

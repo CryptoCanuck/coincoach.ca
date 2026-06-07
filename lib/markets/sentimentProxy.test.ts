@@ -72,8 +72,8 @@ describe('valueDaysAgo', () => {
 describe('coinSentimentList', () => {
   it('maps coins to scored rows, preserving order', () => {
     const coins = [
-      { symbol: 'BTC', name: 'Bitcoin', price: 1, change24h: 5, image: '' },
-      { symbol: 'ETH', name: 'Ethereum', price: 1, change24h: -2.5, image: '' },
+      { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', price: 1, change24h: 5, image: '' },
+      { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', price: 1, change24h: -2.5, image: '' },
     ]
     expect(coinSentimentList(coins, 5)).toEqual([
       { symbol: 'BTC', name: 'Bitcoin', score: 70 },
@@ -82,6 +82,7 @@ describe('coinSentimentList', () => {
   })
   it('respects the limit', () => {
     const coins = Array.from({ length: 12 }, (_, i) => ({
+      id: `c${i}`,
       symbol: `C${i}`,
       name: `Coin ${i}`,
       price: 1,
