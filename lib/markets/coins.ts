@@ -185,11 +185,3 @@ export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
   const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 600 })
   return r.ok ? mapOhlc(r.data) : []
 }
-
-// All timeframes in parallel → a map the client chart switches between.
-// 4 CoinGecko calls per coin page (+1 for getCoin); relies on the API key + ISR
-// (revalidate 600) to stay within rate limits. Each frame fails independently to [].
-export async function getAllOhlc(id: string): Promise<Record<Timeframe, Candle[]>> {
-  const entries = await Promise.all(TIMEFRAMES.map(async (f) => [f, await getOhlc(id, f)] as const))
-  return Object.fromEntries(entries) as Record<Timeframe, Candle[]>
-}
