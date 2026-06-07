@@ -21,13 +21,7 @@ export default function ArticleByline({
   shareUrl,
   title,
 }: BylineProps) {
-  const meta = [
-    occupation,
-    formatDate(date, siteMetadata.locale),
-    typeof readingTime === 'number' ? `${Math.ceil(readingTime)} min read` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+  const readLabel = typeof readingTime === 'number' ? `${Math.ceil(readingTime)} min read` : null
 
   const chip =
     'border-line bg-fill text-ink-2 hover:text-ink flex h-[34px] items-center rounded-lg border px-3 text-[13px] font-bold'
@@ -42,13 +36,18 @@ export default function ArticleByline({
       )}
       <div className="flex-1">
         <div className="text-sm font-bold text-gray-100">By {authorName}</div>
-        <div className="text-ink-3 mt-0.5 text-[12.5px] font-semibold">{meta}</div>
+        <div className="text-ink-3 mt-0.5 text-[12.5px] font-semibold">
+          {occupation ? `${occupation} · ` : ''}
+          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+          {readLabel ? ` · ${readLabel}` : ''}
+        </div>
       </div>
       <div className="flex gap-2">
         <a
           className={chip}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Share on X"
           href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
         >
           𝕏
@@ -57,6 +56,7 @@ export default function ArticleByline({
           className={chip}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Share on LinkedIn"
           href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
         >
           in
