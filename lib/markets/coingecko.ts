@@ -16,6 +16,8 @@ interface CoinGeckoMarket {
   image: string
 }
 
+const num = (v: unknown): number => (Number.isFinite(v) ? (v as number) : 0)
+
 export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   if (!Array.isArray(payload)) return []
   // Drop entries without an id — every coin links to /charts/[id], and an empty
@@ -104,6 +106,90 @@ export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
     })
     if (!res.ok) return []
     return mapCoins(await res.json())
+  } catch {
+    return []
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
+export interface MarketCoin {
+  id: string
+  rank: number | null
+  symbol: string
+  name: string
+  image: string
+  price: number
+  change24h: number
+  change7d: number
+  marketCap: number
+  volume: number
+  sparkline: number[]
+}
+
+interface CoinGeckoMarketRow {
+  id?: string
+  symbol?: string
+  name?: string
+  image?: string
+  current_price?: number | null
+  price_change_percentage_24h?: number | null
+  price_change_percentage_7d_in_currency?: number | null
+  market_cap?: number | null
+  market_cap_rank?: number | null
+  total_volume?: number | null
+  sparkline_in_7d?: { price?: number[] }
+}
+
+// Keep the rendered sparkline small: drop non-finite points and thin a 7-day
+// hourly series (~168 pts) down to `target` evenly-spaced points.
+export function downsampleSparkline(points: number[], target = 24): number[] {
+  const finite = (points ?? []).filter((n) => Number.isFinite(n))
+  if (finite.length <= target) return finite
+  const step = finite.length / target
+  const out: number[] = []
+  for (let i = 0; i < target; i++) out.push(finite[Math.floor(i * step)])
+  return out
+}
+
+export function marketTableUrl(perPage: number): string {
+  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&price_change_percentage=24h,7d&sparkline=true`
+}
+
+export function mapMarketCoins(payload: CoinGeckoMarketRow[]): MarketCoin[] {
+  if (!Array.isArray(payload)) return []
+  return payload.flatMap((c) => {
+    if (!c?.id) return []
+    return [
+      {
+        id: c.id,
+        rank: Number.isFinite(c.market_cap_rank) ? (c.market_cap_rank as number) : null,
+        symbol: (c.symbol || '').toUpperCase(),
+        name: c.name || '',
+        image: c.image || '',
+        price: num(c.current_price),
+        change24h: num(c.price_change_percentage_24h),
+        change7d: num(c.price_change_percentage_7d_in_currency),
+        marketCap: num(c.market_cap),
+        volume: num(c.total_volume),
+        sparkline: downsampleSparkline(c.sparkline_in_7d?.price ?? []),
+      },
+    ]
+  })
+}
+
+// Top `perPage` coins by market cap with 24h/7d change + sparkline. Server-side,
+// ISR-cached (120s). [] on failure.
+export async function getMarketTable(perPage = 100): Promise<MarketCoin[]> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
+  try {
+    const res = await fetch(marketTableUrl(perPage), {
+      next: { revalidate: 120 },
+      signal: controller.signal,
+    })
+    if (!res.ok) return []
+    return mapMarketCoins(await res.json())
   } catch {
     return []
   } finally {
