@@ -25,6 +25,8 @@ interface LayoutProps {
   authorBio?: ReactNode
   coins?: Coin[]
   fearGreed?: FearGreed | null
+  next?: { path: string; title: string }
+  prev?: { path: string; title: string }
   children: ReactNode
 }
 

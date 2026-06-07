@@ -13,6 +13,8 @@ import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
+import { getMarketsByIds } from '@/lib/markets/coingecko'
+import { getFearGreed } from '@/lib/markets/sentiment'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -104,7 +106,18 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     }
   })
 
-  const Layout = layouts[post.layout || defaultLayout]
+  const Layout = layouts[post.layout || defaultLayout] as typeof PostLayout
+
+  // Live data for the article sidebar + inline coin cards (server-side, CSP-safe).
+  const coinIds = (post.coins ?? []) as string[]
+  const [coins, fearGreed] = await Promise.all([getMarketsByIds(coinIds), getFearGreed()])
+
+  // The primary author's MDX body becomes the bio paragraph in the author box.
+  const primaryAuthorSlug = authorList[0]
+  const primaryAuthorDoc = allAuthors.find((p) => p.slug === primaryAuthorSlug)
+  const authorBio = primaryAuthorDoc ? (
+    <MDXLayoutRenderer code={primaryAuthorDoc.body.code} components={components} />
+  ) : null
 
   return (
     <>
@@ -112,7 +125,15 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+      <Layout
+        content={mainContent}
+        authorDetails={authorDetails}
+        authorBio={authorBio}
+        coins={coins}
+        fearGreed={fearGreed}
+        next={next}
+        prev={prev}
+      >
         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </Layout>
     </>
