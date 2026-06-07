@@ -9,6 +9,8 @@ import KeyStats from '@/components/KeyStats'
 import SectionHeading from '@/components/SectionHeading'
 import Converter from '@/components/Converter'
 import SimilarCoins from '@/components/SimilarCoins'
+import CoinContent from '@/components/CoinContent'
+import { relatedPostsForCoin } from '@/lib/coinContent'
 import Gauge from '@/components/Gauge'
 import { getCoin, getAllOhlc, priceVolatilityPct, TIMEFRAMES } from '@/lib/markets/coins'
 import { getTopCoins } from '@/lib/markets/coingecko'
@@ -38,13 +40,7 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
   const similar = top.filter((c) => c.id && c.id !== coin.id).slice(0, 5)
 
   const posts = allCoreContent(sortPosts(allBlogs))
-  const sym = coin.symbol.toLowerCase()
-  const nameLower = coin.name.toLowerCase()
-  const coinNews = posts
-    .filter((p) =>
-      (p.tags ?? []).some((t) => t.toLowerCase() === sym || t.toLowerCase() === nameLower)
-    )
-    .slice(0, 4)
+  const relatedPosts = relatedPostsForCoin(posts, coin, 6)
 
   return (
     <div className="py-2">
@@ -86,6 +82,8 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
               )}
             </div>
           )}
+
+          <CoinContent posts={relatedPosts} coinName={coin.name} symbol={coin.symbol} />
         </div>
 
         {/* RIGHT RAIL */}
@@ -101,32 +99,6 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ coi
           <Converter symbol={coin.symbol} price={coin.price} />
 
           <SimilarCoins coins={similar} />
-
-          <div className="bg-surface border-line rounded-[10px] border p-4">
-            <div className="mb-2 text-[15px] font-extrabold text-gray-50">
-              Latest {coin.symbol} News
-            </div>
-            {coinNews.length === 0 ? (
-              <p className="text-ink-3 text-sm">
-                No {coin.symbol} stories yet —{' '}
-                <Link href="/news" className="text-blue font-semibold">
-                  browse all news ›
-                </Link>
-              </p>
-            ) : (
-              <div className="flex flex-col">
-                {coinNews.map((p) => (
-                  <Link
-                    key={p.slug}
-                    href={`/blog/${p.slug}`}
-                    className="border-line-2 text-ink-2 border-b py-2.5 text-[13.5px] font-semibold last:border-b-0 hover:text-gray-50"
-                  >
-                    {p.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>
