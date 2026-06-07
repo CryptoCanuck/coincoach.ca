@@ -219,6 +219,12 @@ skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
   header nav (relabeled Tags→Topics), CatBar, Footer, and sitemap; freeform `/tags` stays for
   long-tail (Footer "All Tags"). Resolves the "tags vs topics" cross-cutting item above. Plan:
   `docs/superpowers/plans/2026-06-06-coincoach-unit-c-topics-taxonomy.md`.
-- **Unit D — Glossary + Learn hub:** new glossary content type + structured Learn (paths/series/
-  difficulty). Content-model decision still open.
+- **Unit D — Glossary + Learn hub** (content-model decisions resolved: glossary = MDX-per-term;
+  Learn = curated registry over existing guides):
+  - **Glossary ✅ BUILT (this branch):** new `Glossary` Contentlayer doc type (`data/glossary/*.mdx`),
+    20 seeded starter terms, pure helpers (`lib/glossary.ts`, tested), `/glossary` A–Z index with a
+    client search + category filter, `/glossary/[term]` MDX detail pages with related-term chips, and
+    nav/footer/CatBar/sitemap wiring. Plan: `docs/superpowers/plans/2026-06-06-coincoach-unit-d-glossary.md`.
+  - **Learn hub — next:** a curated `lib/learn.ts` paths registry (Beginner→Advanced) over existing
+    guides + `/learn` index and `/learn/[path]` pages. Ships as a separate PR.
 - **Then AI Coach (was Phase 5) LAST** — needs LLM credentials first.
