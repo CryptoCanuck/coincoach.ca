@@ -172,9 +172,28 @@ export const Glossary = defineDocumentType(() => ({
   computedFields,
 }))
 
+export const Lesson = defineDocumentType(() => ({
+  name: 'Lesson',
+  filePathPattern: 'learn/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    title: { type: 'string', required: true },
+    summary: { type: 'string' },
+    difficulty: {
+      type: 'enum',
+      options: ['beginner', 'intermediate', 'advanced'],
+      required: true,
+    },
+    order: { type: 'number' },
+    related: { type: 'list', of: { type: 'string' }, default: [] },
+    draft: { type: 'boolean' },
+  },
+  computedFields,
+}))
+
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors, Glossary],
+  documentTypes: [Blog, Authors, Glossary, Lesson],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [

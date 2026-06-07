@@ -1,0 +1,13 @@
+---
+title: 'Smart Contract Risk and Security'
+summary: 'Why code-based finance can fail, and how to size up a protocol before you use it.'
+difficulty: 'advanced'
+order: 3
+related: ['understanding-defi', 'crypto-wallets-explained']
+---
+
+Smart contracts are programs that move real money automatically, and "the code is the rule" cuts both ways: a bug or a loophole can be exploited just as automatically. Most large DeFi losses trace back to flawed contract code rather than broken cryptography.
+
+Common failure modes include **reentrancy** (a contract is tricked into paying out repeatedly before it updates its balances), **oracle manipulation** (feeding a protocol a fake price to borrow against), and simple logic errors in upgrade or admin functions. Because deployed contracts are often immutable, a shipped bug can't always be patched.
+
+Before trusting a protocol, look for independent **security audits**, a public bug-bounty program, a track record of time in production handling real value, and transparency about who controls upgrade keys. None of these guarantee safety, but their absence is a red flag. The safest habit is the same one from wallets: start with amounts you can afford to lose.

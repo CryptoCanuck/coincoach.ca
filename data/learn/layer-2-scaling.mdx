@@ -1,0 +1,13 @@
+---
+title: 'Layer-2 Scaling Explained'
+summary: 'How rollups make blockchains faster and cheaper without giving up security.'
+difficulty: 'advanced'
+order: 2
+related: ['how-transactions-work', 'understanding-defi']
+---
+
+Popular blockchains can only fit so many transactions in each block, so when demand spikes, fees climb and confirmations slow. **Layer-2** networks fix this by moving most activity off the main chain (Layer 1) while still inheriting its security.
+
+The leading approach is the **rollup**. A rollup executes many transactions on a separate, cheaper chain, then posts a compressed summary back to Layer 1. **Optimistic rollups** assume the summary is valid and allow a challenge window to dispute fraud; **zero-knowledge (ZK) rollups** post a cryptographic proof that the batch was processed correctly, so no challenge period is needed.
+
+Either way, users get much lower fees and faster transactions while the main chain remains the ultimate source of truth. The trade-offs show up in withdrawal times, how decentralized the rollup's operators are, and the maturity of the technology — worth checking before you bridge significant funds onto one.

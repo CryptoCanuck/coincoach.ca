@@ -1,0 +1,13 @@
+---
+title: 'How Crypto Transactions Work'
+summary: 'From signing with your key to confirmation on-chain — and why fees exist.'
+difficulty: 'intermediate'
+order: 1
+related: ['what-is-a-blockchain', 'consensus-mechanisms']
+---
+
+When you send crypto, your wallet creates a transaction and **signs** it with your private key. That signature proves you authorised the transfer without ever revealing the key itself. The signed transaction is then broadcast to the network.
+
+Validators (or miners) pick up pending transactions, check that the signature is valid and the funds exist, and include them in the next block. Once a block is added and a few more are built on top of it, the transaction is considered **confirmed** — practically irreversible.
+
+You pay a **network fee** for this. Fees compensate validators for the work and prevent spam, and they rise when the network is busy because there's limited room in each block. This is why the same transfer can cost cents one day and much more during a market frenzy. Many wallets let you choose a fee level, trading cost against confirmation speed.

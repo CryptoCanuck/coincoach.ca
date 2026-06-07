@@ -40,12 +40,9 @@ describe('publishedLessons', () => {
 
 describe('sortLessons', () => {
   it('sorts by order ascending, missing order last, ties by title', () => {
-    expect(sortLessons(sample.filter((l) => l.difficulty === 'beginner')).map((l) => l.slug)).toEqual([
-      'b1',
-      'b2',
-      'hidden',
-      'noord',
-    ])
+    expect(
+      sortLessons(sample.filter((l) => l.difficulty === 'beginner')).map((l) => l.slug)
+    ).toEqual(['b1', 'b2', 'hidden', 'noord'])
   })
   it('does not mutate the input', () => {
     const copy = [...sample]
