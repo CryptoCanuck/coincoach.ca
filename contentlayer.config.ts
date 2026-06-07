@@ -113,6 +113,7 @@ export const Blog = defineDocumentType(() => ({
     postType: { type: 'enum', options: ['news', 'guide', 'breakdown', 'review'], required: true },
     reviewedItem: { type: 'string' },
     rating: { type: 'number' },
+    coins: { type: 'list', of: { type: 'string' }, default: [] },
   },
   computedFields: {
     ...computedFields,

@@ -161,6 +161,12 @@
     & :where(h1, h2, h3, h4, h5, h6) {
       color: var(--color-gray-100);
     }
+    & h4 {
+      margin-top: 1.6em;
+      margin-bottom: 0.6em;
+      font-size: 1.15em;
+      font-weight: 800;
+    }
   }
 }
 

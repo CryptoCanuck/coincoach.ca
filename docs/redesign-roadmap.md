@@ -128,9 +128,21 @@ Layout (`Coin Detail.html`):
 
 ---
 
-## Phase 4 — Article page enhancement (`layouts/PostLayout.tsx`) ⛔/🟡
+## Phase 4 — Article page enhancement (`layouts/PostLayout.tsx`) ✅ SHIPPED
 
-Restyle to `Article.html` (the body inherits the new palette already; layout is the gap):
+**Shipped:** two-column Article layout — breadcrumb (section › tag › title), category chip,
+big H1, standfirst, rich byline (avatar/role/date/read-time + X/LinkedIn share), hero +
+caption, enhanced prose (h4 subheads, amber `PullQuote`, captioned `Figure`, inline live-price
+`CoinCard` MDX components), tag chips, `AuthorBio` box (renders the author's MDX bio), Related
+Stories grid, and a right sidebar (`ArticleSidebar` = Market Sentiment gauge + "Coins in this
+story" + "Ask the Coach" placeholder + Trending). New `coins: ['bitcoin','ethereum']`
+frontmatter (CoinGecko ids) drives the sidebar list + which ids inline cards can show. All
+market data fetched **server-side** in `app/blog/[...slug]/page.tsx` (`getMarketsByIds` +
+`getFearGreed`, parallel) and passed as props; the inline card reads it via a `CoinDataProvider`
+client context wrapping the MDX — no client fetch, CSP intact. Plan:
+`docs/superpowers/plans/2026-06-06-coincoach-phase-4-article-enhancement.md`.
+
+Original target (`Article.html`) for reference:
 
 - Breadcrumb (News › Category › title), category tag, big H1, standfirst, **byline row**
   (avatar, author + role + date + read time, share buttons), hero image + caption.
