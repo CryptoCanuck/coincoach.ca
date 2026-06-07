@@ -158,9 +158,23 @@ export const Authors = defineDocumentType(() => ({
   computedFields,
 }))
 
+export const Glossary = defineDocumentType(() => ({
+  name: 'Glossary',
+  filePathPattern: 'glossary/**/*.mdx',
+  contentType: 'mdx',
+  fields: {
+    term: { type: 'string', required: true },
+    category: { type: 'string', required: true },
+    related: { type: 'list', of: { type: 'string' }, default: [] },
+    summary: { type: 'string' },
+    draft: { type: 'boolean' },
+  },
+  computedFields,
+}))
+
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, Glossary],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
