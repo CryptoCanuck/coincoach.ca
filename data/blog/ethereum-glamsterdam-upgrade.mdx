@@ -21,9 +21,9 @@ The name itself reflects how Ethereum is built in two coordinated layers. Glamst
 
 Ethereum's roadmap lists two headline proposals, each written up as an Ethereum Improvement Proposal, or EIP, the formal documents used to specify changes.
 
-The first is EIP-7732, often called enshrined proposer-builder separation. In simple terms, it splits the work of agreeing on a block from the heavier work of fully checking the transactions inside it. Ethereum's roadmap explains that this widens the window for spreading block data across the network from roughly two seconds to about nine seconds, which gives the network more breathing room to handle larger amounts of data safely. Both EIP-7732 and the second proposal are currently listed as Draft status.
+The first is EIP-7732, often called enshrined proposer-builder separation. In simple terms, it splits the work of agreeing on a block from the heavier work of fully checking the transactions inside it. Today validators must complete both within the roughly four-second window before their attestations are due. By deferring the execution check, EIP-7732 gives validators more time to verify a block's contents — on the order of six seconds for the next block's proposer and about nine seconds for other validators — which gives the network more breathing room to handle larger amounts of data safely. Both EIP-7732 and the second proposal are currently listed as Draft status.
 
-The second is EIP-7928, or block-level access lists. This proposal asks each block to declare in advance which accounts and data it will touch. According to the EIP, that advance map lets nodes read data and process many transactions in parallel rather than strictly one after another, since most transactions do not overlap.
+The second is EIP-7928, or block-level access lists. This proposal asks each block to declare in advance which accounts and data it will touch. According to the EIP, that advance map lets nodes read data and process transactions in parallel where their accessed data does not overlap, rather than strictly one after another.
 
 ## Why scaling matters to users
 
