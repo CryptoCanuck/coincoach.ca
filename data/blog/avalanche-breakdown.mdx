@@ -1,0 +1,62 @@
+---
+title: 'Avalanche: A Token Breakdown'
+date: '2026-06-08'
+postType: breakdown
+tags: ['avalanche', 'layer-1', 'smart-contracts']
+summary: 'A breakdown of Avalanche (AVAX): its three-chain architecture, the Snowman consensus family, custom L1s, and the role of the AVAX token.'
+authors: ['default']
+coins: ['avalanche-2']
+draft: false
+---
+
+Avalanche is a layer-1 blockchain platform built for **smart contracts** — self-executing programs that run on-chain — with a focus on fast transaction finality and the ability to launch many independent chains. Its native token, AVAX, is used to pay fees, secure the network, and participate in governance.
+
+<CoinCard id="avalanche-2" />
+
+## How it works
+
+Most of Avalanche's activity happens on what it calls the **Primary Network**, which is made up of three built-in blockchains, each with a specialized job:
+
+- **X-Chain (Exchange Chain):** handles the creation and transfer of assets, including AVAX itself.
+- **P-Chain (Platform Chain):** coordinates validators (the computers that secure the network) and manages staking and the creation of new chains.
+- **C-Chain (Contract Chain):** runs smart contracts. It implements the **Ethereum Virtual Machine (EVM)** — the runtime environment Ethereum uses — which means developers can deploy applications written in Solidity and reuse much of the existing Ethereum tooling. Most consumer-facing Avalanche activity, such as decentralized finance, lives here.
+
+Underpinning all of this is the **Avalanche consensus family**, including a protocol called Snowman. Rather than having every node communicate with every other node, validators repeatedly poll small, random samples of other validators about which transactions they prefer. Repeated sampling lets the network converge quickly on agreement, producing sub-second, irreversible **finality** (the point at which a transaction can no longer be reversed) without the heavy energy use of proof-of-work mining.
+
+Beyond the Primary Network, Avalanche lets developers launch their own independent chains, originally called **subnets** and now more commonly referred to as **L1s**. These are custom blockchains that can set their own rules, fee structures, and validator requirements while still benefiting from Avalanche's consensus design. The idea is to let high-demand applications run on dedicated chains instead of competing for space on a single shared network.
+
+## Token and supply
+
+AVAX is the asset that ties the system together. It is used to:
+
+- **Pay transaction fees** across the network.
+- **Stake** — validators and delegators lock up AVAX as collateral to help secure the network and earn rewards, with misbehavior risking loss of that stake.
+- **Participate in governance** over certain network parameters.
+
+AVAX has a **capped maximum supply of 720 million tokens**. New AVAX enters circulation through staking rewards, but the supply is not purely inflationary: transaction fees on the network are **burned** — permanently removed from circulation — rather than paid to validators. During periods of heavy use, this burning can offset or even exceed new issuance, which is why AVAX is sometimes described as having a deflationary mechanism. The actual balance between issuance and burning depends on how busy the network is.
+
+## What drives its value / use cases
+
+Demand for AVAX is closely tied to activity on the network. Because every transaction and smart-contract interaction requires AVAX for fees (a portion of which is burned), broader usage can increase both demand for the token and the rate at which supply is removed.
+
+Several categories of use stand out:
+
+- **Smart contracts and DeFi:** the EVM-compatible C-Chain hosts lending markets, decentralized exchanges, and other applications familiar from the wider Ethereum ecosystem.
+- **Custom L1s / subnets:** projects that need their own dedicated chain — for gaming, enterprise systems, or specialized financial products — can launch one while drawing on Avalanche's infrastructure.
+- **Institutional and tokenization pilots:** Avalanche has been used in experiments around **tokenization** (representing real-world assets such as funds or bonds as on-chain tokens), an area that financial institutions have explored for settlement and asset management.
+
+## Risks
+
+As with any crypto asset, the risks are real and worth weighing carefully.
+
+- **Layer-1 competition:** Avalanche competes with Ethereum, Solana, and many other smart-contract platforms for developers, users, and capital. There is no guarantee it retains or grows its share.
+- **Validator economics:** the security of the network depends on enough participants finding it worthwhile to stake and validate. Changes in rewards, token price, or hardware costs can affect those incentives.
+- **Smart-contract risk:** bugs in application code can lead to lost funds, often with no recourse. This risk sits with individual applications, not just the base network.
+- **Market volatility:** AVAX, like all crypto assets, can experience large and rapid price swings in either direction.
+
+## Learn more
+
+- [Avalanche official site](https://www.avax.network/about/avalanche-avax)
+- [Avalanche developer documentation](https://build.avax.network/docs)
+
+This article is for educational purposes only and is not financial advice.
