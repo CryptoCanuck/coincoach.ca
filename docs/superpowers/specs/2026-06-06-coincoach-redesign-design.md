@@ -1,4 +1,4 @@
-# CoinCoach Redesign (CryptoSlate-style) — Design Spec
+# CoinCoach Redesign (news-magazine style) — Design Spec
 
 **Date:** 2026-06-06
 **Status:** Approved
@@ -7,7 +7,7 @@
 ## Overview
 
 Redesign the CoinCoach site from the default starter theme into a polished,
-crypto-native news magazine in the spirit of CryptoSlate. The redesign covers the
+crypto-native news magazine. The redesign covers the
 global theme, layout shell, homepage, section/listing pages, and article pages, and
 adds a small **live market-data layer** (a price ticker and a "Top Coins" widget)
 backed by CoinGecko.
@@ -41,7 +41,7 @@ header → hero split → colour-coded topic bands) in the **Midnight** palette
 `app/` routes, `components/`, `layouts/`) and re-skin it: replace the Tailwind theme
 tokens with the Midnight palette, rebuild the layout shell and key pages/components,
 and add a self-contained `lib/markets` data layer + market components. The
-CryptoSlate look is overwhelmingly CSS/layout, so this achieves the goal without an
+target look is overwhelmingly CSS/layout, so this achieves the goal without an
 architectural rewrite. Alternatives considered and rejected: adopting shadcn/ui
 (heavier refactor, marginal payoff) and a full bespoke rebuild (highest risk).
 

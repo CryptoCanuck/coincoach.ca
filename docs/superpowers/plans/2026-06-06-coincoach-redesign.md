@@ -1,8 +1,8 @@
-# CoinCoach CryptoSlate-style Redesign Implementation Plan
+# CoinCoach News-Magazine Redesign Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Re-skin CoinCoach into a dark, crypto-native news magazine (CryptoSlate-style) — Midnight palette, live-rail homepage, card-grid sections, polished article pages — plus a small cached CoinGecko market-data layer (ticker + Top Coins widget).
+**Goal:** Re-skin CoinCoach into a dark, crypto-native news magazine — Midnight palette, live-rail homepage, card-grid sections, polished article pages — plus a small cached CoinGecko market-data layer (ticker + Top Coins widget).
 
 **Architecture:** Restyle in place on the existing Contentlayer/MDX + App Router app. Swap the Tailwind v4 `@theme` tokens to the Midnight palette and force dark mode; rebuild the layout shell (ticker + header + footer), homepage, section pages, and article page from shared server components (`Card`, `CategoryChip`, `Ticker`, `TopCoins`, `TrendingList`, `ArticleMeta`). Market data comes from one server-side, ISR-cached CoinGecko fetch (`lib/markets`).
 
@@ -11,7 +11,7 @@
 **Conventions:**
 - Package manager **Yarn Berry**: run `corepack yarn <cmd>` (test: `corepack yarn test`, build: `corepack yarn build`).
 - Commits: authored as `CryptoCanuck <support@rimdc.com>`, **no AI/co-author attribution**. Make **small, logically-scoped commits**.
-- Reference spec: `docs/superpowers/specs/2026-06-06-coincoach-cryptoslate-redesign-design.md`.
+- Reference spec: `docs/superpowers/specs/2026-06-06-coincoach-redesign-design.md`.
 - Visual reference mockup: `.superpowers/brainstorm/1660629-1780755643/content/home-hifi.html`.
 
 ---

@@ -195,9 +195,9 @@ box all feed one assistant.
 
 ---
 
-## Post-Phase-4 build-out — CryptoSlate gap analysis (2026-06-06)
+## Post-Phase-4 build-out — competitive gap analysis (2026-06-06)
 
-A fresh CryptoSlate review identified sections to scaffold before the AI Coach. User
+A fresh competitive review identified sections to scaffold before the AI Coach. User
 approved building all four units below (Coach deferred to last). Off-brand/heavy items
 skipped: Laws DB, Directory, prediction-markets/casinos/sportsbooks.
 
