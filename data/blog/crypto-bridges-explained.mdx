@@ -1,0 +1,58 @@
+---
+title: 'Crypto Bridges Explained: Moving Assets Between Blockchains'
+date: '2026-06-09'
+postType: guide
+tags: ['basics', 'security', 'interoperability']
+summary: 'How crypto bridges move assets between blockchains, why they keep getting hacked, and safer ways for everyday users to cross chains.'
+images: ['/images/covers/crypto-bridges-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+Every blockchain is its own island. Bitcoin keeps one ledger, Ethereum keeps another, Solana keeps a third — and none of them can read the others. A **bridge** is software that moves value between these separate networks, and if you use crypto for long enough, you will eventually need one. This guide covers why bridges exist, how they work in plain words, why they keep getting hacked, and safer ways to get from one chain to another.
+
+## Why bridges exist
+
+Blockchains were not designed to talk to each other. A coin recorded on Ethereum's ledger cannot literally travel to Solana, because Solana has no idea Ethereum's ledger exists. Yet people constantly want to do exactly that — chase lower fees, use an app that only runs on another network, or move a stablecoin to where it is needed. Bridges solve this **interoperability** problem — the ability of separate networks to exchange data and value — by simulating a transfer rather than performing a real one.
+
+## How bridges work, in plain words
+
+Most bridges use one of three designs.
+
+**Lock-and-mint.** The bridge locks your original tokens in a vault contract on the source chain, then mints an equal number of IOU tokens on the destination chain. To come back, the IOUs are destroyed and the originals are unlocked. This is where **wrapped assets** come from — tokens on one chain that represent an asset held in custody somewhere else, such as Wrapped Bitcoin on Ethereum. A wrapped token is only as good as the locked backing behind it.
+
+**Burn-and-mint.** Instead of locking, the bridge destroys tokens on the source chain and mints fresh ones on the destination. This works when one issuer controls the token everywhere it exists, which is why major stablecoin issuers use it to move coins across chains.
+
+**Liquidity pools.** The bridge keeps pots of ready tokens on both chains. You deposit into the pool on one side and withdraw matching tokens from the pool on the other. Nothing is wrapped and transfers are fast, but pool size limits how much can move.
+
+Whatever the design, a verification system must confirm your deposit really happened before funds are released on the other side — and that layer is where things go wrong.
+
+## Why bridges are crypto's biggest honeypot
+
+A busy bridge holds enormous reserves in one place, guarded by code and a handful of operator keys. Attackers noticed. In March 2022, the Ronin bridge serving the game Axie Infinity lost roughly $620 million after attackers — identified by the FBI as North Korea's Lazarus Group — obtained validator keys; the U.S. Treasury later sanctioned a mixer used to launder the funds. A month earlier, in February 2022, the Wormhole bridge lost about $325 million when an attacker exploited a flaw in its signature checks to mint tokens with no backing. And in August 2022, a botched upgrade at Nomad let anyone copy a single exploit transaction, draining around $190 million in a chaotic free-for-all.
+
+The problem has not gone away: in the first five months of 2026, researchers tallied roughly $340 million stolen from bridges across more than a dozen exploits, with attackers increasingly tricking bridge operators rather than breaking code. We covered that wave in [our recent news report](/blog/crypto-bridge-exploits-surge-2026).
+
+## Safer ways to cross chains
+
+**Native interoperability.** Some ecosystems build chain-to-chain communication into the protocol itself. **IBC** — the Inter-Blockchain Communication protocol used by Cosmos-based networks — lets more than a hundred chains verify each other's transactions directly instead of trusting middlemen. **CCIP** — Chainlink's Cross-Chain Interoperability Protocol — routes transfers through decentralized oracle networks with multiple independent checks.
+
+**Exchanges as a bridge.** For ordinary users, the simplest route is often a major exchange: deposit your coins from one network, then withdraw them on another network the exchange supports. You briefly take on exchange risk, but you avoid interacting with bridge contracts entirely.
+
+## A practical safety checklist
+
+- Stick to long-established, audited bridges or a chain's official bridge.
+- Send a small test amount first, every time.
+- Confirm the destination chain and asset — make sure you receive the native version, not an obscure wrapped copy.
+- Type bridge URLs carefully; fake bridge sites are a common scam.
+- For large amounts, split the transfer or use an exchange instead.
+
+## The bottom line
+
+Bridges make a multi-chain world usable, but they concentrate risk in ways most users never see. Use established routes, test small, and never send more through a bridge than you can afford to lose. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [U.S. Treasury: First-Ever Sanctions on a Virtual Currency Mixer, Targets DPRK Cyber Threats](https://home.treasury.gov/news/press-releases/jy0768)
+- [IBC Protocol — official site](https://www.ibcprotocol.dev/)
+- [Chainlink CCIP Documentation](https://docs.chain.link/ccip)
