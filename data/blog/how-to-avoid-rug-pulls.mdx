@@ -1,0 +1,60 @@
+---
+title: 'How to Spot a Rug Pull Before It Happens'
+date: '2026-06-09'
+postType: guide
+tags: ['scams', 'defi', 'security']
+summary: 'Learn how rug pull scams work and the on-chain and social red flags that can help you spot one before you buy.'
+images: ['/images/covers/how-to-avoid-rug-pulls.jpg']
+authors: ['default']
+draft: false
+---
+
+Every month, thousands of new tokens launch on decentralized exchanges, and a large share of them exist for one reason: to take your money. The good news is that most rug pulls leave fingerprints you can spot before you buy. This guide explains how the scam works, the warning signs to check on-chain and on social media, and what to do if you get caught in one.
+
+## What a rug pull actually is
+
+A **rug pull** is a scam where a project's insiders drain the money backing a token or dump their own holdings, causing the price to collapse to near zero. The name fits: the rug gets yanked out from under everyone still holding.
+
+Most rug pulls target a token's **liquidity pool** — the pot of paired funds (for example, the new token plus ETH) that lets people trade it on a decentralized exchange. If the creators control that pool, they can withdraw everything at once, leaving the token untradeable.
+
+Scammers generally run one of two plays:
+
+- **Hard rug pull** — malicious code is built into the token from day one. The developers drain the liquidity in a single transaction, or the contract itself blocks anyone but insiders from selling.
+- **Soft rug pull** — slower and harder to prosecute. The team quietly sells its own tokens into the hype, then lets the project wither: updates stop, promises slip, and the socials eventually go dark.
+
+In 2022, U.S. prosecutors charged the two founders of the Frosties NFT project with wire fraud and money laundering after they abandoned the project and moved roughly $1.1 million within hours of selling out. Rug pulls are fraud, but recovering the money is rare.
+
+## On-chain red flags
+
+You don't need to read code to catch most of these. A few minutes on a block explorer or token scanner goes a long way.
+
+- **Unlocked liquidity.** Legitimate projects usually lock their liquidity for a set period or **burn** it — send it to an address nobody controls — so it can't be pulled. If liquidity is unlocked and sitting in the deployer's wallet, insiders can drain it anytime.
+- **A few wallets hold most of the supply.** If the top handful of holders control a huge share of the tokens outside of known contract addresses, one sell order can wipe out the price.
+- **A live mint function.** If the contract lets the owner create unlimited new tokens, your share can be diluted to nothing in seconds.
+- **Honeypot code.** A **honeypot** is a token you can buy but can't sell — the contract silently blocks sales from regular wallets. Token scanners often flag this automatically.
+- **Anonymous team, copied contract.** No named developers with a track record, plus a contract that's a near-clone of an earlier token, is a classic disposable-scam setup.
+
+## Social red flags
+
+- Waves of paid influencer posts that all appear at once and never mention risk.
+- Urgency and FOMO tactics: "last chance," countdown timers, "next 100x."
+- Promises of guaranteed returns — no honest crypto project can guarantee anything.
+- Locked or heavily censored comments, so nobody can ask hard questions.
+
+## Free tools that help
+
+Free token scanners will check a contract for honeypot behavior, mint functions, and sell taxes. A block explorer like Etherscan shows the holder tab (who owns what) and the contract's source code. DEX Screener and similar sites show liquidity depth and pair age, so you can see whether there is real money behind a token or a puddle. None of these are perfect — treat a clean scan as one data point, not a green light.
+
+## If you get caught in one
+
+Mostly, this is damage control. Sell whatever you still can, revoke any token approvals you granted the project's contracts, and stop interacting with its sites and DMs — victims are often targeted again with fake "recovery" services. Document everything and report it to the FTC and, if you lost meaningful money, to local police or the FBI's IC3. Recovery is unlikely, but reports help investigators connect cases.
+
+## The bottom line
+
+Before buying any small token, run the checklist: liquidity locked or burned, supply spread across many holders, no mint or honeypot flags, an identifiable team, and marketing that doesn't promise the moon. Be honest with yourself, too — even diligent checks can't make a memecoin safe; they only filter out the most obvious traps. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [U.S. Department of Justice: Two Defendants Charged in NFT Fraud and Money Laundering Scheme](https://www.justice.gov/usao-sdny/pr/two-defendants-charged-non-fungible-token-nft-fraud-and-money-laundering-scheme-0)
+- [CFTC Fraud Advisories](https://www.cftc.gov/LearnAndProtect/AdvisoriesAndArticles/CFTCFraudAdvisories/index.htm)
+- [FTC: Report Fraud](https://reportfraud.ftc.gov/)

@@ -1,0 +1,66 @@
+---
+title: 'Exodus Wallet Review'
+date: '2026-06-09'
+postType: review
+reviewedItem: 'Exodus Wallet'
+rating: 3.5
+tags: ['wallets', 'security']
+summary: 'A balanced review of the Exodus software wallet — its design, multi-chain support, swap pricing, closed-source trade-offs, and who it suits.'
+images: ['/images/covers/exodus-wallet-review.jpg']
+authors: ['default']
+draft: false
+---
+
+Exodus is one of the most recognizable names in crypto software wallets, with a polished interface many reviewers consider the most beginner-friendly in the category. It is made by Exodus Movement, Inc., a US company founded in 2015 by JP Richardson and Daniel Castagnoli. Unusually for a wallet maker, Exodus is publicly traded: it sold tokenized shares on the Algorand blockchain in 2021 and uplisted to the NYSE American exchange under the ticker EXOD in December 2024.
+
+## What it is and how it works
+
+Exodus is a free **self-custody wallet** — software where you, not a company, hold the private keys that control your crypto. There is no account to create and no identity verification (KYC) for the basic wallet. It runs on desktop (Windows, macOS, Linux), mobile (iOS and Android), and as a browser extension for Chrome and Brave.
+
+The wallet supports assets across more than 50 blockchain networks, including Bitcoin, Ethereum, Solana, Cardano, XRP, and layer-2 networks like Arbitrum and Base. A unified portfolio view tracks everything in one place, and a built-in swap feature lets you trade one asset for another without leaving the app. Those swaps are not run by Exodus itself: they are routed to **third-party API providers** — outside exchange services that quote a rate and execute the trade — with a spread built into the price you see.
+
+## Security model
+
+Your keys are generated and stored on your own device, protected by a password and a 12-word **recovery phrase** — a backup that can restore the wallet, and that anyone who sees it can steal from. Exodus cannot access, freeze, or recover your funds.
+
+To date there has been no publicized breach of the wallet software itself. The realistic threats are around it: phishing emails impersonating Exodus, fake installers, and malware. In April 2025, researchers found a malicious npm package ("pdf-to-office") that trojanized locally installed Exodus copies to silently redirect outgoing funds — a reminder to download only from exodus.com and keep your machine clean.
+
+For larger balances, Exodus integrates with Trezor and Ledger **hardware wallets** — physical devices that keep keys offline — so you can manage cold-storage funds through Exodus: Trezor via the desktop app and Ledger via the mobile app.
+
+## Usability
+
+This is where Exodus earns its reputation. The design is clean and consistent across platforms, setup takes minutes, and tasks that confuse newcomers elsewhere — receiving an asset, swapping, checking history — are genuinely simple. Staking is built in for several **proof-of-stake** assets — networks where holders lock up tokens to help validate transactions and earn rewards — including Solana, Cardano, Ethereum, and Cosmos, handled through the third-party provider Everstake. Support documentation is extensive and updates are frequent.
+
+## Limitations worth knowing
+
+The longest-running criticism is that Exodus is largely **closed source** — its full code is not published for public inspection, unlike open-source rivals such as Electrum or Sparrow. Exodus argues this makes malicious clones harder to build, but it also means independent experts cannot fully audit the software, which matters to security-conscious users.
+
+Swap pricing is the other trade-off. Quotes come from third-party providers with a spread baked in — Exodus cites rates starting around 0.5 percent, and they can run meaningfully higher — so convenience costs more than trading on an exchange directly. Staking does not cover every proof-of-stake asset the wallet holds, and swap availability varies by region. Finally, Exodus on its own is a **hot wallet** — software connected to the internet — so it is not the right home for large long-term holdings without a hardware wallet attached.
+
+## Pros
+
+- Exceptionally clean, beginner-friendly design across desktop, mobile, and browser
+- Multi-chain support spanning 50+ networks with a unified portfolio view
+- No account, sign-up, or KYC required for the wallet itself
+- Built-in swaps and staking reduce reliance on exchanges
+- Trezor and Ledger integration adds a cold-storage option
+
+## Cons
+
+- Largely closed-source code cannot be independently audited
+- Swap spreads and fees are higher than exchanges or DEXs
+- Staking limited to a subset of supported assets, via a third party
+- As a hot wallet, unsuitable for large holdings on its own
+
+## Verdict
+
+Exodus is a strong first self-custody wallet: attractive, multi-chain, and forgiving for newcomers, backed by a public company with a clean breach record. But the closed-source codebase, premium swap pricing, and hot-wallet limits mean security-focused users will likely outgrow it or pair it with hardware. A well-made convenience product with real trade-offs: **3.5/5**.
+
+This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Exodus — official site](https://www.exodus.com/)
+- [Exodus Knowledge Base — Is Exodus open source?](https://www.exodus.com/support/en/articles/8598678-is-exodus-open-source)
+- [Trezor Guides — Exodus and Trezor](https://trezor.io/guides/third-party-wallet-apps/bitcoin-apps/exodus-and-trezor)
+- [Exodus — Staking crypto](https://www.exodus.com/staking-crypto)
