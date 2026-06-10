@@ -300,38 +300,76 @@ export async function dbCoinDetail(id: string): Promise<DbRead<CoinDetail> | nul
   return { fresh: isFresh(r.fetched_at, FRESH_MS.markets), data: coin }
 }
 
-// Chart frames map onto rolled-up candle intervals; MIN_CANDLES guards against
-// serving a visibly truncated chart while history is still accumulating (the
-// API fallback covers those frames until backfill/accumulation catches up).
+// Chart frames try candle intervals in order: the tick roll-up first (our own
+// observations, finest grain), then the provider-seeded interval the backfill
+// script stores for that frame (scripts/backfill-market-history.mjs). Each
+// candidate's minCandles guards against serving a visibly truncated chart
+// while history is still accumulating — the API fallback covers those frames
+// until backfill/accumulation catches up.
 const FRAME_CANDLES: Record<
   Timeframe,
-  { interval: string; lookback: string; minCandles: number; maxAgeMs: number }
+  {
+    lookback: string
+    maxAgeMs: number
+    candidates: { interval: string; minCandles: number }[]
+  }
 > = {
-  '24H': { interval: '1h', lookback: '24 hours', minCandles: 12, maxAgeMs: 2 * 3_600_000 },
-  '7D': { interval: '1h', lookback: '7 days', minCandles: 84, maxAgeMs: 2 * 3_600_000 },
-  '1M': { interval: '1d', lookback: '30 days', minCandles: 21, maxAgeMs: 2 * 86_400_000 },
-  '1Y': { interval: '1d', lookback: '365 days', minCandles: 200, maxAgeMs: 2 * 86_400_000 },
+  '24H': {
+    lookback: '24 hours',
+    maxAgeMs: 2 * 3_600_000,
+    candidates: [
+      { interval: '1h', minCandles: 12 },
+      { interval: '30m', minCandles: 24 },
+    ],
+  },
+  '7D': {
+    lookback: '7 days',
+    maxAgeMs: 5 * 3_600_000,
+    candidates: [
+      { interval: '1h', minCandles: 84 },
+      { interval: '4h', minCandles: 30 },
+    ],
+  },
+  '1M': {
+    lookback: '30 days',
+    maxAgeMs: 2 * 86_400_000,
+    candidates: [
+      { interval: '1d', minCandles: 21 },
+      { interval: '4h', minCandles: 120 },
+    ],
+  },
+  '1Y': {
+    lookback: '365 days',
+    maxAgeMs: 5 * 86_400_000,
+    candidates: [
+      { interval: '1d', minCandles: 200 },
+      { interval: '4d', minCandles: 70 },
+    ],
+  },
 }
 
 /** Candles for a chart frame; null unless coverage and recency both hold. */
 export async function dbOhlc(id: string, frame: Timeframe): Promise<Candle[] | null> {
   const f = FRAME_CANDLES[frame]
-  const rows = await query<{ t: string; open: number; high: number; low: number; close: number }>(
-    `SELECT extract(epoch FROM bucket_ts)::bigint::text AS t,
-       open::float8 AS open, high::float8 AS high, low::float8 AS low, close::float8 AS close
-     FROM coin_candles
-     WHERE coin_id = $1 AND candle_interval = $2 AND bucket_ts >= now() - $3::interval
-     ORDER BY bucket_ts`,
-    [id, f.interval, f.lookback]
-  )
-  if (!rows || rows.length < f.minCandles) return null
-  const newest = Number(rows[rows.length - 1].t) * 1000
-  if (Date.now() - newest > f.maxAgeMs) return null
-  return rows.map((r) => ({
-    time: Number(r.t),
-    open: r.open,
-    high: r.high,
-    low: r.low,
-    close: r.close,
-  }))
+  for (const candidate of f.candidates) {
+    const rows = await query<{ t: string; open: number; high: number; low: number; close: number }>(
+      `SELECT extract(epoch FROM bucket_ts)::bigint::text AS t,
+         open::float8 AS open, high::float8 AS high, low::float8 AS low, close::float8 AS close
+       FROM coin_candles
+       WHERE coin_id = $1 AND candle_interval = $2 AND bucket_ts >= now() - $3::interval
+       ORDER BY bucket_ts`,
+      [id, candidate.interval, f.lookback]
+    )
+    if (!rows || rows.length < candidate.minCandles) continue
+    const newest = Number(rows[rows.length - 1].t) * 1000
+    if (Date.now() - newest > f.maxAgeMs) continue
+    return rows.map((r) => ({
+      time: Number(r.t),
+      open: r.open,
+      high: r.high,
+      low: r.low,
+      close: r.close,
+    }))
+  }
+  return null
 }
