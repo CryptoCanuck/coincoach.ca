@@ -279,11 +279,27 @@ async function main() {
     posts.push({ slug, filePath, raw, fm })
   }
 
+  // Posts with a curated photo cover (data/cover-photos.json) keep it —
+  // logo/generated art must never overwrite an applied photo.
+  let photoSlugs = new Set()
+  try {
+    photoSlugs = new Set(
+      Object.keys(JSON.parse(await readFile(path.join(ROOT, 'data', 'cover-photos.json'), 'utf8')))
+    )
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      // A present-but-unreadable curated list must abort: continuing would
+      // overwrite curated photo covers with generated art.
+      throw new Error(`cannot read data/cover-photos.json: ${err.message}`)
+    }
+  }
+
   const coinIds = [...new Set(posts.map((p) => p.fm.coins[0]).filter(Boolean))]
   const logos = await fetchLogos(coinIds)
 
   let generated = 0
   for (const { slug, filePath, raw, fm } of posts) {
+    if (photoSlugs.has(slug)) continue
     const coinId = fm.coins[0]
     const logoFile = coinId ? logos[coinId] : undefined
     if (fm.hasImages && !FORCE && !logoFile) continue
