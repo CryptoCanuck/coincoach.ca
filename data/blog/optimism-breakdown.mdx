@@ -1,0 +1,64 @@
+---
+title: 'Optimism and OP: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['optimism', 'layer-2', 'ethereum']
+summary: 'A breakdown of Optimism: the optimistic rollup behind the OP Stack and Superchain, how the OP token governs it, and the honest trade-offs after Base struck out on its own.'
+images: ['/images/covers/optimism-breakdown.jpg']
+authors: ['default']
+coins: ['optimism']
+draft: false
+---
+
+Optimism is one of the oldest and best-known **layer 2** networks — blockchains that process transactions outside Ethereum's main chain while still settling back to it for security. Its public network, OP Mainnet, helped pioneer the rollup approach to scaling, and its open-source software now powers a family of other chains. The OP token, launched in 2022, governs the wider ecosystem but, importantly, is not used to pay transaction fees.
+
+<CoinCard id="optimism" />
+
+## How Optimism scales Ethereum
+
+Optimism is an **optimistic rollup** — a system that batches many transactions together, posts the data to Ethereum, and assumes the results are valid unless someone proves otherwise during a challenge window of about a week. That "innocent until proven guilty" design keeps fees low because Ethereum doesn't re-execute every transaction.
+
+The "proven otherwise" part depends on **fault proofs** — an on-chain mechanism that lets anyone challenge an invalid result. For years this was Optimism's missing piece, but permissionless fault proofs went live on OP Mainnet on June 10, 2024, reaching what researchers call Stage 1 decentralization. A Security Council can still intervene if the system fails, so it is not yet fully trustless.
+
+Arbitrum, the other major optimistic rollup, works on similar principles. The real difference is strategy: Arbitrum focused on growing its own ecosystem, while Optimism bet on giving its code away.
+
+## The OP Stack and the Superchain
+
+That code is the **OP Stack** — a free, open-source toolkit for launching your own rollup. The bet is called the **Superchain**: a network of OP Stack chains sharing standards, security upgrades, and governance. Chains built on it include Coinbase's Base, World Chain, Uniswap's Unichain, Zora, and Mode.
+
+Superchain members contribute the greater of 2.5% of their revenue or 15% of their on-chain profit to the Optimism Collective, which has accumulated more than 14,000 ETH from these contributions. So when other chains succeed, the Collective's treasury grows.
+
+## Retroactive Public Goods Funding
+
+Much of that treasury flows to **Retroactive Public Goods Funding (Retro Funding)** — a program that rewards projects after they have demonstrably helped the ecosystem, rather than funding promises up front. Six numbered rounds ran from 2021 through late 2024, distributing tokens to developer tools, education, and infrastructure. In 2025 the program shifted from annual rounds to ongoing impact evaluation, with 850 million OP — roughly 20% of the initial supply — dedicated to it over time.
+
+## What the OP token actually does
+
+OP is a **governance token** — it grants voting power, nothing more. Optimism uses a two-house system: the **Token House**, where OP holders vote on protocol upgrades and treasury matters, and the **Citizens' House**, where "citizens" — since 2025, verified end users plus top apps and chains, each with one vote — allocate Retro Funding and can veto upgrades. Gas fees on OP Mainnet are paid in ETH, not OP.
+
+That's the value-accrual honesty: sequencer revenue flows to the Collective's treasury, not automatically to token holders. Owning OP is a bet that governance over that treasury and ecosystem eventually matters.
+
+## The honest concern: Base outgrew its parent
+
+Base, Coinbase's OP Stack chain, became larger than OP Mainnet itself by user activity — and the Superchain's biggest revenue contributor. Then, in February 2026, Base announced it was moving off the OP Stack onto its own unified codebase, remaining only a paying client of Optimism's "OP Enterprise" support service. The OP token fell sharply on the news. The Superchain thesis assumed its strongest member would stay; its departure is a genuine setback for the flywheel.
+
+## Risks
+
+**Volatility.** OP is a mid-cap token and swings hard with the broader market.
+
+**Sequencer centralization.** A single **sequencer** — the operator that orders transactions — is run centrally, so transactions can theoretically be delayed or censored, though users can exit via Ethereum.
+
+**Token unlocks.** Only about half of the 4,294,967,296 initial supply circulates; scheduled unlocks add steady sell-side pressure.
+
+**Competition.** Arbitrum, zero-knowledge rollups, and now an independent Base all compete for the same users.
+
+## In summary
+
+Optimism turned itself from a single rollup into the software vendor for a network of chains, with fault proofs shipped and a credible public-goods funding experiment. But OP's value rests on governance rather than fees, and the Superchain's flagship tenant just gave notice. It is a serious project with a genuinely uncertain payoff. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Optimism: Permissionless Fault Proofs and Stage 1 Arrive to the OP Stack](https://www.optimism.io/blog/permissionless-fault-proofs-and-stage-1-arrive-to-the-op-stack)
+- [Optimism: How the Superchain drives fees to the Optimism Collective](https://www.optimism.io/blog/how-%28and-why%29-the-superchain-drives-fees-to-the-optimism-collective)
+- [Base Engineering Blog: A new, unified stack for Base Chain](https://blog.base.dev/next-chapter-for-base-chain-1)
+- [CoinGecko: Optimism (OP)](https://www.coingecko.com/en/coins/optimism)
