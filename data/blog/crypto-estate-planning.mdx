@@ -1,0 +1,53 @@
+---
+title: 'Crypto Inheritance: How to Make Sure Your Coins Don''t Die With You'
+date: '2026-06-09'
+postType: guide
+tags: ['security', 'wallets', 'basics']
+summary: 'Why self-custodied crypto is unrecoverable without a plan, and the practical options — from sealed instructions to multisig — for passing your coins to your heirs.'
+images: ['/images/covers/crypto-estate-planning.jpg']
+authors: ['default']
+draft: false
+---
+
+Crypto rewards self-reliance: if you hold your own keys, nobody can freeze or seize your coins. But that same design creates a problem most people never think about. If you die without leaving a workable plan, your coins almost certainly die with you. No bank, court, or customer-service line can recover them. This guide explains why normal estate processes fail for crypto and walks through practical ways to make sure your holdings actually reach your heirs.
+
+## Why crypto breaks the normal inheritance process
+
+When someone dies, an executor — the person legally responsible for settling the estate — can contact banks and brokerages, present a death certificate and court papers, and have accounts transferred. That works because an institution sits in the middle.
+
+**Self-custody** — holding crypto in your own wallet, where only you control the keys — has no institution in the middle. A blockchain cannot be subpoenaed. If your heirs do not have your **seed phrase** — the list of 12 or 24 words that can regenerate a wallet and everything in it — the coins stay locked at their address forever, visible to everyone and spendable by no one.
+
+This is not a rare outcome. Analysts estimate that somewhere between roughly 2.3 and 3.7 million bitcoin are already permanently inaccessible — on the order of 11 to 18 percent of the 21 million coins that will ever exist — much of it from lost keys and owners who died without sharing access.
+
+## Practical ways to pass crypto on
+
+**Documented seed storage with sealed instructions.** The simplest approach: keep your seed phrase on paper or metal in a home safe or safe deposit box, and leave sealed, plain-language instructions for your executor explaining what exists, where the backup is, and how to use it. The will should point to the instructions, not contain them.
+
+**Multisig with a trusted co-holder.** A **multisig wallet** — a wallet that requires signatures from multiple keys, such as two of three, to move funds — lets you split control. You hold two keys; a lawyer or family member holds the third. No single person can take the funds alone, and your heirs can still recover them with help after your death.
+
+**Shamir backup.** A **Shamir backup** splits a seed into several shares — say five — where any three can rebuild it but fewer reveal nothing. Shares can go to family members and a lawyer, so no one person holds the whole secret. Some hardware wallets, including certain Trezor models, support this natively.
+
+**Custodial accounts.** Coins held on a regulated exchange go through estate settlement much like a bank account. Coinbase has a documented process for claiming a deceased family member's account, and Kraken's compliance team handles deceased-client claims with a death certificate and probate papers. The trade-off is custodial risk while you are alive, and neither exchange currently offers beneficiary designations, so probate is still involved.
+
+**Dead-man switches.** Services that automatically release information if you stop checking in sound clever, but treat them with caution: a glitch or hack could leak your keys early, and the service itself may not outlive you.
+
+## What not to do
+
+- Never write your seed phrase in the will itself. Wills filed for **probate** — the court process that validates a will — become public records that anyone can read.
+- Do not store the only copy of your seed in an encrypted file with a password nobody else can get.
+- Do not keep your holdings entirely secret. Heirs cannot claim what they do not know exists.
+
+## The Canadian angle
+
+In Canada, crypto is treated as property, so it forms part of your estate. At death, the Canada Revenue Agency applies a **deemed disposition** — your assets are treated as if sold at fair market value just before you died — which can trigger capital gains tax on your final return, unless the assets roll over to a spouse or common-law partner. Your estate may owe tax on coins that have appreciated, so heirs need both access and records of what you originally paid.
+
+## The bottom line
+
+A workable plan needs three pieces: an inventory of what you hold, a secure access path that does not depend on you being alive, and an executor who knows the plan exists. Set it up once, review it yearly, and your coins outlive you instead of vanishing. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Coinbase Help — Claim a decedent's Coinbase account](https://help.coinbase.com/en/coinbase/managing-my-account/other/how-do-i-gain-access-to-a-deceased-family-members-coinbase-account)
+- [Kraken Support — Deceased client account claims](https://support.kraken.com/articles/deceased-client-account-claims)
+- [Canada Revenue Agency — Taxable capital gains when someone has died](https://www.canada.ca/en/revenue-agency/services/tax/individuals/life-events/doing-taxes-someone-died/prepare-returns/report-income/capital-gains.html)
+- [SLIP-0039: Shamir's Secret-Sharing for Mnemonic Codes](https://github.com/satoshilabs/slips/blob/master/slip-0039.md)
