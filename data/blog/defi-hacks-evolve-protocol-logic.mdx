@@ -1,0 +1,39 @@
+---
+title: 'DeFi''s Old Hacks Are Fading — the New Ones Can Hit Six Chains at Once'
+date: '2026-06-09'
+postType: news
+tags: ['defi', 'security', 'hacks']
+summary: 'Bridge heists and flash-loan attacks have collapsed as a share of DeFi losses. The threat that replaced them — subtle protocol-logic bugs — is rarer but spreads everywhere a protocol''s code is deployed.'
+images: ['/images/covers/defi-hacks-evolve-protocol-logic.jpg']
+authors: ['default']
+coins: []
+draft: false
+---
+
+The way DeFi gets hacked has fundamentally changed. Security researchers' data shows the attack categories that defined crypto's worst years — bridge heists and flash-loan raids — have shrunk to a sliver of losses, while a subtler threat has taken their place: bugs in protocols' own mathematical logic, which travel to every blockchain where the code is deployed.
+
+## The old attack vectors are dying
+
+In 2022, DeFi's worst year, attackers stole about $2.6 billion, and **cross-chain bridges** — services holding pooled assets to move value between blockchains — accounted for roughly three-quarters of it, through disasters like Ronin ($624 million) and Wormhole ($326 million). **Flash-loan attacks** — exploits using uncollateralized loans borrowed and repaid in a single transaction to manipulate prices — had dominated the era before that.
+
+Both categories have collapsed. By 2025, bridge exploits were down to roughly 3 percent of DeFi losses, and flash-loan attacks under 1 percent. Total losses fell accordingly, and the median incident now costs about $1.5 million, a quarter of what it was in 2022. The improvement is real: bridges adopted stronger designs and monitoring, oracle systems hardened, and the easy money migrated away. (The bridge attacks that do still land remain devastating, as [this year's exploit wave showed](/blog/crypto-bridge-exploits-surge-2026).)
+
+## What replaced them
+
+The dominant category now — nearly nine-tenths of 2025's DeFi losses by one industry tally — is **protocol logic exploits**: flaws in a protocol's own business rules and arithmetic rather than in its keys, bridges, or price feeds.
+
+November's Balancer incident is the textbook case. An attacker exploited how the protocol's pools rounded numbers during swaps, pushing token balances to the exact boundaries where tiny precision errors appear, then compounding those errors through batched micro-swaps until pool accounting broke. About $128 million drained in under 30 minutes — across Ethereum, Arbitrum, Base, Polygon, and other networks simultaneously, because the same vulnerable code had been deployed on each chain and copied by forks. The protocol had been audited eleven times.
+
+That multiplication is the new structural risk. Modern DeFi protocols deploy identical contracts across half a dozen chains, so a single subtle bug becomes six simultaneous exploits — and forks of popular code inherit the flaw too.
+
+## What it means for users
+
+The encouraging read: DeFi security genuinely improved, and measured against the funds deposited, annual losses on major chains now run below half a percent. The sobering read: the surviving bugs are the ones eleven audits missed, and diversifying "across chains" is no diversification at all when the same code runs on each one.
+
+For ordinary users the practical lessons hold steady — favor long-lived protocols, understand that audits reduce risk rather than eliminate it, and never put money into DeFi that you cannot afford to lose to a bug nobody had found yet.
+
+## Sources
+
+- [How an attacker drained $128M from Balancer through rounding-error exploitation (Check Point Research)](https://research.checkpoint.com/2025/how-an-attacker-drained-128m-from-balancer-through-rounding-error-exploitation/)
+- [Explained: the Balancer hack, November 2025 (Halborn)](https://www.halborn.com/blog/post/explained-the-balancer-hack-november-2025)
+- [In-depth analysis: the Balancer V2 exploit (BlockSec)](https://blocksec.com/blog/in-depth-analysis-the-balancer-v2-exploit)
