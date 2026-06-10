@@ -1,0 +1,70 @@
+---
+title: 'Tangem Wallet Review'
+date: '2026-06-09'
+postType: review
+reviewedItem: 'Tangem Wallet'
+rating: 4
+tags: ['wallets', 'hardware-wallet', 'security']
+summary: 'A balanced review of Tangem Wallet — the card-shaped, seedless hardware wallet — covering its security model, usability, known incidents, and who it suits.'
+images: ['/images/covers/tangem-wallet-review.jpg']
+authors: ['default']
+draft: false
+---
+
+Tangem Wallet is a **hardware wallet** — a physical device that keeps the keys to your cryptocurrency offline, away from internet-connected computers. Made by the Swiss company Tangem AG, it is a set of credit-card-shaped smartcards that you tap against your phone. With no screen, no buttons, no battery, and no seed phrase by default, it is one of the most unusual products in the category — and one of the simplest to use.
+
+## What it is and how it works
+
+Tangem is sold as a set of two or three identical cards, priced at $54.90 and $69.90 respectively at the time of writing. Each card contains a **secure element** — a tamper-resistant chip, like the ones in bank cards and passports, designed to keep secrets locked inside even under physical attack.
+
+During setup, the chip generates your **private key** — the secret number that controls your coins — using a hardware random number generator. The key is created inside the card and never leaves it. The other cards in your set are synced as exact copies, so they act as physical backups: lose one card, and you restore access with another card plus your access code.
+
+The cards have no battery or cables. They communicate with the Tangem mobile app over **NFC** — the same short-range tap-to-pay radio used by contactless bank cards. To send crypto, you build the transaction in the app, enter your access code, and tap the card to sign it. The app supports thousands of tokens across dozens of blockchains.
+
+## Security model
+
+Tangem's chip carries an **EAL6+ certification** — a high assurance level under Common Criteria, an international standard for evaluating security hardware. The firmware on the card is fixed at the factory and cannot be updated, which closes off malicious-update attacks but also means any flaw could never be patched.
+
+The biggest difference from Ledger or Trezor is the backup model. Most hardware wallets give you a **seed phrase** — a list of 12 or 24 words that can recreate your private key — which you must write down and guard. Tangem's default "seedless" mode skips this entirely: the backup cards are the backup, and no human-readable copy of your key ever exists. An optional seed phrase mode, using the standard 12- or 24-word format, is available for users who want compatibility with other wallets.
+
+The card firmware is closed source, but it has been independently audited: Kudelski Security reviewed the source code in 2018 and reported no backdoors, and Riscure completed a second firmware source-code audit in 2023. The mobile apps and SDKs are open source on GitHub.
+
+## Usability
+
+This is where Tangem shines. There are no cables, drivers, or firmware updates. The cards are rated IP69K for dust and water resistance, operate from −25°C to 50°C, and carry a 25-year warranty. The trade-off is total phone dependency: Tangem works only through its mobile app on an NFC-capable smartphone, with no desktop option.
+
+## Limitations worth knowing
+
+The lack of a screen matters. Devices like Trezor let you verify the receiving address on the device itself, protecting you if malware swaps the address your phone displays. With Tangem, you must trust your phone.
+
+You also place real trust in Tangem's closed firmware, with audits standing in for public code review.
+
+Finally, in December 2024 Tangem disclosed a logging bug: users who created a wallet in seed phrase mode and then contacted support through the app within seven days could have had their key included in log files sent by email. Tangem said fewer than 0.1% of users were affected, no funds were lost, and all logs were deleted — but some users criticized the quiet handling. The default seedless mode was not affected.
+
+## Pros
+
+- Extremely simple — no cables, batteries, or firmware updates
+- Durable (IP69K rated) with a 25-year warranty
+- Seedless design removes the risk of a stolen paper backup
+- Affordable for a multi-backup hardware wallet
+- Audited, EAL6+ certified secure element
+
+## Cons
+
+- No screen to independently verify addresses
+- Closed-source, non-updatable firmware requires trust in audits
+- Mobile-only; useless without an NFC smartphone
+- 2024 logging incident dented confidence in seed phrase mode
+
+## Verdict
+
+Tangem rethinks the hardware wallet in a way that lowers the barrier for everyday holders: no seed phrase to lose, nothing to charge, and backups you can hand to family. For long-term storage of meaningful but not enormous amounts, it is a strong, inexpensive option. Power users who demand on-device address verification or open firmware will prefer a traditional device with a screen. **4/5**
+
+This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Tangem — Official Website](https://tangem.com/en/)
+- [Tangem Help Center — Firmware & Authenticity](https://tangem.com/en/help-center/security/firmware-authenticity/)
+- [Kudelski Security — Audit of Tangem's Smartcard Wallet Code](https://kudelskisecurity.com/research/audit-of-tangems-smartcard-wallet-code)
+- [Tangem Blog — Tangem Identifies and Resolves Potential Vulnerability](https://tangem.com/en/blog/post/tangem-resolves-log-issue/)
