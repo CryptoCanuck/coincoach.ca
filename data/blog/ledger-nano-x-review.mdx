@@ -1,13 +1,57 @@
 ---
 title: 'Ledger Nano X Review'
 date: '2026-06-05'
+lastmod: '2026-06-09'
 postType: review
 reviewedItem: 'Ledger Nano X'
 rating: 4
 tags: ['wallets', 'hardware-wallet', 'security']
-summary: 'Our hands-on review of the Ledger Nano X hardware wallet.'
+summary: 'A balanced review of the Ledger Nano X hardware wallet — its security model, Bluetooth-first mobile design, and the trade-offs worth knowing.'
 authors: ['default']
 ---
 
-The Ledger Nano X is a popular hardware wallet for storing crypto offline.
-Here is our hands-on assessment of its security, usability, and value.
+A **hardware wallet** keeps your private keys on a dedicated physical device, offline and out of reach of the malware and phishing attacks that target internet-connected software. The Ledger Nano X is one of the most widely used devices in this category, made by Ledger, a French company that has been building security hardware since 2014.
+
+## What it is and how it works
+
+The Nano X is a small USB-stick-shaped device with two buttons and a screen. Your **private keys** are generated and stored on the device and never leave it. Sending funds requires confirming the transaction on the device itself — checking the address and amount on its screen and pressing both buttons — so an attacker who compromises your computer or phone still cannot move your assets without the physical device and your PIN.
+
+What sets the Nano X apart from many competitors is connectivity: alongside USB-C, it has **Bluetooth and a built-in battery**, so it pairs directly with a phone. Combined with the **Ledger Live** companion app for desktop and mobile, it is one of the most practical hardware wallets for people who manage their crypto primarily from a smartphone.
+
+## Security model
+
+Keys live inside a **secure element** — a tamper-resistant chip of the kind used in passports and payment cards, certified to the CC EAL5+ standard. Access requires a **PIN** entered on the device, and three consecutive wrong attempts wipe it.
+
+Everything is recoverable from the **24-word recovery phrase** written down at setup. That phrase is the real key to your funds: anyone who obtains it can take everything, and losing it (along with the device) means permanent loss. Store it physically — never photograph it or save it digitally.
+
+One honest caveat: unlike some rivals, Ledger's firmware is **not fully open-source**. The code that runs on the secure element is proprietary, so users must extend some trust to the company rather than relying entirely on independent audits. Ledger publishes substantial parts of its stack and runs a security research program, but the difference in philosophy is real.
+
+## Usability
+
+Setup through Ledger Live is clearly guided and beginner-friendly. The app covers account management, sending and receiving, and built-in staking for several networks. Asset support is among the broadest available — thousands of coins and tokens — and the device can hold around 100 coin-specific apps at once.
+
+The two-button interface and small screen are serviceable rather than luxurious. Verifying long addresses on a narrow display takes patience compared with touchscreen devices, though it does the job.
+
+## Limitations worth knowing
+
+The company's history includes two incidents worth weighing. In 2020, Ledger's **e-commerce customer database was breached**, exposing names, emails, and addresses of buyers — not crypto keys or devices — which fueled years of targeted phishing attempts against Ledger owners. And in 2023, Ledger introduced **Ledger Recover**, an optional paid service that backs up an encrypted, sharded copy of your seed with third-party custodians. The service is opt-in, but its existence proved controversial because it showed seed material could leave the device under some firmware paths, and it sparked a wider debate about closed-source trust.
+
+The Bluetooth radio itself is a minor consideration: transaction signing still happens on-device, and Bluetooth can be disabled, but security purists may prefer a cable-only model.
+
+## Pros
+
+- **Bluetooth plus battery** make it the rare hardware wallet that works well from a phone
+- **Secure element chip** (CC EAL5+) with a strong device-security track record
+- Very broad asset support through the polished Ledger Live app
+- Established company with a long history in the category
+
+## Cons
+
+- Firmware is **not fully open-source**
+- 2020 customer-data breach exposed buyers to persistent phishing campaigns
+- Ledger Recover controversy dented trust among self-custody purists
+- Small screen makes address verification more tedious than touchscreen rivals
+
+## Verdict
+
+The Nano X remains an easy device to recommend for mobile-first users: the Bluetooth-and-battery design is genuinely convenient, the secure element is solid, and no Ledger device has been shown to leak keys in the wild. The deductions are about trust rather than engineering — closed-source firmware, a careless data breach, and a clumsily launched recovery service. If open-source firmware is a dealbreaker, look elsewhere; otherwise this is a capable, well-supported wallet. **4/5**
