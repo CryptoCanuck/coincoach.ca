@@ -1,0 +1,61 @@
+---
+title: 'MetaMask Review'
+date: '2026-06-09'
+postType: review
+reviewedItem: 'MetaMask'
+rating: 4
+tags: ['wallets', 'defi', 'security']
+summary: 'A balanced review of MetaMask — how the most widely used self-custody software wallet works, its security model, fees, and who it suits.'
+images: ['/images/covers/metamask-review.jpg']
+authors: ['default']
+draft: false
+---
+
+MetaMask is a free **self-custody wallet** — software where you, not a company or exchange, hold the keys that control your crypto. It is made by Consensys, the Ethereum-focused software firm founded by Ethereum co-founder Joseph Lubin. Launched in 2016, it has become the default doorway to Ethereum applications and ships as both a browser extension (Chrome, Firefox, Brave, Edge) and a mobile app for iOS and Android.
+
+## What it is and how it works
+
+When you set up MetaMask, it generates a **Secret Recovery Phrase** — a list of 12 ordinary words that mathematically encodes your private keys. Those keys, your passwords, and the phrase itself are stored in encrypted form locally on your device, never on a Consensys server. The wallet talks to blockchains through an **RPC provider** — a service that relays your requests to the network — with Consensys-owned Infura as the default, though you can switch providers.
+
+MetaMask grew up around Ethereum and **EVM networks** — blockchains compatible with the Ethereum Virtual Machine, such as Arbitrum, Base, and Polygon. In 2025 it expanded beyond that base, adding native Solana support and, later that year, native Bitcoin support, so BTC and SOL can sit alongside Ethereum assets in one interface. Built-in buy, swap, and bridge features round out the package; the swap tool compares quotes across decentralized exchanges and charges a 0.875% service fee baked into each quote, on top of normal network fees.
+
+## Security model
+
+Because it is non-custodial, MetaMask cannot freeze your funds — but it cannot recover them either. Lose your Secret Recovery Phrase and your crypto is gone; share it with anyone and it is theirs. MetaMask is also a **hot wallet** — one whose keys live on an internet-connected device — which makes it inherently more exposed than a hardware wallet kept offline. It mitigates this by letting you pair it with hardware wallets such as Ledger and Trezor, so signing keys never leave the offline device.
+
+The biggest real-world danger is not a MetaMask flaw at all: it is **phishing** — fake websites or messages that trick you into approving a malicious transaction or signature that drains your wallet. MetaMask has added transaction simulations, warnings, and blocklists of known scam sites, but the final click is always yours, and signature-draining scams remain the number one way users lose funds.
+
+## Usability
+
+MetaMask's greatest strength is ubiquity. Nearly every **dapp** — a decentralized application that runs on a blockchain — has a "Connect Wallet" button that works with MetaMask first. Adding networks, importing tokens, and adjusting gas fees are all built in. Beginners should still expect a learning curve: concepts like gas, network switching, and token approvals take time to learn.
+
+## Limitations worth knowing
+
+The multichain expansion is recent and uneven. Bitcoin support launched with the common SegWit address format, with Taproot support still to come, and many non-EVM chains remain unsupported entirely. The 0.875% swap fee is convenient but not cheap; cost-conscious users often swap elsewhere. MetaMask also weathered a privacy controversy in late 2022, when an updated Consensys privacy policy disclosed that Infura collected users' IP addresses and wallet addresses when they sent transactions. After community backlash, Consensys said it would limit retention of that data to seven days and shipped updates giving users more control, but the episode is a reminder that default settings route traffic through company infrastructure.
+
+## Pros
+
+- Free, open to anyone, and the de facto standard for connecting to dapps
+- Broad EVM network support, plus native Solana and Bitcoin since 2025
+- Keys stored encrypted on your device; hardware-wallet pairing available
+- Built-in buying, swapping, and bridging in one interface
+
+## Cons
+
+- Hot-wallet design means phishing and malicious signatures are a constant risk
+- 0.875% swap service fee on top of network fees
+- Non-EVM coverage is still partial; some chains are absent
+- Default Infura routing raises privacy considerations for some users
+
+## Verdict
+
+MetaMask earns its place as the standard software wallet for Ethereum and the EVM world, and its 2025 expansion to Solana and Bitcoin makes it genuinely multichain for the first time. It is not the cheapest place to swap, it demands real care around phishing, and privacy-minded users will want to adjust the defaults. For most people exploring DeFi and Ethereum apps, though, it remains the sensible starting point — ideally paired with a hardware wallet for larger sums. **4/5**
+
+This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [MetaMask official site and FAQ](https://metamask.io/faqs)
+- [MetaMask Help Center: User Guide — Swaps](https://support.metamask.io/trade/swap/user-guide-swaps/)
+- [MetaMask: Introducing Bitcoin on MetaMask](https://metamask.io/news/bitcoin-on-metamask-btc-wallet)
+- [Consensys Privacy Notice](https://consensys.io/privacy-notice)

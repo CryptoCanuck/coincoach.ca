@@ -1,0 +1,52 @@
+---
+title: 'Seed Phrases Explained: The 12 Words That Control Your Crypto'
+date: '2026-06-09'
+postType: guide
+tags: ['security', 'wallets', 'basics']
+summary: 'Learn what a seed phrase is, why those 12 or 24 words control every coin in your wallet, and how to store them so nobody else ever does.'
+images: ['/images/covers/seed-phrases-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+If you have ever set up a crypto wallet, you were probably shown a list of 12 or 24 random words and told to write them down. That list is your seed phrase, the single most important piece of information in crypto self-custody. Anyone who has it controls your money — full stop. This guide explains where those words come from, why they are so powerful, how to store them safely, and the scams designed to steal them.
+
+## Where the 12 words come from
+
+A **seed phrase** — also called a recovery phrase or mnemonic — is a human-readable backup of the master secret behind your wallet. Most wallets follow **BIP-39**, a Bitcoin standard published in 2013 that converts a large random number into everyday words. The words are drawn from a fixed list of exactly 2,048 English words, chosen so that no two share the same first four letters, reducing copying mistakes.
+
+A 12-word phrase encodes 128 bits of randomness; a 24-word phrase encodes 256 bits. Either way, the possible combinations are so astronomically numerous that guessing a phrase is effectively impossible. The phrase also includes a built-in **checksum** — a few extra bits that let wallet software detect typos — which is why a randomly invented word list usually gets rejected as invalid.
+
+## One phrase controls everything
+
+Modern wallets are **hierarchical deterministic (HD) wallets** — wallets that mathematically derive every account and address from one master seed. Your seed phrase generates that seed, which in turn produces every **private key** — the secret number that authorizes spending from an address — across all your accounts, and often across multiple cryptocurrencies.
+
+This has two big consequences. First, one backup restores everything: lose your phone or hardware wallet, type the phrase into a new device, and all your accounts reappear. Second, the phrase *is* the money. Crypto ownership is not tied to your name or your device. Whoever knows the words can recreate your wallet anywhere in the world and drain it. There is no password reset and no fraud department to call.
+
+## How to store it safely
+
+- **Write it on paper or stamp it in metal.** Steel backup plates survive fire and flood; paper is fine if stored carefully. Keep it somewhere only you (and perhaps your estate plan) can reach.
+- **Never store it digitally.** No photos, no cloud notes, no password managers synced online, no email drafts. Malware routinely scans devices and cloud accounts for word lists that look like seed phrases.
+- **Never type it into a website.** A real wallet only asks for your phrase when restoring on a new device — never on a web page, pop-up, or form.
+- **Consider a second copy in a separate location**, guarding against fire or theft at one site.
+- **Verify your backup** by restoring it on a fresh or wiped device before moving significant funds.
+
+## Scams that hunt for seed phrases
+
+Phrase-phishing is the most common way self-custodied crypto gets stolen. The classic setups: fake "support agents" who reply to your post about a wallet problem and ask you to "validate" your phrase; counterfeit wallet apps or look-alike websites that prompt you to enter it; and "your wallet needs to be synced or migrated" messages. The U.S. Federal Trade Commission's guidance is blunt: never share your seed phrase or private key, because no legitimate company will ever ask for it. That includes wallet makers, exchanges, and blockchain projects. Anyone who asks is a thief.
+
+## If your phrase is exposed — and the passphrase option
+
+If you suspect anyone has seen your phrase — a photo, a leaked note, a phishing slip — treat the wallet as compromised. Create a brand-new wallet with a fresh phrase and immediately transfer all funds to it. Do not simply move the funds to another account under the same phrase; every account it derives is exposed.
+
+For extra protection, BIP-39 supports an optional **passphrase** — an extra word or sentence you choose yourself that, combined with your seed phrase, unlocks a completely different hidden wallet. A thief holding only the 12 words gets an empty decoy. The trade-off: forget the passphrase and the funds are gone, so it suits careful users.
+
+## The bottom line
+
+Your seed phrase is the master key to everything in your wallet. Keep it offline, tell no one, and assume anyone asking for it is a scammer. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [BIP-39: Mnemonic code for generating deterministic keys (Bitcoin standards document)](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
+- [What To Know About Cryptocurrency and Scams — U.S. Federal Trade Commission](https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-scams)
+- [BIP-39 Passphrase — COLDCARD Documentation](https://coldcard.com/docs/passphrase/)

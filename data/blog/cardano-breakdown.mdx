@@ -1,0 +1,59 @@
+---
+title: 'Cardano: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['cardano', 'layer-1', 'proof-of-stake']
+summary: 'A breakdown of Cardano: the research-driven proof-of-stake blockchain, how Ouroboros and the eUTXO model work, ADA staking without lockups, and why adoption has lagged.'
+images: ['/images/covers/cardano-breakdown.jpg']
+authors: ['default']
+coins: ['cardano']
+draft: false
+---
+
+Cardano is a layer-1 blockchain best known for its deliberately slow, research-first approach to development. Launched in 2017 by Charles Hoskinson, a co-founder of Ethereum, it supports **smart contracts** — self-executing programs that live on-chain — and runs on a native token called ADA, named after mathematician Ada Lovelace. Where many crypto projects ship features quickly and fix problems later, Cardano publishes academic papers first and builds second.
+
+<CoinCard id="cardano" />
+
+## How Cardano approaches consensus
+
+Cardano runs on **Ouroboros**, a family of **proof-of-stake** protocols — systems where the right to add new blocks is tied to how many tokens participants commit, rather than to raw computing power. Ouroboros was the first proof-of-stake protocol with formal, peer-reviewed security proofs, meaning academics outside the project examined the math before it went live. That rigor is central to Cardano's identity and the work of its research arm, Input Output (formerly IOHK).
+
+In practice, the network divides time into **epochs** — fixed periods of about five days — which are split into short **slots**. For each slot, the protocol randomly selects a **slot leader** to add the next block, with the odds weighted by stake. Most ADA holders delegate to **stake pools** — professional node operators who run the infrastructure and share the rewards. Because this replaces energy-hungry mining, the network's electricity use is a tiny fraction of Bitcoin's.
+
+## Staking without lockup
+
+Cardano's staking design is unusually flexible. When you delegate ADA to a stake pool, the tokens never leave your wallet — you can spend or move them at any time, with no lockup or unbonding period. There is also no **slashing** — the penalty some networks impose by confiscating misbehaving validators' stake — for ordinary delegators, so the worst case is simply missing rewards, which are otherwise paid automatically each epoch. This makes Cardano staking simpler and lower-risk than on many rival networks, though returns are modest.
+
+## ADA supply and the eUTXO model
+
+ADA has a hard **maximum supply of 45 billion tokens**, with the large majority already in circulation. New ADA enters circulation gradually through staking rewards drawn from a fixed reserve, so issuance declines over time rather than continuing forever.
+
+Under the hood, Cardano tracks balances differently from Ethereum. It uses an **extended UTXO (eUTXO)** model: instead of keeping a running account balance, the ledger tracks individual "unspent outputs" — like digital bills in your wallet that are consumed and reissued with each payment, as in Bitcoin, but extended to carry data and script logic. One practical benefit is predictability: a transaction's outcome and fee can be checked before it is submitted, so it cannot fail halfway through and still cost you money.
+
+Smart contracts arrived with the Alonzo upgrade in September 2021 via **Plutus**, Cardano's contract platform built on the **Haskell** programming language — a language favored in high-assurance software because it makes certain classes of bugs harder to write.
+
+## What the network is used for
+
+- **Staking:** a large share of all ADA is delegated to stake pools.
+- **DeFi:** decentralized exchanges, lending markets, and stablecoins, though on a small scale.
+- **Native tokens and NFTs:** Cardano supports custom tokens without requiring a smart contract.
+- **Identity and government pilots:** including digital-ID projects in Africa.
+- **On-chain governance:** ADA holders can vote on protocol changes and treasury spending.
+
+## The honest criticism: adoption has lagged
+
+Cardano's biggest weakness is the gap between its engineering reputation and its real-world usage. Its **total value locked** — the money deposited in a chain's DeFi applications — is a small fraction of Ethereum's or Solana's. Critics argue the research-first process made Cardano chronically late: smart contracts arrived four years after launch, and the need to learn Haskell and eUTXO-specific patterns has kept the developer pool small. Supporters counter that careful engineering pays off over decades; so far, the market has mostly rewarded faster-moving rivals.
+
+## Risks
+
+Like any crypto asset, ADA can fall sharply in value. Applications built on Cardano carry **smart-contract risk** — bugs that can permanently lose user funds. Regulatory treatment of ADA and of staking remains unsettled in some jurisdictions. And the adoption question is itself a risk: a technically sound network that fails to attract developers and users may struggle to justify its valuation.
+
+## In summary
+
+Cardano stands out for peer-reviewed engineering, energy-efficient consensus, and one of the most user-friendly staking experiences among major chains. Its trade-off has been speed: features ship slowly, and ecosystem activity trails its main competitors by a wide margin. Whether methodical rigor eventually wins out over momentum is the open question hanging over ADA. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Ouroboros, Cardano's Proof-of-Stake Protocol — Cardano.org](https://cardano.org/ouroboros/)
+- [Understanding the Extended UTXO model — Cardano Docs](https://docs.cardano.org/about-cardano/learn/eutxo-explainer)
+- [Cardano (ADA) — CoinGecko](https://www.coingecko.com/en/coins/cardano)

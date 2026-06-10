@@ -1,0 +1,60 @@
+---
+title: 'Litecoin: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['litecoin', 'payments', 'mining']
+summary: 'A breakdown of Litecoin: one of the oldest cryptocurrencies, how its Bitcoin-derived design works, its optional privacy feature, and its trade-offs.'
+images: ['/images/covers/litecoin-breakdown.jpg']
+authors: ['default']
+coins: ['litecoin']
+draft: false
+---
+
+Litecoin is one of the oldest cryptocurrencies still in active use, launched in October 2011 by former Google engineer Charlie Lee. Lee created it as a **source-code fork** of Bitcoin — a new network built by copying Bitcoin's open-source code and changing a few key settings — and famously pitched it as "the silver to Bitcoin's gold." Nearly fifteen years later, the network has reportedly never gone offline, an uptime record few blockchains can match.
+
+<CoinCard id="litecoin" />
+
+## How Litecoin approaches digital payments
+
+Litecoin uses **proof of work** — a system where miners compete to solve computational puzzles, and the winner earns the right to add the next block of transactions. That is the same security model as Bitcoin, but Litecoin made two notable changes.
+
+First, it swapped Bitcoin's hashing algorithm for **Scrypt** — a memory-hungry mining algorithm originally chosen so ordinary computers could compete with specialized mining hardware. Second, it cut the block time from ten minutes to 2.5 minutes, so transactions confirm roughly four times faster. To compensate for the faster blocks, the supply cap was set at 84 million LTC, exactly four times Bitcoin's 21 million.
+
+Litecoin also copied Bitcoin's **halving** schedule — a built-in event that cuts the reward miners receive in half at fixed intervals, slowing the creation of new coins. Halvings occur every 840,000 blocks, roughly every four years: rewards fell from 50 LTC to 25 in 2015, to 12.5 in 2019, and to 6.25 in August 2023. The next halving, expected around mid-2027, will drop the reward to 3.125 LTC.
+
+## Optional privacy with MWEB
+
+In May 2022, Litecoin activated **MimbleWimble Extension Blocks (MWEB)** — an optional, parallel section attached to each block where transaction amounts are hidden from public view. Think of it as a side room next to the main ledger: users can move coins into MWEB to transact with more confidentiality, then move them back out. Crucially, it is opt-in. Most Litecoin activity still happens on the fully transparent ledger, and anyone who never touches MWEB uses Litecoin exactly as before.
+
+## What the network is used for
+
+Litecoin has stayed focused on its original goal: being a fast, cheap way to send value. Common uses include:
+
+- Everyday payments, since fees are typically a few cents and confirmations are quick
+- Merchant checkout through payment processors that accept LTC
+- Moving funds between exchanges, where its speed and low fees are practical
+- Serving as a historical test bed — Litecoin adopted the SegWit upgrade in 2017 before Bitcoin did
+
+## Trade-offs and genuine concerns
+
+**Fading differentiation.** Litecoin's edge in 2011 was speed and cost, but newer networks and stablecoin transfers are now faster and cheaper still. "Slightly quicker Bitcoin" is a harder pitch than it once was.
+
+**Scrypt did not stay ASIC-resistant.** Specialized Scrypt mining machines arrived years ago, so the original vision of mining on home computers is long gone. Mining is now an industrial activity, much as it is for Bitcoin.
+
+**Privacy features carry regulatory baggage.** After MWEB launched in 2022, several major South Korean exchanges delisted Litecoin, citing anti-money-laundering rules. Even optional privacy can create friction with regulators and exchanges.
+
+**Quieter development.** Compared with smart-contract platforms, Litecoin's roadmap is modest, and its founder sold his personal holdings back in 2017, which some saw as a confidence signal.
+
+## Risks
+
+Litecoin is volatile, and its price often moves with the broader crypto market rather than on its own merits. Competition risk is real: it must justify its place against Bitcoin on one side and faster payment networks and stablecoins on the other. Regulatory risk around MWEB could resurface in jurisdictions with strict privacy rules. And as halvings keep shrinking mining rewards, the network will increasingly depend on transaction fees to pay for its security.
+
+## In summary
+
+Litecoin is a veteran of the crypto world: a simple, battle-tested payments network with a fixed supply, a long uptime record, and an optional privacy layer. It does not promise smart contracts or high yields — it aims to be dependable digital cash. Its main challenge is relevance in a crowded field, not reliability. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Litecoin.org — official project site](https://litecoin.org/)
+- [Litecoin.com — Litecoin: A Decade of Resilience](https://litecoin.com/news/litecoin-a-decade-of-resilience)
+- [CoinGecko — Litecoin](https://www.coingecko.com/en/coins/litecoin)
