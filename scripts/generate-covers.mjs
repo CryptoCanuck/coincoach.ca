@@ -38,6 +38,7 @@ const TICKERS = {
   solana: 'SOL',
   chainlink: 'LINK',
   avalanche: 'AVAX',
+  'avalanche-2': 'AVAX',
   'matic-network': 'POL',
   'polygon-ecosystem-token': 'POL',
   'the-open-network': 'TON',
