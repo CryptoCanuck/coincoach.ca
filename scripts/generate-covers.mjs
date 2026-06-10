@@ -296,24 +296,31 @@ async function main() {
     const ticker = fm.coins.map((c) => TICKERS[c]).find(Boolean)
     const out = path.join(OUT_DIR, `${slug}.jpg`)
 
+    let usedLogo = false
     if (logoFile) {
-      const svg = logoCoverSvg(slug, fm.postType, ticker)
-      const logo = await sharp(logoFile)
-        .resize(220, 220, { fit: 'inside' })
-        .png()
-        .toBuffer()
-      const meta = await sharp(logo).metadata()
-      await sharp(Buffer.from(svg))
-        .composite([
-          {
-            input: logo,
-            left: Math.round(WIDTH / 2 - meta.width / 2),
-            top: Math.round(HEIGHT * 0.46 - meta.height / 2),
-          },
-        ])
-        .jpeg({ quality: 85, mozjpeg: true })
-        .toFile(out)
-    } else {
+      try {
+        const svg = logoCoverSvg(slug, fm.postType, ticker)
+        const logo = await sharp(logoFile)
+          .resize(220, 220, { fit: 'inside' })
+          .png()
+          .toBuffer()
+        const meta = await sharp(logo).metadata()
+        await sharp(Buffer.from(svg))
+          .composite([
+            {
+              input: logo,
+              left: Math.round(WIDTH / 2 - meta.width / 2),
+              top: Math.round(HEIGHT * 0.46 - meta.height / 2),
+            },
+          ])
+          .jpeg({ quality: 85, mozjpeg: true })
+          .toFile(out)
+        usedLogo = true
+      } catch (err) {
+        console.warn(`logo render failed for ${slug} (${err.message}); using generated art`)
+      }
+    }
+    if (!usedLogo) {
       const svg = coverSvg(slug, fm.postType, ticker)
       await sharp(Buffer.from(svg)).jpeg({ quality: 82, mozjpeg: true }).toFile(out)
     }
@@ -322,7 +329,7 @@ async function main() {
       await writeFile(filePath, insertImagesFrontmatter(raw, slug))
     }
     generated++
-    console.log(`cover: ${slug} (${fm.postType}${logoFile ? `, logo:${coinId}` : ticker ? `, ${ticker}` : ''})`)
+    console.log(`cover: ${slug} (${fm.postType}${usedLogo ? `, logo:${coinId}` : ticker ? `, ${ticker}` : ''})`)
   }
 
   console.log(`${generated} cover(s) generated, ${posts.length - generated} unchanged`)

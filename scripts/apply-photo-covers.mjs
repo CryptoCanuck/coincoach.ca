@@ -71,16 +71,27 @@ async function fetchPhoto(slug, url) {
   } catch {
     /* not cached yet */
   }
-  const res = await fetch(url, {
-    headers: { 'user-agent': 'CoinCoachCoverBot/1.0 (https://coincoach.ca; content tooling)' },
-  })
+  let res
+  for (let attempt = 0; ; attempt++) {
+    res = await fetch(url, {
+      headers: { 'user-agent': 'CoinCoachCoverBot/1.0 (https://coincoach.ca; content tooling)' },
+    })
+    if (res.status === 429 && attempt < 4) {
+      await new Promise((r) => setTimeout(r, 4000 * (attempt + 1)))
+      continue
+    }
+    break
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`)
   const buf = Buffer.from(await res.arrayBuffer())
+  // Be polite to Commons between downloads.
+  await new Promise((r) => setTimeout(r, 800))
   await writeFile(file, buf)
   return buf
 }
 
 async function main() {
+  await mkdir(OUT_DIR, { recursive: true })
   const sources = JSON.parse(await readFile(path.join(ROOT, 'data', 'cover-photos.json'), 'utf8'))
   const only = process.argv.slice(2)
   const slugs = only.length ? only : Object.keys(sources)
