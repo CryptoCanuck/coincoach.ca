@@ -1,0 +1,60 @@
+---
+title: 'Kaspa: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['kaspa', 'mining', 'layer-1']
+summary: 'A breakdown of Kaspa: a fair-launched proof-of-work coin that uses a blockDAG instead of a blockchain, how GHOSTDAG works, and its trade-offs.'
+images: ['/images/covers/kaspa-breakdown.jpg']
+authors: ['default']
+coins: ['kaspa']
+draft: false
+---
+
+Kaspa is a cryptocurrency launched in November 2021 that keeps Bitcoin-style mining but replaces the traditional chain of blocks with a different data structure designed for speed. Its goal is to confirm transactions in seconds while staying fully **proof of work** — a system where miners spend computing power to secure the network and earn new coins. The project had a notably clean start: no premine, no presale, and no coins set aside for insiders.
+
+<CoinCard id="kaspa" />
+
+## How Kaspa replaces the chain with a blockDAG
+
+Most cryptocurrencies use a blockchain, where blocks form a single-file line and only one block can be added at a time. If two miners find blocks at the same moment, one block wins and the other becomes an **orphaned block** — a valid block that gets discarded, wasting the work behind it. That is why Bitcoin keeps its block time at a slow ten minutes.
+
+Kaspa uses a **blockDAG** — short for directed acyclic graph, a structure where blocks can point to multiple earlier blocks instead of just one, letting parallel blocks coexist rather than compete. Its **GHOSTDAG protocol** — the consensus rule that takes all those parallel blocks and sorts them into one agreed-upon order — means simultaneous blocks are kept and sequenced instead of thrown away. Because nothing is orphaned, the network can safely run at block rates that would break an ordinary blockchain.
+
+In May 2025, Kaspa's Crescendo upgrade raised the network from one block per second to ten blocks per second, cutting typical confirmation times to a few seconds. Mining uses **kHeavyHash** — Kaspa's custom hashing algorithm — and today the network is dominated by **ASICs**, specialized machines built to mine one specific algorithm far more efficiently than ordinary computers.
+
+## What the network is used for
+
+Kaspa's pitch is fast, cheap, proof-of-work payments. In practice, current activity centers on:
+
+- Peer-to-peer transfers that confirm in seconds with low fees
+- Mining, which remains a large part of the community and economy
+- An emerging layer of tokens and applications, including EVM-compatible **layer-2 networks** — separate networks that handle transactions off the main chain and settle back to it — such as Kasplex, which launched in 2025, and Igra, which launched in early 2026
+- Speculation and trading, as with most mid-sized cryptocurrencies
+
+## Supply and the chromatic emission schedule
+
+Kaspa was fair-launched: when mining began in November 2021 there was no initial coin offering and no allocation to founders or investors, so every coin in circulation was mined. The maximum supply is roughly 28.7 billion KAS.
+
+New-coin issuance follows what the project calls a chromatic schedule. Rather than Bitcoin's abrupt **halving** — a one-time event that cuts mining rewards in half — Kaspa's block reward shrinks a little every month, by a factor that compounds to a 50% reduction each year. The name nods to the twelve semitones of a musical scale — one small step per month. The practical effect is the same long-term scarcity as Bitcoin's model, but without sudden shocks to miner income.
+
+## Trade-offs and genuine concerns
+
+**Smart contracts arrived late.** For most of its life Kaspa was payments-only. **Smart contracts** — self-executing programs that live on-chain — only became available through layer-2 networks in 2025, and base-layer programmability features are still being rolled out in 2026. Ethereum and Solana have years of head start in applications and developer tooling.
+
+**ASIC mining concentrates power.** A handful of hardware manufacturers and large mining pools account for much of the network's hash power, a common centralization concern for ASIC-mined coins.
+
+**The technology is young.** GHOSTDAG is academically grounded, but running a public network at ten blocks per second is new territory, and further planned upgrades add complexity.
+
+## Risks
+
+KAS is volatile, and much of its valuation reflects expectations about future adoption rather than current usage. Applications built on its new layer-2 networks carry smart-contract risk, since bugs in young code can lose funds. Regulatory treatment of cryptocurrencies varies by country and remains unsettled. Kaspa also competes directly with established smart-contract platforms and with Bitcoin itself as a proof-of-work store of value.
+
+## In summary
+
+Kaspa is one of the more technically interesting proof-of-work projects: a fair-launched coin whose blockDAG design genuinely solves the orphan-block problem that limits blockchain speed. It has an active community, fast and cheap transactions, and a predictable supply schedule. Against that, its application ecosystem is immature and its long-term niche is unproven. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Kaspa official website](https://kaspa.org/)
+- [Kaspa Wiki: Tokenomics](https://wiki.kaspa.org/en/tokenomics)
+- [CoinGecko: Kaspa (KAS)](https://www.coingecko.com/en/coins/kaspa)
