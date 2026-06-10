@@ -1,0 +1,65 @@
+---
+title: 'Coinbase Wallet Review'
+date: '2026-06-09'
+postType: review
+reviewedItem: 'Coinbase Wallet'
+rating: 4
+tags: ['wallets', 'defi']
+summary: 'A balanced review of Coinbase Wallet, the free self-custody app from Coinbase — how it differs from the exchange, its security model, and who it suits.'
+images: ['/images/covers/coinbase-wallet-review.jpg']
+authors: ['default']
+draft: false
+---
+
+Coinbase Wallet is a free **self-custody wallet** — software where you, not a company, hold the keys that control your crypto. It is made by Coinbase, the publicly traded American exchange, but it is a separate product from a Coinbase exchange account, and mixing the two up is one of the most common beginner mistakes in crypto.
+
+## What it is and how it works
+
+A Coinbase exchange account is **custodial**: Coinbase holds your coins for you, the way a bank holds deposits. Coinbase Wallet is the opposite. When you create it, the app generates your keys on your own device, and Coinbase has no access to the funds and no ability to recover them for you. The wallet is available as a mobile app and a browser extension, and you do not need a Coinbase exchange account to use it.
+
+One branding wrinkle: in July 2025 Coinbase rebranded the mobile app as the **Base app**, bundling the wallet with social feeds, messaging, and payments. The wallet underneath remains self-custody, and the Coinbase Wallet name still appears across Coinbase's documentation, so you may see both names for the same product.
+
+The wallet is multi-chain. It supports Ethereum and major **EVM chains** — networks compatible with Ethereum's software, such as Base, Polygon, Arbitrum, Optimism, BNB Chain, and Avalanche — plus Solana, and, on mobile, Bitcoin, Dogecoin, and Litecoin. It leans heavily into Base, Coinbase's own layer-2 network, where the experience is smoothest.
+
+## Security model
+
+By default the wallet uses a standard twelve-word **recovery phrase** — a human-readable backup of your keys that anyone who finds it can use to drain the wallet. Coinbase adds an optional encrypted cloud backup: the phrase is encrypted with AES-256 on your device using a password you choose, then stored in your iCloud or Google Drive. Neither Coinbase nor the cloud provider can read it without your password. The convenience is real, but recovery now depends on your cloud account and password — a weak password or a compromised cloud login becomes a new attack path.
+
+Coinbase also offers a newer **smart wallet** option, launched in 2024, built on **account abstraction** — a design where the wallet is a smart contract rather than a plain key pair. It is secured by a **passkey** (the fingerprint or face unlock built into your phone or browser) instead of a seed phrase, which removes the single most common way beginners lose funds.
+
+Whichever mode you choose, this is a **hot wallet** — it lives on an internet-connected device — so it is not the right home for large long-term holdings.
+
+## Usability
+
+This is where Coinbase Wallet shines. The interface is clean, setup takes minutes, and if you already use the Coinbase exchange you can transfer funds into the wallet directly, removing the biggest hurdle beginners face in moving to self-custody. A built-in **dapp browser** — a tool for connecting to decentralized applications like exchanges and lending protocols — plus WalletConnect support means it works with most of DeFi. In-app token swaps make trading simple, though convenience has a price: Coinbase has historically applied a swap fee of around 1% on top of network **gas fees** (the cost of processing a transaction), so check the quote before confirming.
+
+## Limitations worth knowing
+
+The wallet app itself is not fully open source; Coinbase publishes open-source connection SDKs, but the public cannot audit the complete app code the way they can with some competitors. The brand confusion is genuine — some users assume Coinbase can recover their wallet funds the way an exchange can reset a password, and it cannot; the Base-app rebrand only adds to the confusion. And as with any hot wallet, malicious dapps and signature phishing remain real risks.
+
+## Pros
+
+- Free, polished, and genuinely beginner-friendly
+- Easy on-ramp from the Coinbase exchange
+- Broad multi-chain support with strong Base integration
+- Encrypted cloud backup and a passkey-based smart wallet option
+
+## Cons
+
+- App is not fully open source
+- Easily confused with the custodial Coinbase exchange
+- In-app swap fees can be high versus alternatives
+- Hot wallet — unsuitable for large holdings
+
+## Verdict
+
+Coinbase Wallet is one of the easiest ways for a newcomer to step into self-custody, especially for anyone already on the Coinbase exchange or interested in the Base ecosystem. Costs on in-app swaps and the closed-source codebase keep it short of perfect, and serious holders should pair it with a hardware wallet. For everyday use, it earns a solid **4/5**.
+
+This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Coinbase Wallet — official site](https://www.coinbase.com/wallet)
+- [What's the difference between Coinbase and Coinbase Wallet? — Coinbase Learn](https://www.coinbase.com/learn/crypto-basics/what-is-the-difference-between-coinbase-and-coinbase-wallet)
+- [Backup your encrypted private keys on Google Drive and iCloud — Coinbase Blog](https://www.coinbase.com/blog/backup-your-encrypted-private-keys-on-google-drive-and-icloud-with-coinbase)
+- [A New Era in Crypto Wallets: Smart Wallet is Here — Coinbase Blog](https://www.coinbase.com/blog/a-new-era-in-crypto-wallets-smart-wallet-is-here)

@@ -1,0 +1,51 @@
+---
+title: 'Layer-2 Rollups Explained: How Ethereum Scales Without Breaking'
+date: '2026-06-09'
+postType: guide
+tags: ['layer-2', 'ethereum', 'scaling']
+summary: 'What rollups are, how optimistic and ZK rollups differ, why fees fell after EIP-4844, and what to watch out for before you bridge funds to a layer 2.'
+images: ['/images/covers/layer-2-rollups-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+If you have ever paid more in Ethereum fees than the transaction was worth, you have met the problem that rollups exist to solve. Rollups are now where most everyday Ethereum activity actually happens, and fees there are often a fraction of a cent. This guide explains what a rollup is, the two main types, and what to check before you try one.
+
+## Why Ethereum needs help
+
+Ethereum's base network — often called **layer 1**, the main blockchain where transactions are settled with full security — can only process a limited number of transactions in each block. That blockspace is auctioned off through fees, so when demand spikes, fees spike with it. During busy periods in past years, a simple token swap could cost tens of dollars. Rather than loosening its security to go faster, Ethereum's design pushes day-to-day activity onto **layer 2** networks: separate chains that handle the heavy lifting while leaning on Ethereum for security.
+
+## What a rollup actually is
+
+A **rollup** is a layer-2 network that executes transactions on its own chain, then posts a compressed summary of that activity back to Ethereum, along with evidence that the results are valid. Think of it as doing your math on scratch paper and only submitting the final answer sheet. Because hundreds of transactions get bundled into one Ethereum posting, the cost per user drops dramatically. Crucially, because the data and proofs land on Ethereum itself, a rollup inherits much of Ethereum's security — you are not trusting a separate, weaker blockchain with your funds.
+
+## Optimistic vs. ZK rollups
+
+**Optimistic rollups** assume transactions are honest by default and rely on **fraud proofs** — challenges that anyone watching the chain can submit if an operator posts false results. The catch is the waiting period: withdrawals back to Ethereum through the official bridge typically take about seven days, long enough for any honest watcher to raise a challenge. Arbitrum, Optimism, and Base are the largest networks in this camp.
+
+**ZK rollups** take the opposite approach, using **validity proofs** — cryptographic proofs that mathematically demonstrate every batch of transactions was processed correctly before Ethereum accepts it. Nothing is taken on faith, so there is no week-long challenge window; exits through the official bridge generally finalize within hours. zkSync, Starknet, Linea, and Scroll are well-known examples. The trade-off is that generating these proofs is computationally demanding, which makes the technology harder to build.
+
+## The upgrade that crushed fees
+
+In March 2024, Ethereum's Dencun upgrade activated **EIP-4844**, which gave rollups a dedicated, cheaper lane for posting their data, called **blobs** — temporary data packages that Ethereum verifies and then discards after roughly 18 days instead of storing forever. Typical layer-2 fees fell from tens of cents to fractions of a cent almost overnight. Later upgrades in 2025 expanded blob capacity further, so rollups have room to keep growing.
+
+## What using one feels like
+
+In practice, a layer 2 feels like a faster, cheaper Ethereum. Transactions confirm in seconds, fees are usually under a penny, and most major rollups use regular ETH for gas, so there is no new token to buy first. The one extra step is **bridging** — moving funds from Ethereum onto the layer 2 through a transfer contract. Popular wallets and exchanges now support direct deposits to major rollups, which can skip the bridging step entirely.
+
+## What to watch out for
+
+- **Centralized sequencers.** As of 2026, every major rollup still relies on a single company-run operator to order transactions. It cannot steal your funds, but it can pause the chain or delay your transaction.
+- **Withdrawal friction.** Official optimistic-rollup bridges impose that seven-day wait. Third-party fast bridges are quicker but add their own risks.
+- **Fragmented liquidity.** With dozens of layer 2s, your funds and favorite apps may live on different chains, and bridge mistakes can be costly.
+
+## The bottom line
+
+To try one safely, start small: bridge a modest amount to a major rollup such as Base or Arbitrum, use the official bridge or a direct exchange withdrawal, and confirm the app you want actually lives on that chain. Rollups are how Ethereum scales without compromising what makes it trustworthy — cheap and fast today, with decentralization still a work in progress. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Ethereum.org — Optimistic rollups](https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/)
+- [Ethereum.org — Zero-knowledge rollups](https://ethereum.org/en/developers/docs/scaling/zk-rollups/)
+- [Ethereum.org — Cancun-Deneb (Dencun) FAQ](https://ethereum.org/roadmap/dencun/)
+- [Arbitrum Docs — FAQ](https://docs.arbitrum.io/learn-more/faq)

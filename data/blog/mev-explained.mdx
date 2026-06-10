@@ -1,0 +1,55 @@
+---
+title: 'MEV Explained: The Hidden Tax on Your Crypto Trades'
+date: '2026-06-09'
+postType: guide
+tags: ['ethereum', 'defi', 'basics']
+summary: 'What MEV is, how sandwich attacks quietly worsen your DEX trade prices, and the practical tools that protect everyday users.'
+images: ['/images/covers/mev-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+Every time you swap one token for another on a decentralized exchange, someone may be quietly skimming a slice of your trade. The mechanism behind that skim is called MEV. This guide explains what it is, walks through the most common way it costs everyday traders money, and covers practical steps to keep more of your own trade.
+
+**MEV** stands for maximal extractable value — the extra profit that whoever assembles a block of transactions can capture by choosing which transactions to include, leave out, or reorder. It was originally called "miner extractable value" in Ethereum's proof-of-work days; after the switch to proof of stake in 2022, the name changed because validators, not miners, now order transactions.
+
+## Why MEV exists at all
+
+MEV is a side effect of how public blockchains work. When you submit a transaction, it does not go straight into a block. It first sits in the **mempool** — a public waiting room where pending transactions are visible to anyone before they are confirmed. Specialized bots called **searchers** watch this waiting room, looking for transactions they can profit from. Because block producers decide the final order of transactions, a searcher who spots an opportunity can pay to have its own transactions placed exactly where they make money.
+
+## The sandwich attack, step by step
+
+The form of MEV most likely to hit a regular person is the **sandwich attack**. Here is how it plays out when you swap tokens on a decentralized exchange:
+
+1. **You submit a swap** — say, buying a token with $5,000 of ETH — and it lands in the public mempool.
+2. **A bot sees your pending trade.** Prices on these exchanges move with each trade, so it knows your buy will push the token's price up slightly.
+3. **The bot buys first.** It pays for priority so its own buy order executes just before yours, nudging the price up.
+4. **Your trade executes at the worse price.** You get fewer tokens than you expected.
+5. **The bot sells right after you**, pocketing the difference between the price it paid and the higher price your trade created.
+
+Your trade is the filling in the sandwich, and the price difference comes out of your pocket. The loss on a single trade is usually small, but across millions of trades it adds up to a hidden tax.
+
+## Not all MEV is an attack
+
+It helps to keep the categories straight. **Arbitrage** — buying a token where it is cheap and selling it where it is expensive — is mostly benign and actually keeps prices consistent across exchanges. **Liquidations**, where bots race to close undercollateralized loans on lending platforms, are by design: protocols pay a fee to whoever does it because the system needs those loans closed. Sandwich attacks are the form that directly takes money from ordinary users.
+
+## The industry that grew around it
+
+MEV became so lucrative that a whole supply chain formed. Most Ethereum blocks today are assembled by specialized **block builders** — firms that compete to construct the most profitable block — and delivered to validators through **MEV-Boost**, software that lets validators auction off block construction to the highest bidder. Much trading activity has also moved into **private order flow**: transactions sent directly to builders instead of the public mempool, where sandwich bots cannot see them.
+
+## How to protect yourself
+
+- **Set a tight slippage limit.** **Slippage** is the gap between the price you expect and the price you get; most exchange interfaces let you cap it. A tight cap limits how much a sandwich can take.
+- **Use a private RPC endpoint** such as Flashbots Protect. It routes your transaction around the public mempool, so bots never see it, and can even refund part of any MEV your trade creates.
+- **Trade through MEV-aware venues.** Intent-based exchanges like CoW Swap and UniswapX settle trades through competitive auctions designed to shield users from sandwiching.
+- **Know your network.** Many layer-2 networks order transactions first-come-first-served through a single **sequencer** with no public mempool, which has kept sandwich attacks there rare — though not impossible.
+
+## The bottom line
+
+MEV is not a bug someone forgot to fix. It is a structural consequence of public, ordered, transparent ledgers, and some form of it exists on any open blockchain. The good news: for users who set sensible slippage and route trades through protected channels, the hidden tax is largely avoidable. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Maximal extractable value (MEV) — ethereum.org](https://ethereum.org/en/developers/docs/mev/)
+- [Flashbots Protect overview — Flashbots Docs](https://docs.flashbots.net/flashbots-protect/overview)
+- [How CoW Swap solves the MEV problem — CoW DAO](https://cow.fi/learn/how-cow-swap-solves-the-mev-problem)
