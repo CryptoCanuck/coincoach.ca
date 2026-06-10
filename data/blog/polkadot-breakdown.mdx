@@ -1,0 +1,64 @@
+---
+title: 'Polkadot: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['polkadot', 'layer-1', 'proof-of-stake']
+summary: 'A breakdown of Polkadot: a network that connects specialized blockchains under shared security, how its coretime and governance systems work, and its trade-offs.'
+images: ['/images/covers/polkadot-breakdown.jpg']
+authors: ['default']
+coins: ['polkadot']
+draft: false
+---
+
+Polkadot is a layer-1 blockchain network designed to connect many specialized blockchains into a single shared system. It was founded by Gavin Wood, a co-founder and former chief technology officer of Ethereum, and launched in May 2020. Instead of running every application on one congested chain, Polkadot lets independent chains share security and exchange data with each other.
+
+<CoinCard id="polkadot" />
+
+## How Polkadot connects blockchains
+
+At the center of the network sits the **relay chain** — Polkadot's main chain, which handles consensus and security but runs almost no applications itself. Plugged into it are **parachains** — independent blockchains that connect to the relay chain and inherit its security, the way appliances plug into a power grid. Each parachain can be customized for a specific job, such as DeFi, identity, or gaming, while the relay chain keeps them all coordinated.
+
+The network is secured by **nominated proof of stake** — a system where validators lock up DOT as collateral to process transactions, and ordinary holders ("nominators") back trustworthy validators with their own stake. Both share the rewards, and both can lose part of their stake if a validator misbehaves.
+
+Parachains communicate through **XCM (Cross-Consensus Messaging)** — a standard format that lets chains in the Polkadot ecosystem send tokens and data to one another without relying on third-party bridges, which hackers have repeatedly exploited.
+
+## From slot auctions to Agile Coretime
+
+Originally, projects had to win a **parachain slot auction** — a competitive bid in which teams locked up large amounts of DOT for a lease of up to two years — just to connect to the network. That model proved expensive and inflexible, and in September 2024 Polkadot replaced it with **Agile Coretime** — a system that sells blockspace the way cloud providers sell computing power. Teams now buy "coretime" in monthly bulk sales or on demand, paying only for the capacity they need with no large DOT lockup.
+
+## What the DOT token is used for
+
+DOT is the network's native token, and it has three core jobs:
+
+- **Staking:** securing the network through nominated proof of stake and earning rewards
+- **Governance:** voting on referenda that change the protocol or spend treasury funds
+- **Coretime:** paying for blockspace so chains and applications can run on Polkadot
+
+Governance runs through **OpenGov** — Polkadot's on-chain voting system, launched in June 2023, in which any DOT holder can propose or vote on referenda, with no council or committee acting as a gatekeeper.
+
+## Supply and issuance
+
+DOT launched without a supply cap and with roughly 10% annual inflation. That has changed twice through governance votes. In late 2024, the community fixed issuance at 120 million DOT per year. Then, in September 2025, Referendum 1710 passed with about 81% support, capping the maximum supply at 2.1 billion DOT. Under the new schedule, which took effect on March 14, 2026, issuance steps down roughly every two years, slowing toward near zero over the following decades.
+
+## Trade-offs and genuine concerns
+
+**Adoption has lagged rivals.** Despite sophisticated technology, Polkadot's parachain ecosystem has attracted fewer users, developers, and DeFi deposits than Ethereum's layer-2 networks or Solana.
+
+**Complexity is a barrier.** Concepts like coretime, parachains, and OpenGov voting tracks are harder for newcomers to grasp than "one chain, one token" platforms, and that learning curve extends to developers and stakers alike.
+
+**Constant reinvention cuts both ways.** Polkadot has overhauled its governance, its blockspace model, and its tokenomics since launch. That shows an active community, but it also means the rules that builders depend on keep changing.
+
+## Risks
+
+DOT is a volatile asset, and large price swings in either direction are normal. Staked DOT can be partially **slashed** — destroyed as a penalty — if a validator you nominate misbehaves, and unstaking involves a waiting period. Applications on parachains carry smart-contract risk, and the regulatory treatment of staking rewards varies by country and is still evolving. Finally, Polkadot's value depends on builders actually choosing it; if ecosystem growth keeps trailing competitors, demand for coretime and DOT could stay weak.
+
+## In summary
+
+Polkadot is one of the most technically ambitious blockchain projects: a shared-security network with native cross-chain messaging, fully on-chain governance, and a cloud-style market for blockspace. Its 2025 supply cap and 2024 coretime overhaul show a community willing to rethink fundamentals. The open question remains adoption, where it continues to trail larger ecosystems. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Web3 Foundation: Polkadot is Live](https://web3.foundation/press/polkadot-is-live/)
+- [Polkadot Support: What is the Total Supply of DOT?](https://support.polkadot.network/support/solutions/articles/65000173907-what-is-the-total-supply-of-dot-)
+- [Parity Technologies: Agile Coretime Explained](https://www.parity.io/blog/agilecoretime-explained)
+- [Polkadot: OpenGov Launch Announcement](https://polkadot.com/newsroom/press-releases/polkadot-hands-decision-making-powers-to-its-community-with-opengov-launch/)
