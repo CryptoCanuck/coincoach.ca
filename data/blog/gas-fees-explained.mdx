@@ -1,0 +1,55 @@
+---
+title: 'Gas Fees Explained: Why Crypto Transactions Cost What They Cost'
+date: '2026-06-09'
+postType: guide
+tags: ['ethereum', 'basics', 'layer-2']
+summary: 'What gas fees actually measure, how Ethereum sets them, why they spike, and practical ways to pay less.'
+images: ['/images/covers/gas-fees-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+If you have ever sent crypto and been charged a fee that felt random — a few cents one day, twenty dollars the next — you have met gas fees. They are the toll every transaction pays to use a blockchain. This guide explains what gas measures, who sets the price, why it spikes, and practical ways to pay less.
+
+## What gas actually is
+
+On Ethereum and similar chains, **gas** — a unit that measures how much computational work a transaction requires from the network — is the foundation of every fee. A simple transfer of ether costs 21,000 gas units; a token swap on a decentralized exchange might use ten times that, because more code has to run. Your total fee is the gas used multiplied by the price per unit, quoted in **gwei** — one billionth of an ether. Gas fees are not a percentage of what you send: moving $10 or $10,000 in ether costs the same.
+
+## Why fees exist at all
+
+Every block has a limited amount of **blockspace** — the room available in each batch of transactions the network confirms. Thousands of computers each process every transaction, so capacity is scarce. Fees ration it: when demand is high, the price rises and those who value confirmation most get in first. Fees also prevent spam — if transactions were free, anyone could flood the network with junk and grind it to a halt.
+
+## How EIP-1559 sets the price
+
+Since Ethereum's London upgrade in August 2021, fees follow a standard called **EIP-1559**. Each block has a **base fee** — a minimum price set automatically by the protocol rather than by users bidding against each other. If blocks run fuller than the target size, the base fee rises (by up to 12.5% per block); if emptier, it falls. Crucially, the base fee is burned — permanently destroyed — rather than paid to anyone, which removes any incentive to manipulate it. On top, you can add a **priority fee** — an optional tip to the validator to nudge your transaction in faster. The result is predictable pricing: wallets can estimate the base fee accurately, and anything you authorize above the final cost is refunded.
+
+## Why fees spike
+
+Because the base fee responds to demand block by block, it climbs fast when everyone wants in at once. Classic triggers include hyped NFT mints, where thousands of people compete in the same minute; market crashes, when automated liquidations flood the network; and memecoin frenzies. The surge is usually temporary — fees drift back down once the rush passes.
+
+## How to pay less
+
+**Use a layer-2 network.** A **rollup** — a network that processes transactions on its own faster chain, then posts compressed proof of them back to Ethereum — offers most of Ethereum's security at a fraction of the cost. Since the Dencun upgrade in March 2024 gave rollups a cheap dedicated data lane, fees on networks like Arbitrum, Optimism, and Base often run to cents or less.
+
+**Time your transactions.** Activity follows human schedules: weekends and hours outside the U.S. trading day are typically cheaper. Most wallets show the current base fee, so you can wait out a spike for anything non-urgent.
+
+**Batch when possible.** One transaction that does several things is cheaper than several separate ones. Many apps bundle operations behind the scenes, and some wallets let you combine steps like approving and swapping a token.
+
+## Failed transactions still cost gas
+
+A painful surprise for beginners: a transaction that fails still costs money. Validators must execute your transaction to discover that it fails — say, a swap where the price moved past your limit. That computation is real work, so the gas it consumed is charged even though the transaction's effects are reversed.
+
+## How other chains handle fees
+
+Not every blockchain prices things this way. Solana charges a tiny fixed base fee per signature — 5,000 lamports, a small fraction of a cent — plus an optional priority fee during congestion. Bitcoin has no gas at all: you bid in satoshis per virtual byte of transaction data in an open auction for limited block space, so fees depend on a transaction's data size rather than computation.
+
+## The bottom line
+
+Gas fees are not arbitrary — they are the price of scarce space on a shared global computer, set by an automatic auction that rises and falls with demand. Know the rhythm, lean on layer-2 networks for everyday activity, and a cost that once seemed random becomes something you can plan around. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Gas and fees — ethereum.org developer documentation](https://ethereum.org/developers/docs/gas/)
+- [EIP-1559: Fee market change for ETH 1.0 chain](https://eips.ethereum.org/EIPS/eip-1559)
+- [Cancun-Deneb (Dencun) FAQ — ethereum.org](https://ethereum.org/roadmap/dencun/)
+- [Transaction fees — Solana documentation](https://solana.com/docs/core/fees)
