@@ -1,0 +1,61 @@
+---
+title: 'Monero: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['monero', 'privacy', 'regulation']
+summary: 'A breakdown of Monero: the privacy-by-default cryptocurrency, how ring signatures and stealth addresses work, its tail emission, and the regulatory pressure it faces.'
+images: ['/images/covers/monero-breakdown.jpg']
+authors: ['default']
+coins: ['monero']
+draft: false
+---
+
+Monero is a cryptocurrency built around one idea: financial privacy by default. Launched in April 2014 with no company behind it and no **premine** — coins created for insiders before the public launch — it has been developed and funded by its community ever since. Every Monero transaction hides the sender, the recipient, and the amount, which sets it apart from transparent blockchains like Bitcoin.
+
+<CoinCard id="monero" />
+
+## How Monero approaches privacy
+
+On most blockchains, every transaction is publicly visible forever, and anyone can trace coins from address to address. Monero makes privacy the default rather than an option, using three core technologies.
+
+**Ring signatures** mix your transaction with a group of decoys, so an observer cannot tell which participant actually sent the funds. **Stealth addresses** generate a unique one-time address for every payment, so nobody can look up a recipient on the blockchain and see what they have received. **RingCT** (ring confidential transactions) hides the amount being sent while still letting the network verify that no coins were created out of thin air.
+
+Together these features support Monero's claim to **fungibility** — the property that every unit of a currency is interchangeable with every other. Because Bitcoin's history is public, coins that once passed through a hack can be flagged or refused by exchanges. Monero coins carry no visible history, so no coin can be treated as "tainted."
+
+## Mining and the tail emission
+
+Monero is secured by **proof of work** — a system where miners spend computing power to add blocks and earn rewards. Since November 2019 it has used **RandomX**, a mining algorithm deliberately designed to run best on ordinary computer processors. That makes it resistant to **ASICs** — specialized mining chips that, on other networks, concentrate mining power in a few large operations. In principle, anyone with a regular computer can mine Monero.
+
+The supply schedule is also unusual. The main emission ended in June 2022 after roughly 18.1 million XMR had been created. Instead of stopping there, Monero switched to a **tail emission**: a fixed reward of 0.6 XMR per two-minute block, forever. The reasoning is that miners need a permanent incentive to keep securing the network. Bitcoin, by contrast, caps its supply at 21 million coins and bets that transaction fees alone will eventually pay for security. Monero's supply grows slowly forever, but its inflation rate shrinks every year as the fixed reward becomes a smaller share of the total.
+
+## What Monero is used for
+
+Privacy in money is not inherently sinister; cash offers it too. Legitimate uses include:
+
+- Keeping your balance and spending history away from merchants, employers, and strangers
+- Businesses shielding payroll and supplier payments from competitors
+- People living under authoritarian governments or unstable banking systems
+- Donations to causes where contributors could face retaliation
+
+## The honest other side
+
+**Illicit use is real.** The same properties that protect ordinary users also appeal to ransomware operators and darknet markets, and law-enforcement agencies have repeatedly flagged Monero for that reason.
+
+**Exchanges are pulling back.** Binance delisted Monero in February 2024, citing compliance requirements, and Kraken halted XMR trading for European Economic Area customers in October 2024. Many other platforms have followed, leaving fewer regulated venues to buy or sell it.
+
+**Regulation is tightening.** The EU's Anti-Money Laundering Regulation, adopted in 2024, prohibits regulated crypto service providers from handling privacy-preserving coins, with the rules phasing in by mid-2027. Other jurisdictions, including Dubai's financial free zone, also restrict privacy coins on licensed platforms.
+
+## Risks
+
+Beyond ordinary crypto volatility, Monero carries specific risks. Continued delistings could further reduce liquidity and make it harder to convert XMR into regular money through regulated channels. Future rules could target the protocol itself, not just exchanges, narrowing where it can legally be used. Privacy is also an arms race: researchers have found statistical weaknesses in older Monero transactions, and better analysis techniques could erode today's guarantees.
+
+## In summary
+
+Monero is the most established attempt to build digital cash that behaves like physical cash: private, fungible, and minable by anyone. Its community-driven development, ASIC-resistant mining, and tail emission are genuinely distinctive design choices. But it sits squarely in regulators' crosshairs, and the tension between its technical merits and its shrinking exchange access is the central trade-off to understand. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [About Monero — getmonero.org](https://www.getmonero.org/resources/about/)
+- [Tail Emission — Moneropedia, getmonero.org](https://www.getmonero.org/resources/moneropedia/tail-emission.html)
+- [Regulation (EU) 2024/1624 (Anti-Money Laundering Regulation) — EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/1624/oj)
+- [Monero (XMR) — CoinGecko](https://www.coingecko.com/en/coins/monero)
