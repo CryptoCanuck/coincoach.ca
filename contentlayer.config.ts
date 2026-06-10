@@ -200,7 +200,10 @@ export default makeSource({
       remarkExtractFrontmatter,
       remarkGfm,
       remarkCodeTitles,
-      remarkMath,
+      // Dollar amounts appear constantly in our content; without this option a
+      // paragraph containing two prices (e.g. "$60,000 ... $61,900") is parsed
+      // as inline TeX and rendered in KaTeX's italic math font.
+      [remarkMath, { singleDollarTextMath: false }],
       remarkImgToJsx,
       remarkAlert,
     ],
