@@ -286,8 +286,12 @@ async function main() {
     photoSlugs = new Set(
       Object.keys(JSON.parse(await readFile(path.join(ROOT, 'data', 'cover-photos.json'), 'utf8')))
     )
-  } catch {
-    /* no curated photo list yet */
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      // A present-but-unreadable curated list must abort: continuing would
+      // overwrite curated photo covers with generated art.
+      throw new Error(`cannot read data/cover-photos.json: ${err.message}`)
+    }
   }
 
   const coinIds = [...new Set(posts.map((p) => p.fm.coins[0]).filter(Boolean))]
