@@ -1,0 +1,60 @@
+---
+title: 'Sky (Formerly MakerDAO): A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['sky', 'stablecoins', 'defi']
+summary: 'A breakdown of Sky, the renamed MakerDAO: how its DAI/USDS stablecoin system works, the 2024 rebrand, real-world asset backing, and the trade-offs.'
+images: ['/images/covers/sky-maker-breakdown.jpg']
+authors: ['default']
+coins: ['sky']
+draft: false
+---
+
+Sky is the new name for MakerDAO, the project behind crypto's oldest decentralized stablecoin system. Since 2017 it has issued a dollar-pegged token — first DAI, now USDS — backed by collateral locked in code rather than by a company's bank account. The SKY token is what holders use to vote on how the whole system is run.
+
+<CoinCard id="sky" />
+
+## How Sky issues a decentralized stablecoin
+
+A **stablecoin** is a token designed to hold a steady value, usually one US dollar. The biggest stablecoins are issued by companies that hold dollars and Treasury bills in reserve. Maker pioneered a different model: an **overcollateralized** system, meaning users must lock up more value than they borrow.
+
+It works like a pawn shop run by software. You deposit crypto — say $150 worth of ether — into a **vault**, a smart contract that holds your collateral, and you can mint up to a set fraction of that value (perhaps $100) in stablecoins. To get your collateral back, you repay the stablecoins plus a **stability fee** — interest charged on what you minted. If your collateral's value falls too close to your debt, the system triggers a **liquidation** — it automatically sells your collateral to make sure every stablecoin stays fully backed.
+
+DAI launched on Ethereum on December 18, 2017, backed only by ether, and expanded to multiple collateral types in 2019. It kept its dollar peg through several brutal market crashes, which is why it earned a reputation as decentralized finance's workhorse dollar.
+
+## The rebrand: MakerDAO becomes Sky
+
+In 2024 the project rebranded to Sky and launched upgraded tokens on September 18 of that year. MKR converts to SKY at a fixed rate of 24,000 SKY per 1 MKR, and DAI upgrades to USDS one-for-one. Governance later made SKY the sole governance token and, starting in September 2025, applied a "Delayed Upgrade Penalty" that trims the SKY received per MKR by 1 percent, rising another percentage point each quarter, to push holdouts to convert.
+
+The DAI-to-USDS migration largely wrapped up in spring 2026: Binance automatically converted customer DAI balances and delisted DAI trading pairs on April 7, 2026, with other major exchanges running similar conversions in the following weeks. DAI still exists on-chain, but USDS is now the flagship.
+
+## Real-world assets and the savings rate
+
+A defining shift is the collateral mix. A large share of USDS backing — roughly 40 percent by early 2026, by ecosystem estimates — now sits in **real-world assets (RWAs)**: traditional financial instruments, mainly short-term US Treasury bills and tokenized money-market funds, represented on the blockchain. The yield those assets earn helps fund the **Sky Savings Rate**: deposit USDS and you receive **sUSDS**, a token whose redemption value grows over time as savings interest accrues.
+
+T-bills pay reliable yield, but they require custodians, banks, and legal agreements — exactly the intermediaries a "decentralized" stablecoin was meant to avoid, and points where a regulator or court could intervene. Sky's leadership has also acknowledged that USDS could include a freeze function in the future, a debate that goes to the heart of what decentralization means here.
+
+## The Endgame plan
+
+The rebrand is part of "Endgame," a multi-year restructuring led by cofounder Rune Christensen. It splits the ecosystem into semi-independent units called Stars (with the lending platform Spark as the first), each with its own focus and incentives. Supporters say this reduces governance overload; critics call the plan bewilderingly complex, arguing the cascade of new names, tokens, and sub-organizations makes the system harder for ordinary token holders to oversee.
+
+## Risks
+
+**Depeg risk.** If collateral crashes faster than liquidations can keep up, USDS could trade below one dollar.
+
+**RWA counterparty and regulatory risk.** Treasury-bill backing depends on off-chain custodians and could be frozen or seized by authorities.
+
+**Governance concentration.** Christensen controls roughly 9 percent of governance tokens, and low voter turnout amplifies his influence; S&P Global's 2025 credit assessment cited highly centralized governance. A well-funded attacker capturing votes is a standing threat.
+
+**Market and smart-contract risk.** SKY itself is volatile, and bugs in vault or savings contracts could cause losses.
+
+## In summary
+
+Sky carries forward crypto's longest-running experiment in decentralized money, with a stablecoin system that has survived since 2017. The rebrand brought a savings rate, real-world asset yield, and big ambitions — but also added complexity, off-chain dependencies, and lingering governance concerns. Anyone evaluating SKY or USDS should weigh that history against how much "decentralized" has been traded for scale. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [The Dai Stablecoin System Whitepaper (MakerDAO, December 2017)](https://makerdao.com/whitepaper/DaiDec17WP.pdf)
+- [Sky.money — official site](https://sky.money)
+- [MKR to SKY Upgrade — official Sky ecosystem page](https://upgrademkrtosky.skyeco.com/)
+- [Sky (SKY) on CoinGecko](https://www.coingecko.com/en/coins/sky)

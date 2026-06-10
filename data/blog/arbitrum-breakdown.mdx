@@ -1,0 +1,63 @@
+---
+title: 'Arbitrum: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['arbitrum', 'layer-2', 'ethereum']
+summary: 'A breakdown of Arbitrum: the leading optimistic rollup on Ethereum, how its technology works, what the ARB token actually does, and its trade-offs.'
+images: ['/images/covers/arbitrum-breakdown.jpg']
+authors: ['default']
+coins: ['arbitrum']
+draft: false
+---
+
+Arbitrum is a **layer 2** — a network that runs on top of Ethereum, processing transactions cheaply and quickly while relying on Ethereum for final security. Built by Offchain Labs, it launched its mainnet in 2021 and has since grown into the largest Ethereum layer 2 measured by total value locked. Its ARB token arrived in March 2023 through one of the biggest airdrops in crypto history.
+
+<CoinCard id="arbitrum" />
+
+## How Arbitrum scales Ethereum
+
+Arbitrum is an **optimistic rollup** — a system that bundles many transactions together, executes them off Ethereum's main chain, and posts the results back to Ethereum while "optimistically" assuming they are valid. Instead of re-checking every transaction up front, the network relies on **fraud proofs** — challenges that an observer can submit if an operator posts an incorrect result. To leave time for those challenges, withdrawals from Arbitrum back to Ethereum wait through a challenge window of roughly one week.
+
+This design lets Arbitrum run the same smart contracts as Ethereum at a small fraction of the cost. Note that gas fees on Arbitrum are paid in ETH, not ARB.
+
+Decentralization has improved over time. In February 2025, Arbitrum activated **BoLD** — a dispute protocol that made validation permissionless, meaning anyone — not just an approved list of validators — can now submit a fraud proof and challenge the chain's state.
+
+## What the ecosystem includes
+
+Arbitrum is really a family of networks and tools:
+
+- **Arbitrum One** — the flagship chain, home to most of the ecosystem's DeFi activity, including lending markets and derivatives exchanges.
+- **Arbitrum Nova** — a cheaper chain that keeps some data off Ethereum via a trusted committee, aimed at gaming and social apps.
+- **Stylus** — live on mainnet since 2024, it lets developers write contracts in Rust, C, and C++ that run alongside Solidity contracts.
+- **Orbit chains** — custom blockchains that outside teams launch using Arbitrum's technology.
+
+As of 2026, Arbitrum One remains the largest layer 2 by value deposited in its applications, though Coinbase-backed Base has narrowed the gap considerably.
+
+## The ARB token and the value-accrual question
+
+ARB launched with a supply of 10 billion tokens, with roughly 11.6 percent airdropped to early users in March 2023. It is a pure **governance token** — its only built-in function is voting in the Arbitrum DAO, the on-chain organization that controls protocol upgrades and treasury spending.
+
+That deserves an honest discussion. ARB does not pay for gas, is not required to use the network, and earns no direct share of network fees; the fees Arbitrum collects in ETH flow to the DAO's treasury rather than to individual token holders. So the token's fundamental value rests on what governing the network — and its multibillion-token treasury — is actually worth, which is a genuinely open question.
+
+Governance has also had growing pains. In April 2023, the very first proposal, AIP-1, asked token holders to ratify sending 750 million ARB (then worth around $1 billion) to the Arbitrum Foundation — but the Foundation had already begun moving and spending the tokens before the vote concluded. Holders voted overwhelmingly against it, and the Foundation backed down, splitting the package into separate votes. The episode remains a cautionary tale about how decentralized governance can lag behind the entities it is meant to oversee.
+
+## Risks
+
+**Centralized sequencer.** The **sequencer** — the operator that orders incoming transactions — is run by Offchain Labs alone. It cannot steal funds, but an outage can stall the network, and users must fall back on a slower escape hatch through Ethereum.
+
+**Token unlocks.** Large allocations to the team and early investors unlock on a monthly schedule running into 2027, steadily adding new supply that the market must absorb.
+
+**Competition.** Base, OP Mainnet, and newer zero-knowledge rollups all compete for the same users, and switching costs between layer 2s are low.
+
+**Market and regulatory risk.** ARB is volatile like most crypto assets, and regulators in several countries are still defining how governance tokens should be treated.
+
+## In summary
+
+Arbitrum is proven technology with the deepest DeFi ecosystem of any Ethereum layer 2, and milestones like BoLD and Stylus show steady progress on decentralization and developer reach. The harder question sits with the ARB token itself, which governs the network but captures none of its fees directly. Anyone considering ARB should understand they are buying a vote, not a claim on revenue. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [A gentle introduction to BoLD — Arbitrum Docs](https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction)
+- [Arbitrum Stylus: Now Live on Mainnet — Arbitrum Blog](https://blog.arbitrum.io/arbitrum-stylus-mainnet/)
+- [The $ARB token: A conceptual overview — Arbitrum DAO Docs](https://docs.arbitrum.foundation/concepts/arb-token)
+- [Arbitrum (ARB) — CoinGecko](https://www.coingecko.com/en/coins/arbitrum)

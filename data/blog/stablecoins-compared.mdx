@@ -1,0 +1,47 @@
+---
+title: 'USDT vs. USDC vs. USDS: How the Major Stablecoins Actually Differ'
+date: '2026-06-09'
+postType: guide
+tags: ['stablecoins', 'basics']
+summary: 'How the three major stablecoin models — Tether, USDC, and Sky''s USDS — differ in backing, transparency, and risk, and which trade-offs matter for everyday users.'
+images: ['/images/covers/stablecoins-compared.jpg']
+authors: ['default']
+draft: false
+---
+
+Every major **stablecoin** — a cryptocurrency designed to hold a steady value, usually one US dollar — makes the same promise: one token equals one dollar. But how that promise is kept varies enormously. This guide compares the three dominant models through their best-known examples: Tether's USDT, Circle's USDC, and Sky's USDS, and explains what "backed" actually means in each case.
+
+## Three very different ways to back a dollar
+
+**USDT (Tether) — the centralized offshore giant.** Tether is by far the largest stablecoin, with more than $180 billion in circulation as of 2026. It is issued by a company based offshore (now headquartered in El Salvador) that holds reserves — mostly US Treasury bills, plus bitcoin, gold, and other assets — and promises to redeem tokens for dollars. Tether publishes quarterly **attestations** — accountant-signed snapshots confirming reserves existed on a given date — but has never published a full **audit**, the deeper examination that checks controls and accounting over time, though it has said one is in progress. Its track record matters here: in 2021 the US Commodity Futures Trading Commission fined Tether $41 million for falsely claiming USDT was fully backed by dollars at all times, finding reserves were sufficient on only about a quarter of the days sampled between 2016 and 2018.
+
+**USDC (Circle) — the centralized regulated alternative.** USDC is issued by Circle, a publicly traded US company. Reserves sit in cash and short-term Treasuries, with monthly attestations from a Big Four accounting firm, and Circle operates under the GENIUS Act, the 2025 US federal stablecoin law requiring one-to-one liquid reserves. USDC's worst moment was March 2023, when Circle disclosed that $3.3 billion of its reserves were stuck at the failed Silicon Valley Bank. USDC briefly traded around 87 cents before US regulators guaranteed the bank's deposits and the peg recovered within days. The episode showed that even a conservatively run stablecoin carries banking risk.
+
+**USDS (Sky) — the decentralized, overcollateralized model.** USDS is the upgraded successor to DAI, issued by Sky (formerly MakerDAO). Instead of a company holding dollars, users lock crypto collateral into smart contracts to mint USDS, and the system is **overcollateralized** — more value is locked up than tokens issued, so a price drop in the collateral can be absorbed. Today that collateral mixes crypto assets with tokenized real-world assets such as US Treasury bills, plus a large buffer of USDC itself. Everything is visible on-chain in real time, but there is no company guaranteeing redemption — stability comes from code, incentives, and liquidations. DAI also wobbled in March 2023, dipping below 90 cents, precisely because so much of its backing was USDC.
+
+## Which one fits which job?
+
+- **Trading liquidity:** USDT dominates trading volume globally, especially on offshore exchanges. If you need the deepest markets, it is usually the default.
+- **Regulatory comfort:** USDC offers the clearest reserves, US oversight, and the strongest disclosure. Cautious holders and businesses generally prefer it.
+- **Censorship resistance:** USDS has no central redemption desk, though its reliance on USDC and real-world collateral means it is less independent than the original DAI design.
+
+## A note for Canadian readers
+
+Canadian securities regulators treat stablecoins as "value-referenced crypto assets" that may be securities or derivatives. Under the CSA's interim framework, registered Canadian platforms can only offer stablecoins whose issuers sign formal undertakings — Circle did so for USDC in December 2024, while Tether never did, and USDT was delisted from regulated Canadian exchanges. A federal stablecoin framework passed under Bill C-15 is now bringing dedicated rules for issuers operating in Canada.
+
+## Risks they all share
+
+- A **depeg** — the token trading away from $1 — can happen to any of them under stress.
+- None are insured deposits; there is no CDIC or FDIC protection.
+- Issuers (or, for USDS, governance) can freeze or change things; smart-contract bugs add another layer of risk on-chain.
+
+## The bottom line
+
+USDT offers scale and liquidity with the weakest transparency, USDC offers regulation and disclosure with bank-dependency risk, and USDS offers on-chain transparency without any redemption guarantee. Match the tool to the job, and never treat any stablecoin as risk-free cash. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [CFTC Order Against Tether and Bitfinex (2021)](https://www.cftc.gov/PressRoom/PressReleases/8450-21)
+- [Circle: GENIUS Act Compliance](https://www.circle.com/genius-act)
+- [Canada's Stablecoin Framework — Department of Finance](https://www.canada.ca/en/department-finance/programs/financial-sector-policy/canadas-stablecoin-framework.html)
+- [Sky Protocol — Official Site](https://sky.money/)

@@ -1,0 +1,64 @@
+---
+title: 'Aave: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['aave', 'defi', 'smart-contracts']
+summary: 'A breakdown of Aave: the largest DeFi lending protocol, how pooled overcollateralized lending works, the GHO stablecoin, and the trade-offs to know.'
+images: ['/images/covers/aave-breakdown.jpg']
+authors: ['default']
+coins: ['aave']
+draft: false
+---
+
+Aave is the largest lending protocol in **DeFi** — decentralized finance, financial services built from code on a blockchain instead of run by a company. It lets people earn interest on crypto deposits or borrow against their holdings without a bank in the middle, and as of mid-2026 it holds more deposits than any other DeFi lending platform. The protocol is controlled by holders of its AAVE token.
+
+<CoinCard id="aave" />
+
+## How pooled lending on Aave works
+
+Aave replaces the loan officer with a shared pot of money. Suppliers deposit assets such as ETH or USDC into a **liquidity pool** — a smart contract that holds everyone's funds together — and earn interest paid by borrowers. Interest rates adjust automatically: when a pool is nearly empty, rates rise to attract deposits and discourage borrowing.
+
+Borrowing is **overcollateralized**, meaning you must lock up collateral worth more than the loan you take. Someone might deposit $1,500 of ETH to borrow $1,000 of stablecoins. If the collateral's value falls too close to the debt, the position faces **liquidation** — an automatic sale of the borrower's collateral, at a discount, to repay the loan before it can leave the pool short. Liquidations are harsh on the borrower, but they are what keeps depositors whole.
+
+When you supply assets, you receive **aTokens** — receipt tokens, like aUSDC for USDC, whose balance grows in your wallet as interest accrues and which can be redeemed for the underlying deposit at any time.
+
+## Versions and the GHO stablecoin
+
+Aave v3, live since 2022, added **efficiency mode**, which allows higher borrowing power when the collateral and the loan are closely correlated assets (such as two stablecoins). It also added **isolation mode**, which quarantines newer, riskier tokens so they can only back limited loans and cannot endanger the main pools.
+
+Aave v4 launched on the Ethereum mainnet on March 30, 2026, after roughly two years of development. It reorganizes the protocol around a "hub-and-spoke" design: central liquidity hubs feed many specialized markets ("spokes"), each with its own risk settings, which is aimed at supporting institutional and real-world-asset lending without splitting liquidity.
+
+Aave also issues **GHO**, a dollar-pegged stablecoin that users mint by borrowing against their Aave collateral. Interest on GHO loans goes to the Aave treasury rather than to outside suppliers. GHO's circulating supply grew past roughly $580 million in early 2026 and has expanded to networks beyond Ethereum.
+
+## The AAVE token
+
+AAVE has a maximum supply of 16 million tokens. It serves three main roles:
+
+- **Governance.** Holders vote on risk parameters, new markets, and upgrades — the v4 launch itself required a governance vote.
+- **Safety staking.** Stakers backstop the protocol through a **slashing backstop** — staked tokens that can be partially seized to cover bad debt if the protocol takes a loss. In 2025 Aave upgraded this system, called Umbrella, to slash automatically when shortfalls cross set thresholds.
+- **Value return.** Under the 2025 "Aavenomics" update, the DAO began using protocol revenue to buy back AAVE — starting at $1 million per week in April 2025 and later formalized as an ongoing program.
+
+## History and track record
+
+Aave began in 2017 as ETHLend, a peer-to-peer lending project founded by Stani Kulechov, and relaunched under the Aave name (Finnish for "ghost") in January 2020 with the pooled model. The old LEND token converted to AAVE in late 2020. The protocol has operated through every major crypto downturn — March 2020, the 2022 collapses, and subsequent crises — without becoming insolvent, a notable record in DeFi.
+
+## Risks
+
+**Smart-contract risk.** Heavily audited code can still contain bugs, and Aave holds billions of dollars.
+
+**Bad debt.** Liquidations can fail in fast markets or thin tokens. In November 2022, a trader's failed short squeeze on the CRV token left Aave with about $1.6 million in bad debt, which the DAO later covered. Stakers in the safety system can be slashed in such events.
+
+**Regulatory risk.** Lending and stablecoin issuance are areas regulators watch closely, and DeFi's legal treatment is still unsettled in many countries.
+
+**Token volatility.** AAVE's price swings sharply with the broader crypto market.
+
+## In summary
+
+Aave is DeFi's flagship lender: long-running, battle-tested, and still shipping major upgrades like v4 and GHO. Its overcollateralized design has protected depositors through repeated market shocks, though smart-contract, bad-debt, and regulatory risks never fully disappear. Anyone using it should understand liquidations before borrowing. This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Aave V4 is Live on Ethereum — Aave blog](https://aave.com/blog/aave-v4-live-ethereum)
+- [GHO — Aave Protocol Documentation](https://aave.com/docs/ecosystem/gho)
+- [Umbrella — Aave Protocol Documentation](https://aave.com/docs/aave-v3/umbrella)
+- [Aave (AAVE) — CoinGecko](https://www.coingecko.com/en/coins/aave)

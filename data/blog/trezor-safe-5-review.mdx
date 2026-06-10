@@ -1,0 +1,63 @@
+---
+title: 'Trezor Safe 5 Review'
+date: '2026-06-09'
+postType: review
+reviewedItem: 'Trezor Safe 5'
+rating: 4.5
+tags: ['wallets', 'hardware-wallet', 'security']
+summary: 'A balanced review of the Trezor Safe 5 — its secure element, open-source firmware, 20-word backup standard, and who it suits.'
+images: ['/images/covers/trezor-safe-5-review.jpg']
+authors: ['default']
+draft: false
+---
+
+The Trezor Safe 5 is a **hardware wallet** — a small physical device that stores the private keys controlling your crypto offline, away from internet-connected computers. It is made by SatoshiLabs, the Czech company that shipped the first commercial hardware wallet back in 2014, and it launched in June 2024 at a retail price of $169 as the company's then-flagship (the Bluetooth-equipped Trezor Safe 7, released in October 2025, has since taken that spot). It matters because it directly addresses the most persistent criticism of older Trezor devices: their vulnerability to physical attacks. (We also reviewed the older [Trezor Model T](/blog/trezor-model-t-review) if you want a comparison point.)
+
+## What it is and how it works
+
+Like all hardware wallets, the Safe 5 keeps your private keys on the device and signs transactions internally. You connect it over USB-C to the **Trezor Suite** app on desktop, or to an Android phone with a compatible cable, and confirm each transaction on the device's own 1.54-inch color touchscreen. The screen is covered in Gorilla Glass 3 and paired with a haptic engine, so taps give physical feedback — a genuine step up from the small monochrome screens and physical buttons on earlier Trezors.
+
+The standard edition supports thousands of coins and tokens, including Bitcoin and Ethereum. A Bitcoin-only edition (in orange) is also sold, with all non-Bitcoin code stripped out for a smaller attack surface.
+
+## Security model
+
+This is where the Safe 5 changes the story. Older Trezors used a general-purpose microcontroller with no dedicated protection, and in 2020 Kraken's security team demonstrated a **voltage glitching** attack — briefly disturbing a chip's power supply to bypass its protections — that could extract the seed from a Trezor One or Model T in about 15 minutes of physical access.
+
+The Safe 5 adds a **secure element** — a tamper-resistant chip designed to withstand physical attacks — specifically Infineon's Optiga Trust M, certified to EAL6+, a high Common Criteria assurance level that includes testing against fault injection and side-channel attacks. The chip enforces PIN verification in hardware and wipes its secret after 16 wrong attempts, so a thief with your device cannot brute-force their way in.
+
+Crucially, Trezor chose a secure element whose documentation is public, with no non-disclosure agreement required, so the firmware remains fully **open source** — anyone can inspect the code that runs the wallet. Most competitors with secure elements keep parts of their firmware closed because of chip NDAs. Getting both properties at once is the Safe 5's defining achievement.
+
+The default backup is also new: a 20-word phrase based on **SLIP-39** — a standard built on Shamir's secret sharing that lets a secret be split into multiple parts. You start with a single 20-word share and can later upgrade to a multi-share backup, where, for example, any 2 of 3 shares can recover the wallet and no single share is enough.
+
+## Usability
+
+Setup through Trezor Suite is clear and beginner-friendly, and the touchscreen plus haptics make entering PINs and confirming addresses far less fiddly than older models. Android works over a USB cable; on iPhone you are limited to a view-only mobile app, since the Safe 5 has no Bluetooth and iOS does not support its USB connection.
+
+## Limitations worth knowing
+
+The lack of Bluetooth is deliberate — wireless links add attack surface — but it makes the Safe 5 awkward as a mobile-first wallet. The device is also newer than the decade-old Trezor One, so the secure-element design has a shorter real-world track record. And while the firmware is open source, the secure element itself is still proprietary silicon; Trezor mitigates this by using it only for PIN enforcement and as one input alongside other secrets, with documentation that is publicly reviewable. Note that the 20-word SLIP-39 backup is not directly compatible with wallets that only accept traditional 12/24-word phrases.
+
+## Pros
+
+- EAL6+ secure element combined with fully open-source firmware
+- Fixes the physical-extraction weakness of older Trezors
+- Bright color touchscreen with haptic feedback
+- Flexible 20-word backup, upgradeable to multi-share
+- Bitcoin-only edition available
+
+## Cons
+
+- No Bluetooth; iPhone use is view-only
+- Shorter track record than older models
+- SLIP-39 backups are not portable to every wallet
+
+## Verdict
+
+The Safe 5 is one of the most complete Trezors to date: it closes the company's long-standing physical-security gap without sacrificing the transparency that built its reputation. Mobile-first users may prefer something wireless, such as the newer Safe 7, but for desktop-based self-custody it is an easy recommendation. **4.5/5**. This review is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Trezor Safe 5 — official product page](https://trezor.io/trezor-safe-5)
+- [Secure Elements in Trezor Safe devices — Trezor Knowledge Base](https://trezor.io/learn/security-privacy/how-trezor-keeps-you-safe/secure-elements-in-trezor-safe-devices)
+- [Trezor Safe 5 launch announcement — SatoshiLabs](https://satoshilabs.com/news/trezor-safe-5-launches-bringing-everyday-convenience-to-crypto-hardware-wallets)
+- [Kraken Identifies Critical Flaw in Trezor Hardware Wallets — Kraken Blog](https://blog.kraken.com/product/security/kraken-identifies-critical-flaw-in-trezor-hardware-wallets)
