@@ -1,4 +1,5 @@
 import { cgFetch, type CgOutcome } from './cgFetch'
+import { dbCoinDetail, dbOhlc } from './dbReads'
 
 export interface ResourceLink {
   label: string
@@ -168,10 +169,15 @@ export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetch {
   return outcome.status === 404 ? { status: 'not-found' } : { status: 'unavailable' }
 }
 
-// Server-side, ISR-cached (10 min). Distinguishes unknown vs temporarily-down.
-// Longer TTL keeps revalidations (and thus rate-limit windows) infrequent.
+// DB-first (docs/market-data.md): a profiled coin with fresh market numbers is
+// served from Postgres; otherwise the API path (ISR-cached, 10 min) decides,
+// with a stale DB row standing in when the API is down (instead of a soft 404).
 export async function getCoinDetail(id: string): Promise<CoinFetch> {
-  return classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 600 }))
+  const db = await dbCoinDetail(id)
+  if (db?.fresh) return { status: 'ok', coin: db.data }
+  const api = classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 600 }))
+  if (api.status === 'unavailable' && db) return { status: 'ok', coin: db.data }
+  return api
 }
 
 // Thin wrapper for callers (e.g. generateMetadata) that only need the coin or null.
@@ -186,6 +192,11 @@ export async function getCoin(id: string): Promise<CoinDetail | null> {
 export type OhlcResult = { ok: true; candles: Candle[] } | { ok: false }
 
 export async function getOhlcResult(id: string, frame: Timeframe): Promise<OhlcResult> {
+  // DB-first: candle roll-ups serve the frame once they have enough coverage
+  // and recency (dbOhlc returns null otherwise — e.g. while history is still
+  // accumulating for the longer frames).
+  const db = await dbOhlc(id, frame)
+  if (db) return { ok: true, candles: db }
   const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 600 })
   return r.ok ? { ok: true, candles: mapOhlc(r.data) } : { ok: false }
 }

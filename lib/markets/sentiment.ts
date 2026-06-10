@@ -1,3 +1,5 @@
+import { dbFearGreed, dbFearGreedHistory } from './dbReads'
+
 export interface FearGreed {
   value: number
   label: string
@@ -15,8 +17,11 @@ export function mapFearGreed(payload: FngPayload): FearGreed | null {
   return { value, label: latest.value_classification || 'Neutral' }
 }
 
-// Server-side, ISR-cached (1 h — the index updates daily). Null on failure.
+// DB-first (docs/market-data.md); server-side, ISR-cached (1 h — the index
+// updates daily) on the API path. Null on failure.
 export async function getFearGreed(): Promise<FearGreed | null> {
+  const db = await dbFearGreed()
+  if (db?.fresh) return db.data
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
   try {
@@ -24,10 +29,10 @@ export async function getFearGreed(): Promise<FearGreed | null> {
       next: { revalidate: 3600 },
       signal: controller.signal,
     })
-    if (!res.ok) return null
-    return mapFearGreed(await res.json())
+    if (!res.ok) return db?.data ?? null
+    return mapFearGreed(await res.json()) ?? db?.data ?? null
   } catch {
-    return null
+    return db?.data ?? null
   } finally {
     clearTimeout(timeoutId)
   }
@@ -52,8 +57,11 @@ export function mapFearGreedHistory(payload: FngPayload): FearGreedPoint[] {
   return points.reverse()
 }
 
-// Server-side, ISR-cached (1 h). Up to ~1 year of daily points. [] on failure.
+// DB-first; server-side, ISR-cached (1 h) on the API path. Up to ~1 year of
+// daily points. [] on failure.
 export async function getFearGreedHistory(limit = 365): Promise<FearGreedPoint[]> {
+  const db = await dbFearGreedHistory(limit)
+  if (db?.fresh) return db.data
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 5000)
   try {
@@ -61,10 +69,11 @@ export async function getFearGreedHistory(limit = 365): Promise<FearGreedPoint[]
       next: { revalidate: 3600 },
       signal: controller.signal,
     })
-    if (!res.ok) return []
-    return mapFearGreedHistory(await res.json())
+    if (!res.ok) return db?.data ?? []
+    const mapped = mapFearGreedHistory(await res.json())
+    return mapped.length ? mapped : (db?.data ?? [])
   } catch {
-    return []
+    return db?.data ?? []
   } finally {
     clearTimeout(timeoutId)
   }

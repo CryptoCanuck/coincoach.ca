@@ -1,4 +1,5 @@
 import { cgFetch } from './cgFetch'
+import { dbTopCoins, dbMarketsByIds, dbMarketTable } from './dbReads'
 
 export interface Coin {
   id: string
@@ -70,25 +71,37 @@ export function pickCoin(coins: Coin[], id: string): Coin | null {
 }
 
 // Top 10 by market cap — shared by the ticker and the homepage coin table
-// (same URL, so Next dedupes the fetch). ISR-cached. Movers fetches separately.
+// (same URL, so Next dedupes the fetch). DB-first (docs/market-data.md):
+// fresh DB rows are served directly; otherwise the API, then stale DB rows
+// as a last resort. ISR-cached on the API path. Movers fetches separately.
 export async function getTopCoins(): Promise<Coin[]> {
-  return fetchMarkets(10)
+  const db = await dbTopCoins(10)
+  if (db?.fresh) return db.data
+  const api = await fetchMarkets(10)
+  return api.length ? api : (db?.data ?? [])
 }
 
-// Biggest movers among the top 100 by market cap.
+// Biggest movers among the top 100 by market cap. DB-first.
 export async function getMovers(): Promise<{ gainers: Coin[]; losers: Coin[] }> {
-  return splitMovers(await fetchMarkets(100))
+  const db = await dbTopCoins(100)
+  if (db?.fresh) return splitMovers(db.data)
+  const api = await fetchMarkets(100)
+  return splitMovers(api.length ? api : (db?.data ?? []))
 }
 
-// Live data for a specific set of coins (by id), server-side + ISR-cached (60s).
-// [] for an empty id list or on failure. Reuses mapCoins (drops empty-id rows).
+// Live data for a specific set of coins (by id), DB-first; server-side +
+// ISR-cached (60s) on the API path. [] for an empty id list or on failure.
+// Reuses mapCoins (drops empty-id rows).
 export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
   // Trim, drop blanks, and dedupe so messy `coins:` frontmatter can't trigger a
   // wasted call (e.g. ['', '  ']) or a bloated ids param with repeats.
   const normalizedIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))]
   if (!normalizedIds.length) return []
+  const db = await dbMarketsByIds(normalizedIds)
+  if (db?.fresh) return db.data
   const r = await cgFetch<CoinGeckoMarket[]>(marketsByIdsUrl(normalizedIds), { revalidate: 60 })
-  return r.ok ? mapCoins(r.data) : []
+  if (r.ok) return mapCoins(r.data)
+  return db?.data ?? []
 }
 
 export interface MarketCoin {
@@ -156,9 +169,12 @@ export function mapMarketCoins(payload: CoinGeckoMarketRow[]): MarketCoin[] {
   })
 }
 
-// Top `perPage` coins by market cap with 24h/7d change + sparkline. Server-side,
-// ISR-cached (120s). [] on failure.
+// Top `perPage` coins by market cap with 24h/7d change + sparkline. DB-first;
+// server-side, ISR-cached (120s) on the API path. [] on failure.
 export async function getMarketTable(perPage = 100): Promise<MarketCoin[]> {
+  const db = await dbMarketTable(perPage)
+  if (db?.fresh) return db.data
   const r = await cgFetch<CoinGeckoMarketRow[]>(marketTableUrl(perPage), { revalidate: 120 })
-  return r.ok ? mapMarketCoins(r.data) : []
+  if (r.ok) return mapMarketCoins(r.data)
+  return db?.data ?? []
 }

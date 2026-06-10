@@ -1,4 +1,5 @@
 import { cgFetch } from './cgFetch'
+import { dbGlobalStats } from './dbReads'
 
 export interface GlobalStats {
   totalMarketCap: number
@@ -32,10 +33,17 @@ export function mapGlobal(payload: CoinGeckoGlobal): GlobalStats | null {
   }
 }
 
-// Server-side, ISR-cached (5 min). Returns null on any failure so the UI degrades.
+// DB-first (docs/market-data.md); server-side, ISR-cached (5 min) on the API
+// path. Returns null on any failure so the UI degrades.
 export async function getGlobalStats(): Promise<GlobalStats | null> {
+  const db = await dbGlobalStats()
+  if (db?.fresh) return db.data
   const r = await cgFetch<CoinGeckoGlobal>('https://api.coingecko.com/api/v3/global', {
     revalidate: 300,
   })
-  return r.ok ? mapGlobal(r.data) : null
+  if (r.ok) {
+    const mapped = mapGlobal(r.data)
+    if (mapped) return mapped
+  }
+  return db?.data ?? null
 }
