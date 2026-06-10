@@ -1,0 +1,56 @@
+---
+title: 'Hyperliquid: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['hyperliquid', 'defi', 'layer-1']
+summary: 'A breakdown of Hyperliquid: a purpose-built layer-1 blockchain running a fully on-chain perpetual futures exchange, its HYPE token, and its trade-offs.'
+images: ['/images/covers/hyperliquid-breakdown.jpg']
+authors: ['default']
+coins: ['hyperliquid']
+draft: false
+---
+
+Hyperliquid is a layer-1 blockchain built around one flagship application: a fully on-chain exchange for **perpetual futures** — contracts that let traders speculate on a coin's price with leverage and no expiry date. Rather than launching as an app on an existing chain, the team built a custom blockchain fast enough to run a professional-grade exchange entirely on-chain. Its native token, HYPE, arrived in late 2024 through one of the largest airdrops in crypto history.
+
+<CoinCard id="hyperliquid" />
+
+## How Hyperliquid puts an exchange on a blockchain
+
+Most decentralized exchanges use an **automated market maker (AMM)** — a pool of tokens with prices set by a formula — because traditional order books were too slow and expensive to run on-chain. Hyperliquid took the opposite path: it runs a full **central limit order book** — the list of standing buy and sell orders used by stock exchanges and major crypto exchanges — directly on its own chain, so every order, cancellation, and trade is recorded on-chain.
+
+That is possible because of **HyperBFT**, a custom consensus protocol derived from the academic HotStuff algorithm. It finalizes transactions in well under a second and, according to the project's documentation, can process on the order of 200,000 orders per second. The exchange logic lives in a component called HyperCore.
+
+In February 2025, Hyperliquid added the **HyperEVM** — an Ethereum-compatible environment on the same chain — so developers can deploy ordinary Ethereum-style smart contracts that interact with the exchange's liquidity. This turned a single-purpose trading chain into a broader DeFi platform.
+
+## The HYPE token
+
+HYPE has a maximum supply of 1 billion tokens. At the genesis event on November 29, 2024, 31% of the supply — 310 million HYPE — was airdropped to roughly 94,000 early users, a distribution worth over a billion dollars at launch and widely ranked among the largest airdrops ever. Notably, no tokens were allocated to venture capital firms, private investors, or exchanges; the small founding team self-funded the project and has publicly rejected VC money.
+
+The token has three main jobs:
+
+- **Staking** — holders delegate HYPE to validators that secure the network and earn rewards.
+- **Gas** — HYPE pays transaction fees on the HyperEVM, where base and priority fees are burned.
+- **Buybacks** — most trading fees flow to an on-chain **assistance fund**, which automatically buys HYPE on the open market; validators voted in late 2025 to formally recognize those tokens as burned, permanently removing them from supply.
+
+## Trade-offs and genuine concerns
+
+**A small validator set.** Hyperliquid runs on roughly two dozen validators, far fewer than Ethereum's more than a million validators or even most proof-of-stake chains. That keeps the network fast but concentrates power in few hands.
+
+**The JELLY incident.** In March 2025, a trader manipulated the price of the JELLY memecoin to squeeze Hyperliquid's community liquidity vault, which briefly faced over $10 million in paper losses. Validators voted within minutes to delist the market and force-settle positions at a price that favored the vault, while the foundation reimbursed most affected users. Critics noted that an exchange marketed as decentralized had effectively overridden market prices by committee — a level of admin intervention closer to a centralized exchange than a neutral protocol.
+
+**Closed-source core.** The core node software is not fully open source, which limits independent review and means outside validators largely run code they cannot fully inspect.
+
+## Risks
+
+HYPE carries the usual volatility of crypto assets, amplified by its link to trading activity: revenue and buybacks shrink in quiet markets. Perpetual futures are tightly regulated or restricted in many countries — Hyperliquid is not available to US users, for example — and derivatives rules remain a live regulatory risk. The platform also competes directly with large centralized exchanges and a growing field of rival perpetuals DEXs. Finally, smart-contract bugs and the concentrated validator set remain technical risks, and the chain's short track record means it has weathered fewer stress events than older networks.
+
+## In summary
+
+Hyperliquid is one of the clearest demonstrations that an order-book exchange can run fully on-chain, and its no-VC, user-first token launch earned it real community goodwill. The buyback-and-burn design ties HYPE closely to exchange revenue, for better or worse. Against that stand a small validator set, closed-source core software, and the JELLY episode's reminder that decentralization is still a work in progress. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Hyperliquid documentation](https://hyperliquid.gitbook.io/hyperliquid-docs)
+- [Hyperliquid docs: Fees](https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees)
+- [Hyperliquid docs: Staking](https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/staking)
+- [Hyperliquid on CoinGecko](https://www.coingecko.com/en/coins/hyperliquid)
