@@ -1,0 +1,56 @@
+---
+title: 'Market, Limit, and Stop Orders: Crypto Order Types Explained'
+date: '2026-06-09'
+postType: guide
+tags: ['basics', 'markets', 'exchanges']
+summary: 'Learn how market, limit, stop-loss, and take-profit orders work on crypto exchanges, what each one costs, and which type beginners should reach for first.'
+images: ['/images/covers/crypto-order-types-explained.jpg']
+authors: ['default']
+draft: false
+---
+
+When you buy or sell crypto on an exchange, the simple "buy" button hides a real decision: how should your trade be executed? The answer is an order type, and the wrong choice can quietly cost you money. This guide explains market, limit, stop, and take-profit orders in plain English, covers the quirks specific to crypto, and ends with a rule of thumb for beginners.
+
+## Why order types exist
+
+Every exchange runs an **order book** — a live, ranked list of everyone's offers to buy and sell at specific prices. An order type is your instruction for how your trade interacts with that list: trade right now at whatever prices are available, or wait until the market comes to your price.
+
+## Market orders: fast, but speed has a price
+
+A **market order** buys or sells immediately at the best prices currently on the book. You are guaranteed a fill, but not a price. The hidden cost is **slippage** — the gap between the price you saw quoted and the average price you actually paid. A tiny example: a small coin is quoted at $1.00 and you place a $5,000 market buy. The first $2,000 of sell offers fill at $1.00, the next $2,000 at $1.02, and the last $1,000 at $1.05. Your average price is about $1.02 — roughly 2% worse than the quote, before fees.
+
+## Limit orders: you set the price, the market decides
+
+A **limit order** says "buy (or sell) only at this price or better." You get full price control and zero slippage, but no guarantee: if the market never reaches your price, the order never fills.
+
+Limit orders also connect to fees. A **maker** is a trader whose resting limit order adds liquidity to the book; a **taker** removes liquidity by filling an existing order instantly — every market order is a taker order. Exchanges typically charge makers less, and some, like Kraken on select pairs, even pay **maker rebates** — a small credit instead of a fee. The takeaway: a patient limit order is usually cheaper twice over — lower fee, no slippage.
+
+## Stop-loss, stop-limit, and take-profit orders
+
+A **stop-loss order** sits dormant until the price falls to your chosen trigger (the stop price), then becomes a market order to sell, capping losses automatically. The catch: in a fast crash, that market order can fill well below your stop price, because the stop is only a trigger, not a guaranteed exit.
+
+A **stop-limit order** becomes a limit order instead when triggered. That prevents a terrible fill — but introduces the gap-through problem. If the price crashes straight through both your stop and your limit, your sell may never execute, and you hold through the entire drop. Neither version is safe in every scenario; each trades one risk for another.
+
+A **take-profit order** is the mirror image: it triggers a sell when the price rises to your target, locking in gains without you watching the screen.
+
+## Crypto-specific gotchas
+
+- **Thin altcoin books.** Small coins often have little resting liquidity, so even a modest market order can move the price several percent against you.
+- **24/7 markets.** Crypto never closes. Liquidity often thins out on weekends and overnight, making moves sharper — and your stops can trigger at 3 a.m. while you sleep.
+- **Scam wicks.** On small or poorly policed exchanges, a brief manipulated spike or dip (a long "wick" on the chart) can trigger your stop near the bottom, then snap back within minutes.
+- **Fees follow order type.** Market orders always pay the higher taker fee; resting limit orders usually pay the lower maker fee.
+
+## A simple decision guide for beginners
+
+Start with limit orders. Place a buy slightly below the current price (or a sell slightly above), accept that you might wait, and enjoy lower fees with no slippage. Reserve market orders for small trades in deeply liquid coins like Bitcoin, where slippage is negligible. If you use stops, give them room below normal volatility, and learn exactly how your exchange triggers them before relying on one.
+
+## The bottom line
+
+Order types are not advanced tricks — they are basic cost control. Market orders buy certainty of execution at the cost of price; limit orders buy price certainty at the cost of patience; stop orders automate exits but can misfire in crashes. None of them tells you what to trade or when. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [SEC Investor Bulletin: Understanding Order Types](https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-14)
+- [SEC Investor Bulletin: Stop, Stop-Limit, and Trailing Stop Orders](https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-15)
+- [Kraken Support: What Are Maker and Taker Fees?](https://support.kraken.com/articles/360000526126-what-are-maker-and-taker-fees-)
+- [Kraken Fee Schedule](https://www.kraken.com/features/fee-schedule)
