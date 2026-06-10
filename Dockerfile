@@ -18,6 +18,21 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 RUN yarn build
 
+# ---- collector: market-data collector (see docs/market-data.md) ----
+# Reuses the deps layer; needs only pg + the collector/db sources, plus
+# data/blog so the articleCoins job can scan frontmatter for tracked coins.
+FROM node:22-bookworm-slim AS collector
+WORKDIR /app
+ENV NODE_ENV=production
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 collector
+COPY --from=deps /app/node_modules ./node_modules
+COPY db ./db
+COPY collector ./collector
+COPY data/blog ./data/blog
+USER collector
+CMD ["node", "collector/index.mjs"]
+
 # ---- runner: minimal runtime image ----
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app
