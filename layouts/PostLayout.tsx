@@ -44,7 +44,8 @@ export default function PostLayout({
   children,
 }: LayoutProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { slug, date, title, summary, tags, readingTime, images, postType } = content as any
+  const { slug, date, title, summary, tags, readingTime, images, imageCredit, postType } =
+    content as any
   const shareUrl = `${siteMetadata.siteUrl}/blog/${slug}`
   const section = getSection(postType)
   const sortedPosts = allCoreContent(sortPosts(allBlogs))
@@ -98,6 +99,9 @@ export default function PostLayout({
             type={postType}
             className="h-[300px] w-full rounded-[10px] sm:h-[380px]"
           />
+          {imageCredit ? (
+            <p className="text-ink-3 mt-1.5 text-right text-[11px] leading-tight">{imageCredit}</p>
+          ) : null}
 
           <CoinDataProvider coins={coins}>
             <div className="prose prose-invert mt-7 max-w-none">{children}</div>

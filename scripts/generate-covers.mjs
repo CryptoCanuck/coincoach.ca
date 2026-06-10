@@ -116,6 +116,96 @@ function sparklinePoints(rand) {
   return points.join(' ')
 }
 
+function logoCoverSvg(slug, postType, ticker) {
+  const color = CATEGORY_COLORS[postType] ?? CATEGORY_COLORS.news
+  const rand = mulberry32(hashSlug(slug))
+  const spark = sparklinePoints(rand)
+  const label = postType.toUpperCase()
+  const cx = WIDTH / 2
+  const cy = Math.round(HEIGHT * 0.46)
+
+  const dots = []
+  for (let x = 60; x < WIDTH; x += 96) {
+    for (let y = 60; y < HEIGHT; y += 96) {
+      dots.push(`<circle cx="${x}" cy="${y}" r="1.6" fill="#ffffff" opacity="0.05"/>`)
+    }
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
+  <defs>
+    <linearGradient id="wash" gradientTransform="rotate(${Math.round(rand() * 360)} 0.5 0.5)">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.30"/>
+      <stop offset="55%" stop-color="#0a0e15" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="logoGlow" cx="0.5" cy="${(cy / HEIGHT).toFixed(3)}" r="0.42">
+      <stop offset="0%" stop-color="${color}" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="#0a0e15"/>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#wash)"/>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#logoGlow)"/>
+  ${dots.join('\n  ')}
+  <circle cx="${cx}" cy="${cy}" r="186" fill="none" stroke="${color}" stroke-opacity="0.45" stroke-width="3"/>
+  <circle cx="${cx}" cy="${cy}" r="226" fill="none" stroke="${color}" stroke-opacity="0.18" stroke-width="2"/>
+  <circle cx="${cx}" cy="${cy}" r="278" fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="2"/>
+  <circle cx="${cx}" cy="${cy}" r="150" fill="#10151e" stroke="${color}" stroke-opacity="0.25" stroke-width="2"/>
+  <polyline points="${spark}" fill="none" stroke="${color}" stroke-opacity="0.4" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  ${
+    ticker
+      ? `<text x="${WIDTH - 48}" y="${HEIGHT - 64}" text-anchor="end" font-family="sans-serif" font-size="200" font-weight="800" fill="#ffffff" opacity="0.06">${ticker}</text>`
+      : ''
+  }
+  <text x="56" y="86" font-family="sans-serif" font-size="26" font-weight="700" letter-spacing="6" fill="${color}">${label}</text>
+  <text x="56" y="${HEIGHT - 52}" font-family="sans-serif" font-size="34" font-weight="800">
+    <tspan fill="#e7ecf3">Coin</tspan><tspan fill="#f2a024">Coach</tspan>
+  </text>
+</svg>`
+}
+
+const LOGO_CACHE = path.join(ROOT, 'node_modules', '.cache', 'coin-logos')
+
+/** Fetch official coin artwork from CoinGecko, cached on disk between runs. */
+async function fetchLogos(ids) {
+  await mkdir(LOGO_CACHE, { recursive: true })
+  const map = {}
+  const missing = []
+  for (const id of ids) {
+    const file = path.join(LOGO_CACHE, `${id}.png`)
+    try {
+      await readFile(file)
+      map[id] = file
+    } catch {
+      missing.push(id)
+    }
+  }
+  if (missing.length) {
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${missing.join(',')}&per_page=250`
+    const res = await fetch(url, {
+      headers: process.env.COINGECKO_API_KEY
+        ? { 'x-cg-demo-api-key': process.env.COINGECKO_API_KEY }
+        : {},
+    })
+    if (res.ok) {
+      for (const coin of await res.json()) {
+        try {
+          const img = await fetch(coin.image.replace('/large/', '/large/'))
+          if (!img.ok) continue
+          const buf = Buffer.from(await img.arrayBuffer())
+          const file = path.join(LOGO_CACHE, `${coin.id}.png`)
+          await writeFile(file, buf)
+          map[coin.id] = file
+        } catch {
+          /* fall back to generated art for this coin */
+        }
+      }
+    } else {
+      console.warn(`CoinGecko request failed (${res.status}); using generated art for ${missing.length} coin(s)`)
+    }
+  }
+  return map
+}
+
 function coverSvg(slug, postType, ticker) {
   const color = CATEGORY_COLORS[postType] ?? CATEGORY_COLORS.news
   const rand = mulberry32(hashSlug(slug))
@@ -175,8 +265,8 @@ function insertImagesFrontmatter(raw, slug) {
 async function main() {
   await mkdir(OUT_DIR, { recursive: true })
   const files = (await readdir(BLOG_DIR)).filter((f) => f.endsWith('.mdx'))
-  let generated = 0
 
+  const posts = []
   for (const file of files) {
     const slug = file.replace(/\.mdx$/, '')
     const filePath = path.join(BLOG_DIR, file)
@@ -186,22 +276,63 @@ async function main() {
       console.warn(`skip (no frontmatter): ${file}`)
       continue
     }
-    if (fm.hasImages && !FORCE) continue
+    posts.push({ slug, filePath, raw, fm })
+  }
+
+  const coinIds = [...new Set(posts.map((p) => p.fm.coins[0]).filter(Boolean))]
+  const logos = await fetchLogos(coinIds)
+
+  let generated = 0
+  for (const { slug, filePath, raw, fm } of posts) {
+    const coinId = fm.coins[0]
+    const logoFile = coinId ? logos[coinId] : undefined
+    if (fm.hasImages && !FORCE && !logoFile) continue
+    // Logo covers are cheap to rebuild and should stay in sync with frontmatter,
+    // so regenerate them every run; pure-generated art is only redone with --force.
+    if (fm.hasImages && !FORCE && logoFile) {
+      // fallthrough: rebuild logo cover
+    }
 
     const ticker = fm.coins.map((c) => TICKERS[c]).find(Boolean)
-    const svg = coverSvg(slug, fm.postType, ticker)
-    await sharp(Buffer.from(svg))
-      .jpeg({ quality: 82, mozjpeg: true })
-      .toFile(path.join(OUT_DIR, `${slug}.jpg`))
+    const out = path.join(OUT_DIR, `${slug}.jpg`)
+
+    let usedLogo = false
+    if (logoFile) {
+      try {
+        const svg = logoCoverSvg(slug, fm.postType, ticker)
+        const logo = await sharp(logoFile)
+          .resize(220, 220, { fit: 'inside' })
+          .png()
+          .toBuffer()
+        const meta = await sharp(logo).metadata()
+        await sharp(Buffer.from(svg))
+          .composite([
+            {
+              input: logo,
+              left: Math.round(WIDTH / 2 - meta.width / 2),
+              top: Math.round(HEIGHT * 0.46 - meta.height / 2),
+            },
+          ])
+          .jpeg({ quality: 85, mozjpeg: true })
+          .toFile(out)
+        usedLogo = true
+      } catch (err) {
+        console.warn(`logo render failed for ${slug} (${err.message}); using generated art`)
+      }
+    }
+    if (!usedLogo) {
+      const svg = coverSvg(slug, fm.postType, ticker)
+      await sharp(Buffer.from(svg)).jpeg({ quality: 82, mozjpeg: true }).toFile(out)
+    }
 
     if (!fm.hasImages) {
       await writeFile(filePath, insertImagesFrontmatter(raw, slug))
     }
     generated++
-    console.log(`cover: ${slug} (${fm.postType}${ticker ? `, ${ticker}` : ''})`)
+    console.log(`cover: ${slug} (${fm.postType}${usedLogo ? `, logo:${coinId}` : ticker ? `, ${ticker}` : ''})`)
   }
 
-  console.log(`${generated} cover(s) generated, ${files.length - generated} already covered`)
+  console.log(`${generated} cover(s) generated, ${posts.length - generated} unchanged`)
 }
 
 main().catch((err) => {
