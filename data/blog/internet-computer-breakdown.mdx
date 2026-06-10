@@ -1,0 +1,55 @@
+---
+title: 'Internet Computer: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['internet-computer', 'layer-1', 'smart-contracts']
+summary: 'A breakdown of Internet Computer (ICP): how canisters aim to host full web apps on-chain, the reverse-gas model, the troubled 2021 launch, and the trade-offs.'
+images: ['/images/covers/internet-computer-breakdown.jpg']
+authors: ['default']
+coins: ['internet-computer']
+draft: false
+---
+
+The Internet Computer is a layer-1 blockchain developed by the DFINITY Foundation, a Swiss nonprofit founded in 2016 by entrepreneur Dominic Williams. Launched in May 2021, it carries one of the most ambitious goals in crypto: hosting entire web applications — front end, back end, and data — directly on a blockchain instead of just recording transactions. Its native token, ICP, powers governance and pays for the computation that keeps those applications running.
+
+<CoinCard id="internet-computer" />
+
+## How it tries to put the web on-chain
+
+Applications on the Internet Computer run inside **canisters** — smart contracts that bundle code and data together and can serve web pages directly to a browser. A typical decentralized app keeps most of its moving parts on ordinary cloud servers and stores only key records on-chain; a canister-based app can, in principle, live entirely on the network.
+
+Canisters run on **subnets** — groups of node machines, run by independent providers in data centers worldwide, that each handle a share of the network's workload. New subnets can be added over time, so the network is designed to scale out the way a cloud provider adds servers.
+
+Holding it all together is **chain-key cryptography** — a set of techniques that lets the entire network share a single public key, so a phone or laptop can verify the network's responses without downloading any blockchain data. It is also what allows the network to finalize transactions in a couple of seconds.
+
+## Cycles, reverse gas, and what ICP is for
+
+Most blockchains make users pay a fee for every transaction. The Internet Computer flips that with a **reverse-gas model** — developers prepay for their application's computation, so users never need tokens just to use an app. Developers fund this by converting ICP into **cycles** — stable-priced units of computation that canisters burn as they run, like prepaid server credits.
+
+Beyond cycles, ICP's main role is governance. The network is controlled by the **Network Nervous System (NNS)** — an on-chain governance system that can upgrade the protocol and create subnets. Holders participate by locking ICP in **neurons** — staked positions with a lock-up of six months to eight years — that grant voting power and rewards. ICP has no fixed maximum supply: new tokens are minted for voting rewards and node providers, while tokens converted to cycles are burned.
+
+## A rocky history
+
+It is fair to say the project's launch damaged its reputation. ICP debuted in May 2021 near the top of a bull market, briefly ranking among the largest cryptocurrencies by market value, then lost more than 90% of its price within months. Critics noted that only a small share of tokens had gone to the public, while early investors who bought for pennies in 2017 could sell at launch-era prices. In 2021, analytics firm Arkham Intelligence alleged that addresses linked to the DFINITY treasury and insiders had moved large amounts of ICP to exchanges during the decline — an analysis DFINITY strongly disputed, and no regulator has found wrongdoing. The network has also seen occasional technical incidents, including a June 2024 slowdown of the subnet that hosts the governance system and the ICP ledger, documented in a public retrospective.
+
+## What genuinely sets it apart
+
+The network's chain-key signatures let canisters hold and sign transactions on other blockchains directly. That powers **chain-key tokens** — assets like ckBTC and ckETH that are backed 1:1 by real bitcoin and ether held by the protocol itself, with no third-party bridge. Given how many bridge hacks the industry has suffered, that is a meaningful design difference, and serving full websites from a blockchain remains rare among competitors.
+
+## Risks
+
+- **Volatility.** ICP's history shows drawdowns can be severe, and its 2021 peak remains far above later trading ranges.
+- **Complexity.** The architecture is intricate, which makes its security and decentralization claims harder for outsiders to independently verify.
+- **Centralization critiques.** DFINITY remains the dominant developer and a major voice in NNS governance, and node operators are vetted rather than fully permissionless.
+- **Adoption.** The vision only matters if developers and users choose it over established platforms like Ethereum and Solana.
+
+## In summary
+
+The Internet Computer is one of crypto's most technically ambitious projects, aiming to replace traditional cloud hosting rather than merely complement it. Its canister model, reverse-gas approach, and bridgeless Bitcoin and Ethereum integrations are real innovations. Set against that are a troubled launch history, ongoing centralization questions, and an adoption gap it has yet to close. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Internet Computer documentation](https://internetcomputer.org/docs)
+- [DFINITY: Understanding the Network Nervous System, Neurons, and ICP Utility Tokens](https://medium.com/dfinity/understanding-the-internet-computers-network-nervous-system-neurons-and-icp-utility-tokens-730dab65cae8)
+- [DFINITY Forum: June 14th 2024 NNS subnet incident retrospective](https://forum.dfinity.org/t/june-14th-2024-nns-subnet-incident-retrospective/32198)
+- [CoinGecko: Internet Computer (ICP)](https://www.coingecko.com/en/coins/internet-computer)
