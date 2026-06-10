@@ -1,0 +1,65 @@
+---
+title: 'Uniswap and UNI: A Token Breakdown'
+date: '2026-06-09'
+postType: breakdown
+tags: ['uniswap', 'defi', 'exchanges']
+summary: 'A breakdown of Uniswap: the pioneering decentralized exchange, how automated market makers work, the UNI token and its fee switch, and the risks involved.'
+images: ['/images/covers/uniswap-breakdown.jpg']
+authors: ['default']
+coins: ['uniswap']
+draft: false
+---
+
+Uniswap is the best-known **decentralized exchange (DEX)** — a marketplace where people trade crypto directly from their own wallets, with no company holding their funds or matching their orders. Launched on Ethereum in November 2018 by Hayden Adams, a former mechanical engineer, it pioneered a design that most of decentralized finance still builds on. Its token, UNI, gives holders a vote in how the protocol is run.
+
+<CoinCard id="uniswap" />
+
+## How an automated market maker works
+
+Traditional exchanges use an order book: buyers and sellers post offers, and the exchange matches them. Uniswap replaced that with an **automated market maker (AMM)** — software that sets prices by formula instead of by matching individual buyers with sellers.
+
+The building block is the **liquidity pool**: a shared pot of two tokens (say, ETH and USDC) that anyone can deposit into. Traders swap against the pool rather than against another person. People who deposit tokens — **liquidity providers (LPs)** — earn a small fee from every swap in return.
+
+Prices come from the **constant product formula**: the quantities of the two tokens, multiplied together, must stay equal to the same number before and after a trade. In plain terms, the more of one token you take out, the more expensive each additional unit becomes. That simple rule keeps the pool from running dry and lets the market price itself, every hour of every day, with no operator involved.
+
+## From v1 to v4 — and a chain of its own
+
+Each major version refined this idea. Version 2 (2020) allowed pools between any two Ethereum tokens. Version 3 (2021) introduced **concentrated liquidity** — letting LPs commit their funds to a chosen price range instead of all prices, so the same capital supports more trading. Version 4 went live in January 2025 with **hooks** — plug-in contracts that let developers customize how a pool behaves, enabling features like dynamic fees and on-chain limit orders.
+
+In February 2025, Uniswap Labs also launched **Unichain**, its own **layer-2 network** — a faster, cheaper blockchain that settles back to Ethereum. Built within Optimism's Superchain ecosystem, it confirms transactions in fractions of a second and now carries a large share of Uniswap v4 volume.
+
+## What the protocol is used for
+
+Uniswap functions as core plumbing for decentralized finance:
+
+- Swapping tokens without an account, sign-up, or custodian
+- Earning fees by providing liquidity
+- Giving new tokens a market from day one, with no listing process
+- Serving as a price source and liquidity backbone that other DeFi apps route through
+
+## UNI and the long fee-switch debate
+
+UNI launched in September 2020, when 400 tokens were airdropped to every past user, out of an initial supply of 1 billion. It is a **governance token** — it confers voting power over the protocol, but for years it paid holders nothing, since all trading fees went to LPs.
+
+Whether to flip the **fee switch** — diverting a slice of fees to the protocol itself — was debated for years; several attempts stalled in 2024 amid legal uncertainty. The deadlock broke in December 2025, when the "UNIfication" proposal passed with near-unanimous support. It activates protocol fees and uses them to **burn** UNI — permanently destroying tokens to reduce supply — rather than paying holders directly. The package included a one-time burn of 100 million treasury UNI, Unichain sequencer revenue feeding the burn, and Uniswap Labs dropping its separate interface and wallet fees. In early 2026, governance moved to extend fee collection to additional chains.
+
+## Risks
+
+**Impermanent loss.** LPs face **impermanent loss** — when the two pooled tokens change in relative price, the LP can end up worth less than if they had simply held the tokens. Fees may or may not offset it.
+
+**Smart-contract risk.** Code can contain bugs, and hooks add third-party code to v4 pools. Uniswap's core contracts are heavily audited, but the risk is never zero.
+
+**Regulatory risk.** The U.S. SEC closed its multi-year investigation of Uniswap Labs in February 2025 without action, a milestone for DeFi — but rules for decentralized exchanges remain unsettled in many countries.
+
+**Competition and volatility.** Rival DEXs compete on fees and speed, and UNI's price has historically been highly volatile.
+
+## In summary
+
+Uniswap invented the model that made decentralized trading practical, and it has kept iterating — concentrated liquidity, hooks, and now its own layer-2. With the 2025 fee switch, UNI finally gained a direct economic link to the protocol's activity, though through burns rather than payouts. The protocol's risks — impermanent loss, code bugs, and shifting regulation — are real and worth understanding before participating. This article is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Uniswap Labs: Uniswap v4 is Here](https://blog.uniswap.org/uniswap-v4-is-here)
+- [Uniswap Labs: UNIfication](https://blog.uniswap.org/unification)
+- [Uniswap Labs: SEC Closes Investigation into Uniswap Labs](https://blog.uniswap.org/a-win-for-defi)
+- [CoinGecko: Uniswap (UNI)](https://www.coingecko.com/en/coins/uniswap)
