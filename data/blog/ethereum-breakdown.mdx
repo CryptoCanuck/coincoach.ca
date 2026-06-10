@@ -1,17 +1,45 @@
 ---
 title: 'Ethereum: A Token Breakdown'
 date: '2026-06-05'
+lastmod: '2026-06-09'
 postType: breakdown
 tags: ['ethereum', 'smart-contracts']
-summary: 'A breakdown of Ethereum: what it does, how it works, and what drives its value.'
+summary: 'A breakdown of Ethereum: what it does, how proof of stake secures it, how ETH supply works, and the risks worth understanding.'
 authors: ['default']
-coins: ['ethereum', 'bitcoin']
+coins: ['ethereum']
 ---
 
-Ethereum is a programmable blockchain that powers smart contracts and
-decentralized applications. This breakdown covers its design and use cases.
+Ethereum is a programmable blockchain — a shared global computer whose rules are enforced by thousands of independent machines rather than any single company. While Bitcoin pioneered decentralized money, Ethereum extended the idea to general-purpose computation through **smart contracts**: self-executing programs that live on-chain and run exactly as written. Its native token, ETH (ether), pays for that computation and helps secure the network.
 
 <CoinCard id="ethereum" />
 
-Bitcoin pioneered the concept of decentralized money, but Ethereum extended
-the idea to general-purpose computation.
+## How Ethereum works
+
+Launched in 2015, Ethereum lets developers deploy applications that no one can unilaterally shut down or alter. These **decentralized applications (dapps)** run on the **Ethereum Virtual Machine (EVM)** — the shared runtime environment that every node on the network executes identically. The EVM has become a de facto standard: many competing blockchains implement it so that Ethereum applications can be reused elsewhere.
+
+Since September 2022, when an upgrade known as **the Merge** retired energy-intensive mining, Ethereum has been secured by **proof of stake**. Validators lock up 32 ETH as collateral for the right to propose and attest to new blocks. Honest participation earns rewards; provable misbehavior can be punished by destroying part of the stake, an enforcement mechanism called **slashing**. The switch cut the network's energy use by well over 99 percent.
+
+Every transaction pays a fee measured in **gas**, which prices the computational work involved. Simple transfers are cheap; complex smart-contract interactions cost more. When the network is busy, fees rise — which is why much of Ethereum's everyday activity now happens on **layer-2 networks**, separate chains such as rollups that bundle transactions and settle them back to Ethereum, inheriting much of its security at a fraction of the cost.
+
+## How ETH supply works
+
+Unlike Bitcoin's fixed 21 million cap, **ETH has no maximum supply**. New ETH is issued to validators as staking rewards. Working against that, a 2021 change known as **EIP-1559** burns the base portion of every transaction fee — permanently removing it from circulation. When network activity is high, the burn can offset or even exceed new issuance, making supply roughly flat or slightly shrinking; in quieter periods supply grows modestly. The balance shifts with usage, so check live data rather than relying on a single quoted figure.
+
+Beyond paying fees, ETH is used as staking collateral, as the main trading and collateral asset across decentralized finance, and as the unit in which most on-chain applications denominate value.
+
+## What it's used for
+
+- **Decentralized finance (DeFi):** lending markets, decentralized exchanges, and derivatives platforms hold and move billions of dollars in value on Ethereum.
+- **Stablecoins:** a large share of dollar-pegged tokens circulates on Ethereum and its layer-2 networks, one of crypto's most widely used real-world applications.
+- **NFTs and digital ownership:** the standards behind non-fungible tokens originated on Ethereum.
+- **Tokenization:** financial institutions have piloted representing real-world assets such as funds and bonds as on-chain tokens, frequently on Ethereum or EVM-compatible chains.
+
+Development continues through coordinated network upgrades — most recently focused on scaling, including the [Glamsterdam upgrade planned for late 2026](/blog/ethereum-glamsterdam-upgrade).
+
+## Risks
+
+**Price volatility** applies to ETH as to all crypto assets; large swings in both directions are normal, not exceptional. **Smart-contract risk** means bugs in application code can lead to lost funds with no recourse — a risk that sits with individual dapps but affects users directly. **Competition** is real: other layer-1 networks offer higher raw speed or lower fees, and Ethereum's bet on layer-2 scaling has to keep delivering. **Centralization debates** persist around how much stake is managed through a small number of staking providers. And **regulatory uncertainty** continues to evolve across jurisdictions.
+
+## In summary
+
+Ethereum is the most widely used smart-contract platform and the foundation for much of what exists in crypto beyond simple payments. It is also a complex, still-evolving system with genuine trade-offs and an uncapped (if burn-offset) token supply. This article is for educational purposes only and is not financial advice.
