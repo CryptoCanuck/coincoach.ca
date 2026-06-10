@@ -1,0 +1,50 @@
+---
+title: 'What Is Crypto Mining? Proof of Work Explained'
+date: '2026-06-09'
+postType: guide
+tags: ['mining', 'bitcoin', 'basics']
+summary: 'How crypto mining actually works — hashing, block rewards, halvings, and the energy debate — and whether mining still makes sense for a regular person.'
+images: ['/images/covers/what-is-crypto-mining.jpg']
+authors: ['default']
+draft: false
+---
+
+Every Bitcoin transaction you have ever heard about was confirmed by a miner. Mining is the process that keeps Bitcoin and similar networks running without a bank or company in charge, and it is also the source of the famous energy debate. This guide explains what miners actually do, why the system works, and whether mining is still realistic for an ordinary person in 2026.
+
+## Why mining exists
+
+Bitcoin has no head office, so someone has to decide which transactions are valid and in what order. That job falls to miners through **proof of work** — a system where participants must burn real computing power to win the right to add the next page to the ledger.
+
+Here is the core idea. Miners gather waiting transactions into a candidate block, then race to find a winning **hash** — a fixed-length digital fingerprint produced by feeding data through a math function. Change the input even slightly and the fingerprint changes completely and unpredictably. The network only accepts a block whose hash starts with a certain number of zeros, and the only way to find one is to guess: tweak a number in the block, hash it, check, and repeat trillions of times per second. The first miner to find a valid hash broadcasts the block, other computers verify it in a split second, and the race starts again.
+
+This guessing game is what makes the ledger hard to rewrite. To alter an old transaction, an attacker would have to redo the work for that block and every block after it, faster than the entire honest network builds new ones. With millions of machines mining worldwide, that is economically out of reach — which is the whole point.
+
+## Rewards, halvings, and difficulty
+
+Miners get paid two ways. The winner of each block collects a **block reward** — newly created bitcoin, currently 3.125 BTC per block — plus the transaction fees users attached. The reward is cut in half roughly every four years in an event called a **halving**; the next one is expected around April 2028, when the reward drops to 1.5625 BTC. Halvings continue until the supply tops out at 21 million coins, after which fees alone will pay miners.
+
+Bitcoin also self-regulates through the **difficulty adjustment**: every 2,016 blocks (about two weeks), the network makes the puzzle harder or easier so blocks keep arriving roughly every ten minutes, however many miners join or quit.
+
+## From laptops to warehouses
+
+In 2009 you could mine Bitcoin on an ordinary laptop CPU. Miners soon discovered graphics cards (GPUs) were far faster, and by 2013 the arms race produced the **ASIC** — a chip built to do one thing only, in Bitcoin's case computing SHA-256 hashes, thousands of times more efficiently than general hardware.
+
+Today most Bitcoin mining happens in industrial facilities packed with ASICs, often sited near cheap power. Smaller operators join a **mining pool** — a group that combines computing power and splits rewards in proportion to work contributed — turning rare jackpot wins into small, steady payouts.
+
+## The energy debate
+
+Bitcoin mining uses a lot of electricity — on the order of what a mid-sized country consumes, with recent estimates running well above 100 terawatt-hours per year. Supporters note that miners chase the cheapest power available, which increasingly means hydro, wind, solar, nuclear, and otherwise-wasted energy; a 2025 Cambridge study estimated roughly half of mining's energy mix is sustainable. Critics counter that mining still produces meaningful emissions, can strain local grids, and consumes electricity other users might need. Both things can be true, and regulators in several countries have responded with reporting requirements, higher power tariffs, or outright restrictions.
+
+## Can a regular person still mine?
+
+Honestly: not Bitcoin, not solo. A single ASIC competing against industrial farms might find a block once in centuries, and in most places household electricity rates eat the profits. Realistic options include buying an ASIC and joining a pool (run the math on your power bill first), or mining CPU-friendly coins like Monero, whose RandomX algorithm is deliberately designed to resist ASICs. Most hobbyists find it is education first, income a distant second.
+
+## The bottom line
+
+Mining is the engine that secures proof-of-work blockchains: open competition, paid in coins, that makes cheating more expensive than honesty. You do not need to mine to use crypto, but understanding it explains why Bitcoin works — and what it costs. This guide is for educational purposes only and is not financial advice.
+
+## Sources
+
+- [Bitcoin.org — How does Bitcoin work?](https://bitcoin.org/en/how-it-works)
+- [Monero — Mining Monero](https://www.getmonero.org/get-started/mining/)
+- [Congressional Research Service — Cryptocurrency Mining and the Electricity Sector (2026)](https://www.congress.gov/crs_external_products/R/PDF/R48914/R48914.1.pdf)
