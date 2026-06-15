@@ -37,6 +37,13 @@ fields we already store but don't yet expose.
   watchlist, Treasury (BTC/ETH only), Specs table.
 - **Full-width layout** — no right rail. Modules stack full-width, with internal
   multi-column grids where useful.
+- **Universe = the entire CoinGecko coin list (~17k), 30-min price cadence.**
+  Every coin gets a DB-backed page. Sized for the **Analyst plan ($129/mo,
+  500k calls)**. Markets row collected for every coin; full detail + tickers
+  collected for top + article coins on a rotation (not 17k detail calls/cycle).
+- **Strict DB-only views.** Nothing on the request path calls CoinGecko — the
+  collector is the sole API caller. No enqueue-on-miss, no view cold-fill.
+- **Timeframes = 24H / 7D / 1M / 3M / 1Y / MAX** (matches CoinGecko).
 
 ---
 
@@ -60,14 +67,12 @@ is stale, which couples API usage to traffic.
 - `alternative.me` Fear & Greed stays as-is conceptually (keyless), but is also
   served from the `fear_greed` table the collector fills; no per-view fetch.
 
-**Unseen coins (the one edge case).** A coin absent from the DB (long-tail, never
-collected) can't be served DB-only. Proposed handling: **enqueue + soft state** —
-insert/flag the coin as `tracked` so the collector profiles it on its next tick,
-and render a lightweight "we're gathering data for {coin}" state meanwhile. No
-API call on the view. Top-250 + article coins are all seeded, so this only
-affects rarely-visited long-tail coins, and only until the next collector cycle.
-*(Alternative considered: a single one-time API cold-fill for unseen coins. Open
-for review — see Open Questions.)*
+**Unseen coins.** Because the collector sweeps the *entire* universe (see 1d),
+effectively every coin is already in the DB before anyone views it — no
+view-triggered fetch is ever needed. The only residual case is a brand-new
+listing in the gap before the next full sweep: that coin renders a lightweight
+"we're gathering data for {coin}" soft state and is picked up automatically on
+the next markets sweep (no per-coin enqueue logic required).
 
 ### 1b. New and extended reads
 
@@ -106,20 +111,42 @@ stats) live alongside and are unit-tested; the SQL is thin and not unit-tested
    rolling 30-day call count from `fetch_log` and/or back off when the API
    returns `error_code 10006`, so the collector can't silently exhaust the plan.
 
-### 1d. Full historical backfill (after the plan upgrade)
+### 1d. Full-universe collection + historical backfill (after the plan upgrade)
 
-`scripts/backfill-market-history.mjs` already seeds 365d daily ticks + 4h/4d
-candle frames per tracked coin. Post-upgrade:
+The collector grows from "top-250" to "the whole list," tiered so detail calls
+stay bounded:
 
-- Ensure the `tracked` set covers all coins we want depth for (top-N + every
-  article coin).
-- Run the backfill across the full set (provider-sourced rows marked
-  `source='provider'`).
-- Consider seeding 90d hourly for top coins so the 7D/1M frames have density
-  before observed ticks accumulate.
+- **Markets sweep — every coin, ~30 min.** Paginate `/coins/markets` across the
+  full universe (~17k coins ÷ 250 ≈ 68 pages → ~3.3k calls/day ≈ ~98k/mo).
+  Upserts `coins` (identity) + `coin_markets_latest` (price/mcap/changes/
+  supplies/ATH-ATL/sparkline). This alone makes every coin's header, key
+  metrics, and a basic chart renderable.
+- **Detail + tickers — tiered rotation.** Full `/coins/{id}` (description, dev/
+  community, sentiment votes, specs, links) and `/coins/{id}/tickers` only for
+  top coins + article coins, refreshed on a rotation (e.g. top tier daily,
+  mid-tier weekly). The long tail relies on the markets row + provider OHLC.
+- **Other jobs unchanged** (global, categories, trending, treasury, exchanges,
+  Fear & Greed).
+- Budget targets the Analyst 500k/mo ceiling; cadences live in
+  `collector/config.mjs` so they remain a config change.
 
-This is the step that needs the upgraded API budget; tracks 1a–1c and Track 2
-are built and tested against the existing test DB first.
+**Tick-storage tiering (write-volume risk).** Appending an observed `coin_ticks`
+row for all ~17k coins every 30 min is ~24M rows/month. `coin_markets_latest` is
+a cheap upsert (~17k rows overwritten), but the append-only tick history must be
+tiered: capture fine-grained observed ticks for the top tier (drives our own
+candle roll-ups), and coarser (hourly/daily) ticks for the long tail. Monthly
+partitions already exist; this keeps growth bounded. *(Exact tiers are an
+implementation-plan decision.)*
+
+**Historical backfill.** `scripts/backfill-market-history.mjs` already seeds
+365d daily ticks + 4h/4d candle frames per tracked coin (`source='provider'`).
+Post-upgrade, run it across the tracked set and add the deeper frames the new
+timeframes need (3M, MAX) — e.g. 90d/1y/max OHLC per top coin — so charts have
+depth before observed candles accumulate. The full-universe backfill is gradual
+(budget-paced, re-runnable), not a single blocking run.
+
+Tracks 1a–1c and Track 2 are built and tested against the existing test DB
+first; this step needs the upgraded API budget.
 
 ---
 
@@ -133,8 +160,10 @@ populated for bitcoin/eth in the test DB.
    chip(s)**, big live price + 24h change. *(enrich existing `CoinHeader`)*
 2. ✅ **Key metrics bar** — Market cap · FDV · 24h volume · circulating supply
    (% of max) · 24h high/low. Full-width stat strip.
-3. ✅ **Price chart** — candlesticks + timeframe toggles + freshness note,
-   full-width. DB-fed via `getOhlc`/`/api/ohlc`. *(keep `PriceChart`)*
+3. ✅ **Price chart** — candlesticks + timeframe toggles
+   (**24H / 7D / 1M / 3M / 1Y / MAX**) + freshness note, full-width. DB-fed via
+   `getOhlc`/`/api/ohlc`. *(keep `PriceChart`; add the 3M/MAX/1Y frames to the
+   `Timeframe` set and the `dbOhlc` frame→interval map)*
 4. ✅ **Price performance + Price stats** — two-column grid: left = % change
    1H/24H/7D/30D/1Y (color-coded); right = ATH (value + date + % below), ATL
    (value + date + % above), launch/genesis date.
@@ -219,12 +248,19 @@ alternative.me ─┘                                  │
 Steps 1–3 are built/tested against the existing test DB now; step 4 follows the
 upgrade.
 
-## Open questions / risks
+## Resolved decisions
 
-- **Unseen-coin handling:** enqueue + soft-state (strict no-API, recommended) vs.
-  a one-time API cold-fill on first view. Confirm during review.
-- **Timeframes:** keep current 24H/7D/1M/1Y, or add 3M/MAX? (More frames need
-  more candle coverage from the backfill.) Default: keep current for now.
+- **Universe:** entire CoinGecko list (~17k), 30-min prices, tiered detail →
+  Analyst plan ($129/mo).
+- **Unseen coins:** strict DB-only; collector sweeps all, so no view fetch.
+- **Timeframes:** 24H / 7D / 1M / 3M / 1Y / MAX.
+
+## Risks / implementation notes
+
+- **Tick write-volume:** all-coin observed ticks are ~24M rows/mo — must tier
+  tick capture (fine for top, coarse for long tail). See 1d.
+- **Markets payload size:** `sparkline=true` over the full universe is heavy;
+  request sparkline only where it's used (top pages / table), not all 68 pages.
 - **Community data sparsity:** dev stats are solid; reddit/telegram/twitter are
   largely deprecated by CoinGecko → section 7 leans "Developer Activity."
 - **Backfill budget:** the full seed depends on the upgraded plan; the Demo
