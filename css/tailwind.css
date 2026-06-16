@@ -99,6 +99,10 @@
 
   html {
     color-scheme: dark;
+    /* Reserve the scrollbar gutter so content doesn't shift when a scrollbar
+       toggles — without the asymmetric left padding that left a gap at the
+       window's left edge. */
+    scrollbar-gutter: stable;
   }
   body {
     background-color: var(--color-base);
