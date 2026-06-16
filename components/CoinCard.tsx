@@ -1,6 +1,5 @@
 'use client'
 
-import { pickCoin } from '@/lib/markets/coingecko'
 import { formatUsd, formatPercent, changeDirection } from '@/lib/markets/format'
 import CoinLogo from './CoinLogo'
 import { useCoinData } from './CoinDataProvider'
@@ -9,8 +8,11 @@ import { useCoinData } from './CoinDataProvider'
 //   <CoinCard id="bitcoin" />
 // The id must be listed in the post's `coins:` frontmatter. Renders nothing if
 // the coin isn't in the provided data (missing id or market data unavailable).
+// The lookup is inlined (rather than importing pickCoin from coingecko.ts) so
+// this client component doesn't pull the DB-backed market module — and `pg`
+// with it — into the browser bundle.
 export default function CoinCard({ id }: { id: string }) {
-  const coin = pickCoin(useCoinData(), id)
+  const coin = useCoinData().find((c) => c.id === id) ?? null
   if (!coin) return null
   const dir = changeDirection(coin.change24h)
   const changeClass = dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-ink-2'
