@@ -49,15 +49,16 @@ export default function SentimentBand({
 
   // Resolve the vote split. If only one side is present, derive the other so the
   // bar always reads as two parts summing to 100.
+  const clampPct = (n: number) => Math.max(0, Math.min(100, n))
   const up = num(sentimentVotesUpPct)
-    ? (sentimentVotesUpPct as number)
+    ? clampPct(sentimentVotesUpPct as number)
     : num(sentimentVotesDownPct)
-      ? 100 - (sentimentVotesDownPct as number)
+      ? clampPct(100 - (sentimentVotesDownPct as number))
       : null
   const down = num(sentimentVotesDownPct)
-    ? (sentimentVotesDownPct as number)
+    ? clampPct(sentimentVotesDownPct as number)
     : num(sentimentVotesUpPct)
-      ? 100 - (sentimentVotesUpPct as number)
+      ? clampPct(100 - (sentimentVotesUpPct as number))
       : null
 
   return (

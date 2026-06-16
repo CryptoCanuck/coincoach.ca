@@ -191,12 +191,9 @@ export type CoinFetchLegacy =
 // drives the on-page "Updated …" note, never a fetch). 'gathering' = the coin
 // row is absent — the collector sweeps the whole universe, so a miss is a
 // brand-new listing the next sweep will pick up; the page shows a soft
-// "gathering data" state rather than a hard 404. 'not-found' is reserved for a
-// cheap, certain non-coin (we can't tell that here, so we prefer 'gathering').
-export type CoinFetch =
-  | { status: 'ok'; coin: CoinFull; fresh: boolean }
-  | { status: 'gathering' }
-  | { status: 'not-found' }
+// "gathering data" state rather than a hard 404 (DB-only, we can't cheaply tell
+// a brand-new listing from a non-coin, so an absent row always reads 'gathering').
+export type CoinFetch = { status: 'ok'; coin: CoinFull; fresh: boolean } | { status: 'gathering' }
 
 // DB-only (spec 1a): assemble CoinFull from Postgres. Stale rows still render
 // (with the freshness note); an absent row is the soft "gathering" state.

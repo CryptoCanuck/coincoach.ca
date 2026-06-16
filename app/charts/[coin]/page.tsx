@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
@@ -46,11 +45,10 @@ export async function generateMetadata({
 
 export default async function CoinDetailPage({ params }: { params: Promise<{ coin: string }> }) {
   const { coin: id } = await params
-  // DB-only (spec 1a): assemble CoinFull from Postgres. 'not-found' is a certain
-  // non-coin; 'gathering' is a brand-new listing the next collector sweep will
-  // pick up — show a soft state, not a hard 404; 'ok' renders the full page.
+  // DB-only (spec 1a): assemble CoinFull from Postgres. 'gathering' = a coin not
+  // yet in the DB (a brand-new listing the next collector sweep will pick up) —
+  // show a soft state; 'ok' renders the full page.
   const result = await getCoinDetail(id)
-  if (result.status === 'not-found') notFound()
   if (result.status === 'gathering') {
     return (
       <div className="py-2">

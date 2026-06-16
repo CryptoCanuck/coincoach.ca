@@ -4,7 +4,7 @@ import { formatUsd, formatPercent, changeDirection } from '@/lib/markets/format'
 import type { CoinFull } from '@/lib/markets/coins'
 
 export default function CoinHeader({ coin }: { coin: CoinFull }) {
-  const change24h = coin.changes.h24 ?? 0
+  const change24h = coin.changes.h24
   const dir = changeDirection(change24h)
   const changeClass = dir === 'down' ? 'text-down' : dir === 'up' ? 'text-up' : 'text-ink-2'
   return (
@@ -35,11 +35,13 @@ export default function CoinHeader({ coin }: { coin: CoinFull }) {
       </div>
       <div className="ml-auto text-right">
         <div className="text-[28px] font-black tracking-tight text-gray-50">
-          {formatUsd(coin.price ?? 0)}
+          {coin.price === null ? '—' : formatUsd(coin.price)}
         </div>
-        <div className={`mt-0.5 text-[15px] font-bold ${changeClass}`}>
-          {formatPercent(change24h)} (24h)
-        </div>
+        {change24h !== null && (
+          <div className={`mt-0.5 text-[15px] font-bold ${changeClass}`}>
+            {formatPercent(change24h)} (24h)
+          </div>
+        )}
       </div>
       <div className="flex gap-2.5">
         <WatchlistButton coinId={coin.id} />
