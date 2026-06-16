@@ -6,7 +6,7 @@ from Postgres first, falling back to the API only for data the collector does
 not have yet. This decouples API usage from site traffic: the API bill is a
 fixed function of collector cadence, regardless of visitors.
 
-```
+```text
 CoinGecko API ──(fixed-budget collector)──> Postgres ──> Next.js server components
 alternative.me ─┘                              └──> accumulates history for charts
 ```
@@ -23,11 +23,11 @@ alternative.me ─┘                              └──> accumulates histor
 
 ## Services (docker-compose)
 
-| Service               | Image                          | Role |
-| --------------------- | ------------------------------ | ---- |
-| `coincoach`           | Dockerfile `runner` target     | Next.js site; reads DB via `DATABASE_URL`, falls back to API when unset/unreachable |
-| `coincoach-collector` | Dockerfile `collector` target  | Applies migrations, then runs polling jobs on fixed cadences |
-| `coincoach-db`        | `postgres:17-alpine`           | Named volume `coincoach-pgdata` — survives stack redeploys |
+| Service               | Image                         | Role                                                                                |
+| --------------------- | ----------------------------- | ----------------------------------------------------------------------------------- |
+| `coincoach`           | Dockerfile `runner` target    | Next.js site; reads DB via `DATABASE_URL`, falls back to API when unset/unreachable |
+| `coincoach-collector` | Dockerfile `collector` target | Applies migrations, then runs polling jobs on fixed cadences                        |
+| `coincoach-db`        | `postgres:17-alpine`          | Named volume `coincoach-pgdata` — survives stack redeploys                          |
 
 The database is not published on a host port; it is reachable only on the
 compose network. `DATABASE_URL` is optional everywhere: without it the site
@@ -86,18 +86,18 @@ slugs (`bitcoin`), matching `coins:` frontmatter and `<CoinCard id>` usage.
 Cadences live in `collector/config.mjs` and target the Demo plan's ~333
 calls/day with headroom. Calls/day at default cadence:
 
-| Job                          | Cadence  | Calls/day |
-| ---------------------------- | -------- | --------- |
-| Markets top-250 snapshot     | 10 min   | 144       |
-| Global + DeFi stats          | 30 min   | 96        |
-| Trending                     | 1 h      | 24        |
-| Tickers (tracked coins)      | daily    | ~35       |
-| Coin detail (weekly rotation)| daily    | ~5        |
-| Categories                   | 6 h      | 4         |
-| Treasury (BTC + ETH)         | daily    | 2         |
-| Exchanges                    | daily    | 1         |
-| Fear & Greed (keyless)       | 1 h      | 0         |
-| **Total**                    |          | **~311**  |
+| Job                           | Cadence | Calls/day |
+| ----------------------------- | ------- | --------- |
+| Markets top-250 snapshot      | 10 min  | 144       |
+| Global + DeFi stats           | 30 min  | 96        |
+| Trending                      | 1 h     | 24        |
+| Tickers (tracked coins)       | daily   | ~35       |
+| Coin detail (weekly rotation) | daily   | ~5        |
+| Categories                    | 6 h     | 4         |
+| Treasury (BTC + ETH)          | daily   | 2         |
+| Exchanges                     | daily   | 1         |
+| Fear & Greed (keyless)        | 1 h     | 0         |
+| **Total**                     |         | **~311**  |
 
 Candle roll-ups, partition housekeeping, and `fetch_log` pruning are DB-only
 jobs (zero API calls). On a paid plan, tighten `markets` toward 60s and raise

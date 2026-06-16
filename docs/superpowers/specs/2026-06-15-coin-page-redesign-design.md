@@ -9,11 +9,11 @@
 Two coupled tracks:
 
 1. **Data layer** — finish the Postgres market-data layer so the site is served
-   entirely from the database. The background collector becomes the *only* thing
+   entirely from the database. The background collector becomes the _only_ thing
    that calls CoinGecko; user page views never touch the API. Seed full history
    so charts and stats render from the DB from day one.
 2. **Coin page redesign** — rebuild `/charts/[coin]` as a full-width,
-   CryptoSlate-modeled page that surfaces *all* the data we collect, instead of
+   CryptoSlate-modeled page that surfaces _all_ the data we collect, instead of
    the thin slice it shows today.
 
 The page redesign is what motivates the data work: the richer sections need
@@ -67,7 +67,7 @@ is stale, which couples API usage to traffic.
 - `alternative.me` Fear & Greed stays as-is conceptually (keyless), but is also
   served from the `fear_greed` table the collector fills; no per-view fetch.
 
-**Unseen coins.** Because the collector sweeps the *entire* universe (see 1d),
+**Unseen coins.** Because the collector sweeps the _entire_ universe (see 1d),
 effectively every coin is already in the DB before anyone views it — no
 view-triggered fetch is ever needed. The only residual case is a brand-new
 listing in the gap before the next full sweep: that coin renders a lightweight
@@ -135,8 +135,8 @@ row for all ~17k coins every 30 min is ~24M rows/month. `coin_markets_latest` is
 a cheap upsert (~17k rows overwritten), but the append-only tick history must be
 tiered: capture fine-grained observed ticks for the top tier (drives our own
 candle roll-ups), and coarser (hourly/daily) ticks for the long tail. Monthly
-partitions already exist; this keeps growth bounded. *(Exact tiers are an
-implementation-plan decision.)*
+partitions already exist; this keeps growth bounded. _(Exact tiers are an
+implementation-plan decision.)_
 
 **Historical backfill.** `scripts/backfill-market-history.mjs` already seeds
 365d daily ticks + 4h/4d candle frames per tracked coin (`source='provider'`).
@@ -157,18 +157,18 @@ stack full-width top→bottom; grids used inside modules. ✅ = data confirmed
 populated for bitcoin/eth in the test DB.
 
 1. ✅ **Identity header** — logo, name, ticker, **rank badge**, **category
-   chip(s)**, big live price + 24h change. *(enrich existing `CoinHeader`)*
+   chip(s)**, big live price + 24h change. _(enrich existing `CoinHeader`)_
 2. ✅ **Key metrics bar** — Market cap · FDV · 24h volume · circulating supply
    (% of max) · 24h high/low. Full-width stat strip.
 3. ✅ **Price chart** — candlesticks + timeframe toggles
    (**24H / 7D / 1M / 3M / 1Y / MAX**) + freshness note, full-width. DB-fed via
-   `getOhlc`/`/api/ohlc`. *(keep `PriceChart`; add the 3M/MAX/1Y frames to the
-   `Timeframe` set and the `dbOhlc` frame→interval map)*
+   `getOhlc`/`/api/ohlc`. _(keep `PriceChart`; add the 3M/MAX/1Y frames to the
+   `Timeframe` set and the `dbOhlc` frame→interval map)_
 4. ✅ **Price performance + Price stats** — two-column grid: left = % change
    1H/24H/7D/30D/1Y (color-coded); right = ATH (value + date + % below), ATL
    (value + date + % above), launch/genesis date.
 5. ✅ **Markets / "Where to buy"** — table: exchange (logo) · pair · price · 24h
-   volume · spread · trust · trade link. *(new; 50 tickers for BTC in test DB)*
+   volume · spread · trust · trade link. _(new; 50 tickers for BTC in test DB)_
 6. ✅ **About + Specs** — two-column: About (description + links) | Specs
    (hashing algorithm · block time · genesis · platform · categories).
 7. ✅ **Developer Activity** — GitHub stars/forks/commits(4w)/PRs merged/
@@ -176,12 +176,12 @@ populated for bitcoin/eth in the test DB.
    when non-null** — CoinGecko has deprecated most, so they're usually absent.
 8. ✅ **Sentiment** — momentum gauge (existing proxy) + up/down vote %s +
    watchlist user count, as a band.
-9. ✅ **Converter** — fiat/crypto converter module. *(keep `Converter`)*
+9. ✅ **Converter** — fiat/crypto converter module. _(keep `Converter`)_
 10. ✅ **Treasury holdings** — public-company table, **BTC/ETH only**
-    (`treasury_totals` + `treasury_holdings`). *(new)*
-11. ✅ **Similar coins** — horizontal card row, same-category. *(improve
-    `SimilarCoins`)*
-12. ✅ **Related news & guides** — full-width grid. *(keep `CoinContent`)*
+    (`treasury_totals` + `treasury_holdings`). _(new)_
+11. ✅ **Similar coins** — horizontal card row, same-category. _(improve
+    `SimilarCoins`)_
+12. ✅ **Related news & guides** — full-width grid. _(keep `CoinContent`)_
 
 New components (server, presentational): `KeyMetricsBar`, `PricePerformance`,
 `PriceStats`, `MarketsTable` (coin tickers — distinct from the existing markets
@@ -194,7 +194,7 @@ reused/enriched.
 
 ## Data flow
 
-```
+```text
 CoinGecko ──(collector, background cadences)──> Postgres
 alternative.me ─┘                                  │
                                                    ▼
