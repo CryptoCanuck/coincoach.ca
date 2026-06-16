@@ -89,11 +89,12 @@ async function main() {
     console.log(`${signal} received, shutting down`)
     stopping = true
     clearInterval(timer)
-    await pool.end()
+    await pool.end().catch((err) => console.error(`pool.end failed: ${err.message}`))
     process.exit(0)
   }
-  process.on('SIGTERM', () => shutdown('SIGTERM'))
-  process.on('SIGINT', () => shutdown('SIGINT'))
+  // once() so a second signal can't run shutdown concurrently mid-teardown.
+  process.once('SIGTERM', () => shutdown('SIGTERM'))
+  process.once('SIGINT', () => shutdown('SIGINT'))
 }
 
 main().catch((err) => {

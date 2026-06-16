@@ -400,8 +400,10 @@ export async function detail(pool) {
         JSON.stringify(c),
       ]
     )
+    // Rebuild this coin's category links each refresh — delete unconditionally
+    // so a coin that has lost all its categories is cleared too.
+    await pool.query('DELETE FROM coin_categories WHERE coin_id = $1', [id])
     if (Array.isArray(c.categories) && c.categories.length) {
-      await pool.query('DELETE FROM coin_categories WHERE coin_id = $1', [id])
       // Coin detail lists category display names; map them via categories.name.
       await pool.query(
         `INSERT INTO coin_categories (coin_id, category_id)

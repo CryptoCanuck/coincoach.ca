@@ -19,8 +19,8 @@ services:
       # and prices/charts fail. COINGECKO_API_PLAN=pro only for a paid Pro key.
       - COINGECKO_API_KEY=${COINGECKO_API_KEY}
       - COINGECKO_API_PLAN=${COINGECKO_API_PLAN}
-      # Market data is read from Postgres first, falling back to the API when
-      # the DB is unreachable. See docs/market-data.md.
+      # Market data is served from Postgres (DB-only on the request path); the
+      # collector is the sole CoinGecko caller. See docs/market-data.md.
       - DATABASE_URL=postgres://coincoach:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@coincoach-db:5432/coincoach
       # - BUTTONDOWN_API_KEY=${BUTTONDOWN_API_KEY}
     healthcheck:
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgres://coincoach:${POSTGRES_PASSWORD}@coincoach-db:5432/coincoach
+      - DATABASE_URL=postgres://coincoach:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@coincoach-db:5432/coincoach
       - COINGECKO_API_KEY=${COINGECKO_API_KEY}
       - COINGECKO_API_PLAN=${COINGECKO_API_PLAN}
       # Defaults target the CoinGecko Demo plan (~333 calls/day); see
@@ -84,7 +84,7 @@ services:
     environment:
       - POSTGRES_USER=coincoach
       - POSTGRES_DB=coincoach
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
       # Named volume so market-data history survives stack redeploys, which
       # rebuild containers but keep volumes.

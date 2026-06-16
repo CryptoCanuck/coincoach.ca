@@ -95,6 +95,7 @@ async function main() {
   console.log(`backfill: ${ids.length} coin(s)`)
 
   let done = 0
+  let failed = 0
   for (const id of ids) {
     const { rows: seeded } = await pool.query(
       `SELECT 1 FROM coin_candles
@@ -122,10 +123,13 @@ async function main() {
         break
       }
       console.error(`${id}: ${err.message}`)
+      failed++
     }
   }
   console.log(`backfill: ${done}/${ids.length} coin(s) seeded`)
   await pool.end()
+  // Surface partial failures to the caller (CI/cron) instead of a false exit 0.
+  if (failed) process.exitCode = 1
 }
 
 main().catch((err) => {
