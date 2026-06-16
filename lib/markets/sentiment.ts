@@ -17,25 +17,11 @@ export function mapFearGreed(payload: FngPayload): FearGreed | null {
   return { value, label: latest.value_classification || 'Neutral' }
 }
 
-// DB-first (docs/market-data.md); server-side, ISR-cached (1 h — the index
-// updates daily) on the API path. Null on failure.
+// DB-only (spec 1a): the collector fills the fear_greed table; views read it
+// fresh-or-stale, or null when empty. No per-view alternative.me fetch.
 export async function getFearGreed(): Promise<FearGreed | null> {
   const db = await dbFearGreed()
-  if (db?.fresh) return db.data
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch('https://api.alternative.me/fng/?limit=1&format=json', {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return db?.data ?? null
-    return mapFearGreed(await res.json()) ?? db?.data ?? null
-  } catch {
-    return db?.data ?? null
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  return db?.data ?? null
 }
 
 export interface FearGreedPoint {
@@ -57,24 +43,8 @@ export function mapFearGreedHistory(payload: FngPayload): FearGreedPoint[] {
   return points.reverse()
 }
 
-// DB-first; server-side, ISR-cached (1 h) on the API path. Up to ~1 year of
-// daily points. [] on failure.
+// DB-only (spec 1a). Up to ~1 year of daily points; [] when the table is empty.
 export async function getFearGreedHistory(limit = 365): Promise<FearGreedPoint[]> {
   const db = await dbFearGreedHistory(limit)
-  if (db?.fresh) return db.data
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch(`https://api.alternative.me/fng/?limit=${limit}&format=json`, {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return db?.data ?? []
-    const mapped = mapFearGreedHistory(await res.json())
-    return mapped.length ? mapped : (db?.data ?? [])
-  } catch {
-    return db?.data ?? []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  return db?.data ?? []
 }

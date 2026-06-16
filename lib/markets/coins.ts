@@ -1,10 +1,35 @@
-import { cgFetch, type CgOutcome } from './cgFetch'
-import { dbCoinDetail, dbOhlc } from './dbReads'
+import type { CgOutcome } from './cgFetch'
+import type { CoinFull } from './coinView'
+import { dbCoinFull, dbOhlc } from './dbReads'
 
 export interface ResourceLink {
   label: string
   href: string
 }
+
+// Re-export the view-models + pure mappers so callers can keep importing them
+// from '@/lib/markets/coins' (the page uses CoinFull; CoinDetail stays for the
+// few components that still type against the thin shape).
+export type {
+  CoinFull,
+  PriceChanges,
+  PriceExtreme,
+  DevStats,
+  CommunityStats,
+  TickerRow,
+  TreasuryHolding,
+  TreasuryView,
+  SimilarCoin,
+  MarketStatsView,
+} from './coinView'
+export {
+  mapDevStats,
+  mapCommunityStats,
+  mapTicker,
+  mapTreasury,
+  mapMarketStats,
+  mapLinks,
+} from './coinView'
 
 export interface CoinDetail {
   id: string
@@ -52,7 +77,7 @@ interface CoinGeckoCoin {
 
 const num = (v: unknown): number => (Number.isFinite(v) ? (v as number) : 0)
 
-function stripHtml(html: string): string {
+export function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, '')
     .replace(/\s+/g, ' ')
@@ -139,29 +164,15 @@ export function priceVolatilityPct(candles: Candle[]): number | null {
   return Math.sqrt(variance)
 }
 
-const OHLC_DAYS = { '24H': 1, '7D': 7, '1M': 30, '1Y': 365 } as const
+const OHLC_DAYS = { '24H': 1, '7D': 7, '1M': 30, '3M': 90, '1Y': 365, MAX: 'max' } as const
 export type Timeframe = keyof typeof OHLC_DAYS
 export const TIMEFRAMES = Object.keys(OHLC_DAYS) as Timeframe[]
 
-export function coinUrl(id: string): string {
-  return `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(
-    id
-  )}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-}
-
-export function ohlcUrl(id: string, frame: Timeframe): string {
-  return `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/ohlc?vs_currency=usd&days=${OHLC_DAYS[frame]}`
-}
-
-export type CoinFetch =
-  | { status: 'ok'; coin: CoinDetail }
-  | { status: 'not-found' }
-  | { status: 'unavailable' }
-
-// Pure: maps a raw cgFetch outcome to a UI-ready status. CoinGecko returns 404
-// for an unknown id (real not-found); 429/5xx/timeout (null) is a transient
-// outage the page should show softly rather than 404.
-export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetch {
+// Pure: maps a raw cgFetch outcome to a UI-ready status. Kept (and unit-tested)
+// for completeness, but no longer on the request path — views are DB-only (spec
+// 1a), so getCoinDetail never calls the API. CoinGecko returns 404 for an
+// unknown id (real not-found); 429/5xx/timeout (null) is a transient outage.
+export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetchLegacy {
   if (outcome.ok) {
     const coin = mapCoinDetail(outcome.data)
     return coin ? { status: 'ok', coin } : { status: 'not-found' }
@@ -169,39 +180,54 @@ export function classifyCoin(outcome: CgOutcome<CoinGeckoCoin>): CoinFetch {
   return outcome.status === 404 ? { status: 'not-found' } : { status: 'unavailable' }
 }
 
-// DB-first (docs/market-data.md): a profiled coin with fresh market numbers is
-// served from Postgres; otherwise the API path (ISR-cached, 10 min) decides,
-// with a stale DB row standing in when the API is down (instead of a soft 404).
+// Legacy classifier result (still used by classifyCoin's unit tests).
+export type CoinFetchLegacy =
+  | { status: 'ok'; coin: CoinDetail }
+  | { status: 'not-found' }
+  | { status: 'unavailable' }
+
+// DB-only result for the page (spec 1a — nothing on the request path calls
+// CoinGecko). 'ok' = coin present in the DB (fresh OR stale; the freshness flag
+// drives the on-page "Updated …" note, never a fetch). 'gathering' = the coin
+// row is absent — the collector sweeps the whole universe, so a miss is a
+// brand-new listing the next sweep will pick up; the page shows a soft
+// "gathering data" state rather than a hard 404. 'not-found' is reserved for a
+// cheap, certain non-coin (we can't tell that here, so we prefer 'gathering').
+export type CoinFetch =
+  | { status: 'ok'; coin: CoinFull; fresh: boolean }
+  | { status: 'gathering' }
+  | { status: 'not-found' }
+
+// DB-only (spec 1a): assemble CoinFull from Postgres. Stale rows still render
+// (with the freshness note); an absent row is the soft "gathering" state.
 export async function getCoinDetail(id: string): Promise<CoinFetch> {
-  const db = await dbCoinDetail(id)
-  if (db?.fresh) return { status: 'ok', coin: db.data }
-  const api = classifyCoin(await cgFetch<CoinGeckoCoin>(coinUrl(id), { revalidate: 600 }))
-  if (api.status === 'unavailable' && db) return { status: 'ok', coin: db.data }
-  return api
+  const db = await dbCoinFull(id)
+  if (!db) return { status: 'gathering' }
+  return { status: 'ok', coin: db.data, fresh: db.fresh }
 }
 
 // Thin wrapper for callers (e.g. generateMetadata) that only need the coin or null.
-export async function getCoin(id: string): Promise<CoinDetail | null> {
+export async function getCoin(id: string): Promise<CoinFull | null> {
   const r = await getCoinDetail(id)
   return r.status === 'ok' ? r.coin : null
 }
 
-// Distinguishes a genuine (possibly empty) response from an upstream failure, so
-// callers (e.g. the lazy-load route) can surface a transient outage instead of
-// caching it as an empty success. Server-side, ISR-cached (10 min).
+// Distinguishes a genuine (possibly empty) response from a DB outage, so callers
+// (e.g. the lazy-load route) can surface that rather than caching an empty
+// success. DB-only (spec 1a): no API fallback — { ok: false } now means the DB
+// was unreachable, and an empty-but-reachable DB returns { ok: true, candles: [] }.
 export type OhlcResult = { ok: true; candles: Candle[] } | { ok: false }
 
 export async function getOhlcResult(id: string, frame: Timeframe): Promise<OhlcResult> {
-  // DB-first: candle roll-ups serve the frame once they have enough coverage
-  // and recency (dbOhlc returns null otherwise — e.g. while history is still
-  // accumulating for the longer frames).
+  // DB-only: candle roll-ups (observed + provider-seeded) serve the frame once
+  // they have enough coverage and recency. While history is still accumulating
+  // for the longer frames dbOhlc returns null — we surface that as an empty
+  // (but successful) chart, never an API call.
   const db = await dbOhlc(id, frame)
-  if (db) return { ok: true, candles: db }
-  const r = await cgFetch<number[][]>(ohlcUrl(id, frame), { revalidate: 600 })
-  return r.ok ? { ok: true, candles: mapOhlc(r.data) } : { ok: false }
+  return { ok: true, candles: db ?? [] }
 }
 
-// Convenience wrapper: candles, or [] on failure.
+// Convenience wrapper: candles, or [] when there are none.
 export async function getOhlc(id: string, frame: Timeframe): Promise<Candle[]> {
   const res = await getOhlcResult(id, frame)
   return res.ok ? res.candles : []

@@ -7,7 +7,23 @@
 // without the stack) or the database is unreachable — callers then behave
 // exactly as before this layer existed. Server-only.
 import type { Pool } from 'pg'
-import { mapCoinDetail, type Candle, type CoinDetail, type Timeframe } from './coins'
+import { mapCoinDetail, stripHtml, type Candle, type CoinDetail, type Timeframe } from './coins'
+import {
+  mapCommunityStats,
+  mapDevStats,
+  mapLinks,
+  mapMarketStats,
+  mapTicker,
+  mapTreasury,
+  type CoinFull,
+  type RawMarketStats,
+  type RawTickerRow,
+  type RawTreasuryHolding,
+  type RawTreasuryTotals,
+  type SimilarCoin,
+  type TickerRow,
+  type TreasuryView,
+} from './coinView'
 import { downsampleSparkline, type Coin, type MarketCoin } from './coingecko'
 import type { GlobalStats } from './global'
 import type { FearGreed, FearGreedPoint } from './sentiment'
@@ -21,6 +37,10 @@ const FRESH_MS = {
   categories: 13 * 60 * 60_000, // cadence 6 h
   fearGreedDays: 2, // daily index
 }
+
+// CoinFull freshness keys off the market row (coin_markets_latest.fetched_at) —
+// the price/cap numbers users watch. Identity/profile columns refresh on a
+// slower detail rotation, but the market row is what makes the page feel live.
 
 export interface DbRead<T> {
   fresh: boolean
@@ -300,12 +320,215 @@ export async function dbCoinDetail(id: string): Promise<DbRead<CoinDetail> | nul
   return { fresh: isFresh(r.fetched_at, FRESH_MS.markets), data: coin }
 }
 
+// Row shape for the CoinFull query: identity/profile columns from `coins`, the
+// full market row from `coin_markets_latest`, and aggregated category names.
+interface CoinFullRow extends RawMarketStats {
+  id: string
+  symbol: string | null
+  name: string | null
+  image_url: string | null
+  rank: number | null
+  asset_platform_id: string | null
+  genesis_date: string | null // cast to text in SQL (YYYY-MM-DD)
+  hashing_algorithm: string | null
+  block_time_minutes: number | string | null
+  description_en: string | null
+  links: unknown
+  sentiment_votes_up_pct: number | string | null
+  sentiment_votes_down_pct: number | string | null
+  watchlist_users: number | string | null
+  dev_data: unknown
+  community_data: unknown
+  cats: string[] | null
+  fetched_at: Date | null
+}
+
+const numCol = (v: number | string | null | undefined): number | null => {
+  if (v === null || v === undefined) return null
+  const n = typeof v === 'string' ? Number(v) : v
+  return Number.isFinite(n) ? (n as number) : null
+}
+
+/**
+ * CoinFull (the redesigned page's view-model) assembled from coins +
+ * coin_markets_latest + category names. DB-only: returns the row whether fresh
+ * or stale (the `fresh` flag drives the on-page "Updated …" note, never a
+ * fetch). null only when the coin row is absent — the caller renders the soft
+ * "gathering data" state for that miss.
+ */
+export async function dbCoinFull(id: string): Promise<DbRead<CoinFull> | null> {
+  const rows = await query<CoinFullRow>(
+    // genesis_date is a DATE — cast to text so it arrives as 'YYYY-MM-DD'
+    // without a JS Date timezone round-trip that could shift it a day.
+    `SELECT c.id, c.symbol, c.name, c.image_url, c.asset_platform_id,
+       c.genesis_date::text AS genesis_date, c.hashing_algorithm, c.block_time_minutes,
+       c.description_en, c.links,
+       c.sentiment_votes_up_pct, c.sentiment_votes_down_pct, c.watchlist_users,
+       c.dev_data, c.community_data,
+       m.market_cap_rank AS rank,
+       m.price_usd AS price,
+       m.pct_change_1h AS pct_1h, m.pct_change_24h AS pct_24h,
+       m.pct_change_7d AS pct_7d, m.pct_change_30d AS pct_30d, m.pct_change_1y AS pct_1y,
+       m.market_cap, m.market_cap_change_24h AS mcap_change_24h,
+       m.market_cap_change_pct_24h AS mcap_change_pct_24h,
+       m.fully_diluted_valuation AS fdv,
+       m.total_volume AS volume, m.high_24h, m.low_24h,
+       m.circulating_supply, m.total_supply, m.max_supply,
+       m.ath, m.ath_change_pct, m.ath_date,
+       m.atl, m.atl_change_pct, m.atl_date,
+       (SELECT array_agg(cat.name ORDER BY cat.name)
+          FROM coin_categories cc JOIN categories cat ON cat.id = cc.category_id
+          WHERE cc.coin_id = c.id) AS cats,
+       m.fetched_at
+     FROM coins c
+     LEFT JOIN coin_markets_latest m ON m.coin_id = c.id
+     WHERE c.id = $1`,
+    [id]
+  )
+  const r = rows?.[0]
+  // null vs []: query() returns null only on a DB outage; an absent coin yields
+  // an empty array. Both mean "no CoinFull" to the caller, which is correct —
+  // an outage shows the unavailable panel, a real miss shows "gathering".
+  if (!r) return null
+
+  const stats = mapMarketStats(r)
+  const data: CoinFull = {
+    id: r.id,
+    symbol: (r.symbol ?? '').toUpperCase(),
+    name: r.name ?? '',
+    image: r.image_url,
+    rank: r.rank,
+    categories: r.cats ?? [],
+
+    price: stats.price,
+    changes: stats.changes,
+    marketCap: stats.marketCap,
+    marketCapChange24hAbs: stats.marketCapChange24hAbs,
+    marketCapChange24hPct: stats.marketCapChange24hPct,
+    fdv: stats.fdv,
+    volume: stats.volume,
+    high24h: stats.high24h,
+    low24h: stats.low24h,
+    circulatingSupply: stats.circulatingSupply,
+    totalSupply: stats.totalSupply,
+    maxSupply: stats.maxSupply,
+    ath: stats.ath,
+    atl: stats.atl,
+
+    description: stripHtml(r.description_en ?? ''),
+    links: mapLinks(r.links),
+    genesisDate: r.genesis_date,
+    hashingAlgorithm: r.hashing_algorithm,
+    blockTimeMinutes: numCol(r.block_time_minutes),
+    assetPlatform: r.asset_platform_id,
+
+    sentimentVotesUpPct: numCol(r.sentiment_votes_up_pct),
+    sentimentVotesDownPct: numCol(r.sentiment_votes_down_pct),
+    watchlistUsers: numCol(r.watchlist_users),
+
+    dev: mapDevStats(r.dev_data),
+    community: mapCommunityStats(r.community_data),
+  }
+  return { fresh: isFresh(r.fetched_at, FRESH_MS.markets), data }
+}
+
+/**
+ * Top exchange markets for a coin (coin_tickers joined to exchanges), ordered by
+ * USD volume, dropping anomalous/stale rows. [] when the coin has no tickers; the
+ * page hides the "Where to buy" section then. DB-only.
+ */
+export async function dbCoinTickers(id: string, limit: number): Promise<TickerRow[]> {
+  const rows = await query<RawTickerRow>(
+    `SELECT t.exchange_id, t.exchange_name, t.base, t.target,
+       t.last_usd, t.volume_usd, t.spread_pct, t.trade_url,
+       e.name AS ex_name, e.image_url AS ex_image, e.trust_score AS ex_trust
+     FROM coin_tickers t
+     LEFT JOIN exchanges e ON e.id = t.exchange_id
+     WHERE t.coin_id = $1
+       AND COALESCE(t.is_anomaly, false) = false
+       AND COALESCE(t.is_stale, false) = false
+     ORDER BY t.volume_usd DESC NULLS LAST
+     LIMIT $2`,
+    [id, limit]
+  )
+  if (!rows?.length) return []
+  return rows.map(mapTicker)
+}
+
+/**
+ * Treasury totals + ranked public-company holdings (treasury_totals +
+ * treasury_holdings). Only meaningful for bitcoin/ethereum; null when the coin
+ * has no treasury data so the page hides the section. DB-only.
+ */
+export async function dbTreasury(id: string): Promise<TreasuryView | null> {
+  const totals = await query<RawTreasuryTotals>(
+    `SELECT total_holdings, total_value_usd, market_cap_dominance
+     FROM treasury_totals WHERE coin_id = $1`,
+    [id]
+  )
+  const holdings = await query<RawTreasuryHolding>(
+    `SELECT company_symbol, name, country, total_holdings,
+       total_entry_value_usd, total_current_value_usd, pct_of_supply
+     FROM treasury_holdings WHERE coin_id = $1
+     ORDER BY total_holdings DESC NULLS LAST`,
+    [id]
+  )
+  // No totals row and no holdings → not a treasury coin; hide the section.
+  if (!totals?.length && !holdings?.length) return null
+  return mapTreasury(totals?.[0] ?? null, holdings ?? [])
+}
+
+/**
+ * Coins sharing a category with `id`, ranked by market cap, excluding self.
+ * Powers the "Similar coins" row (replaces the top-coins stand-in). [] when the
+ * coin has no categorized peers. DB-only.
+ */
+export async function dbSimilarByCategory(id: string, limit: number): Promise<SimilarCoin[]> {
+  const rows = await query<{
+    id: string
+    symbol: string | null
+    name: string | null
+    image_url: string | null
+    rank: number | null
+    price: number | null
+    chg24: number | null
+  }>(
+    `SELECT DISTINCT ON (c.id)
+       c.id, c.symbol, c.name, c.image_url,
+       m.market_cap_rank AS rank,
+       m.price_usd::float8 AS price,
+       m.pct_change_24h::float8 AS chg24
+     FROM coin_categories cc
+     JOIN coin_categories peer ON peer.category_id = cc.category_id AND peer.coin_id <> cc.coin_id
+     JOIN coins c ON c.id = peer.coin_id
+     LEFT JOIN coin_markets_latest m ON m.coin_id = c.id
+     WHERE cc.coin_id = $1
+     ORDER BY c.id, m.market_cap_rank NULLS LAST`,
+    [id]
+  )
+  if (!rows?.length) return []
+  // DISTINCT ON requires id-first ordering; re-sort by rank for the final list.
+  return rows
+    .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity))
+    .slice(0, limit)
+    .map((r) => ({
+      id: r.id,
+      symbol: (r.symbol ?? '').toUpperCase(),
+      name: r.name ?? '',
+      image: r.image_url,
+      rank: r.rank,
+      price: r.price,
+      change24h: r.chg24,
+    }))
+}
+
 // Chart frames try candle intervals in order: the tick roll-up first (our own
 // observations, finest grain), then the provider-seeded interval the backfill
 // script stores for that frame (scripts/backfill-market-history.mjs). Each
-// candidate's minCandles guards against serving a visibly truncated chart
-// while history is still accumulating — the API fallback covers those frames
-// until backfill/accumulation catches up.
+// candidate's minCandles guards against serving a visibly truncated chart while
+// history is still accumulating; dbOhlc returns null until one candidate has
+// both the coverage and recency a frame needs (the page shows an empty chart
+// then — never an API call, per spec 1a).
 const FRAME_CANDLES: Record<
   Timeframe,
   {
@@ -338,12 +561,30 @@ const FRAME_CANDLES: Record<
       { interval: '4h', minCandles: 120 },
     ],
   },
+  '3M': {
+    lookback: '90 days',
+    maxAgeMs: 3 * 86_400_000,
+    candidates: [
+      { interval: '1d', minCandles: 60 },
+      { interval: '4h', minCandles: 360 },
+    ],
+  },
   '1Y': {
     lookback: '365 days',
     maxAgeMs: 5 * 86_400_000,
     candidates: [
       { interval: '1d', minCandles: 200 },
       { interval: '4d', minCandles: 70 },
+    ],
+  },
+  MAX: {
+    // 'max' has no fixed window; use a generous lookback that covers the
+    // deepest seeded frames without being unbounded.
+    lookback: '4000 days',
+    maxAgeMs: 10 * 86_400_000,
+    candidates: [
+      { interval: '1d', minCandles: 300 },
+      { interval: '4d', minCandles: 100 },
     ],
   },
 }
