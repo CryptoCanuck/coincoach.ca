@@ -69,7 +69,7 @@ export default async function SentimentPage() {
       <div className="mt-5 grid gap-6 lg:grid-cols-[380px_1fr]">
         <div className="bg-surface border-line flex flex-col items-center justify-center rounded-[10px] border p-6">
           <div className="mb-1.5 self-start text-[15px] font-extrabold text-gray-50">Today</div>
-          <Gauge value={fng?.value ?? 50} label={fng?.label ?? 'Neutral'} size="xl" />
+          <Gauge value={fng?.value ?? null} label={fng?.label} size="xl" />
           <div className="text-ink-3 mt-4 flex gap-4 text-xs font-bold">
             <span className="text-down">0 Fear</span>
             <span>·</span>

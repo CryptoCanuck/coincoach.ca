@@ -18,7 +18,7 @@ export default function ArticleSidebar({ fearGreed, coins, trending }: SidebarPr
     <aside className="flex flex-col gap-[22px]">
       <div className="bg-surface border-line rounded-[10px] border px-4 pt-[18px] pb-5">
         <div className="mb-1.5 text-[15px] font-extrabold text-gray-50">Market Sentiment</div>
-        <Gauge value={fearGreed?.value ?? 50} label={fearGreed?.label ?? 'Neutral'} size="sm" />
+        <Gauge value={fearGreed?.value ?? null} label={fearGreed?.label} size="sm" />
       </div>
       <CoinsInStory coins={coins} />
       <ArticleCoachBox />

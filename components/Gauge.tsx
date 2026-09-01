@@ -3,17 +3,18 @@
 // static value until their feed exists. Arc red → amber → green; needle + readout
 // colour by zone.
 export default function Gauge({
-  value = 64,
-  label = 'Greed',
+  value = null,
+  label = 'Unavailable',
   size = 'lg',
 }: {
-  value?: number
+  value?: number | null
   label?: string
   size?: 'lg' | 'sm' | 'xl'
 }) {
-  const clamped = Math.max(0, Math.min(100, value))
+  const available = typeof value === 'number' && Number.isFinite(value)
+  const clamped = available ? Math.max(0, Math.min(100, value)) : 50
   const angle = -90 + (clamped / 100) * 180
-  const arcLen = (clamped / 100) * 270
+  const arcLen = available ? (clamped / 100) * 270 : 0
   const positive = clamped >= 50
   const gid = `gauge-grad-${size}-${clamped}`
   const dims =
@@ -24,7 +25,15 @@ export default function Gauge({
         : { w: 160, h: 90, needle: 72 }
 
   return (
-    <div className="flex flex-col items-center">
+    <div
+      className="flex flex-col items-center"
+      role="img"
+      aria-label={
+        available
+          ? `Fear and Greed index: ${clamped}, ${label}`
+          : 'Fear and Greed index unavailable'
+      }
+    >
       <div className="relative overflow-hidden" style={{ width: dims.w, height: dims.h }}>
         <svg
           width={dims.w}
@@ -56,21 +65,27 @@ export default function Gauge({
             </linearGradient>
           </defs>
         </svg>
-        <div
-          className="bg-ink absolute bottom-0 left-1/2 w-[3px] origin-bottom rounded-sm"
-          style={{ height: dims.needle, transform: `translateX(-50%) rotate(${angle}deg)` }}
-        />
-        <div className="bg-ink absolute bottom-[-6px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full" />
+        {available && (
+          <>
+            <div
+              className="bg-ink absolute bottom-0 left-1/2 w-[3px] origin-bottom rounded-sm"
+              style={{ height: dims.needle, transform: `translateX(-50%) rotate(${angle}deg)` }}
+            />
+            <div className="bg-ink absolute bottom-[-6px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full" />
+          </>
+        )}
       </div>
       <div className="mt-1.5 text-center">
         <div
-          className={`leading-none font-black ${positive ? 'text-up' : 'text-down'} ${
-            size === 'xl' ? 'text-[48px]' : size === 'lg' ? 'text-[38px]' : 'text-[28px]'
-          }`}
+          className={`leading-none font-black ${
+            available ? (positive ? 'text-up' : 'text-down') : 'text-ink-2'
+          } ${size === 'xl' ? 'text-[48px]' : size === 'lg' ? 'text-[38px]' : 'text-[28px]'}`}
         >
-          {clamped}
+          {available ? clamped : '—'}
         </div>
-        <div className="text-ink-2 text-xs font-bold">{label} · Fear &amp; Greed</div>
+        <div className="text-ink-2 text-xs font-bold">
+          {available ? `${label} · Fear & Greed` : 'Data unavailable'}
+        </div>
       </div>
     </div>
   )

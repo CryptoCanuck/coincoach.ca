@@ -11,7 +11,7 @@ export default async function MarketPulse() {
     <div className="bg-surface border-line grid overflow-hidden rounded-[10px] border md:grid-cols-[260px_1fr]">
       <div className="bg-fill-2 border-line border-b px-5 py-4 md:border-r md:border-b-0">
         <div className="mb-1 text-[15px] font-extrabold text-gray-50">Market Sentiment</div>
-        <Gauge value={fng?.value ?? 50} label={fng?.label ?? 'Neutral'} />
+        <Gauge value={fng?.value ?? null} label={fng?.label} />
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4">
         <StatCard
