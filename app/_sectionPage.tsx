@@ -19,15 +19,25 @@ export default function SectionPage({ type }: { type: PostType }) {
   const posts = filterByType(allCoreContent(sortPosts(allBlogs)), type)
 
   return (
-    <div className="py-8">
-      <h1 className="text-3xl font-extrabold tracking-tight text-gray-50">{section.title}</h1>
-      <p className="mt-2 text-gray-400">{section.description}</p>
+    <div className="py-10">
+      <div className="border-line flex flex-col gap-4 border-b pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-accent text-xs font-extrabold tracking-[0.14em] uppercase">
+            CoinCoach editorial
+          </p>
+          <h1 className="mt-2 text-4xl font-black tracking-tight text-gray-50">{section.title}</h1>
+          <p className="mt-2 max-w-2xl text-gray-400">{section.description}</p>
+        </div>
+        <p className="text-ink-3 shrink-0 text-sm font-semibold">
+          {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+        </p>
+      </div>
       {posts.length === 0 ? (
         <p className="mt-8 text-gray-400">No posts yet.</p>
       ) : (
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+        <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post, index) => (
+            <PostCard key={post.slug} post={post} featured={index === 0} />
           ))}
         </div>
       )}
