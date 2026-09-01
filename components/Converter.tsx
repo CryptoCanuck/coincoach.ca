@@ -23,7 +23,6 @@ export default function Converter({ symbol, price }: { symbol: string; price: nu
 
   return (
     <div className="bg-surface border-line rounded-[10px] border p-4">
-      <div className="mb-3 text-[15px] font-extrabold text-gray-50">Converter</div>
       <label className={`${rowClass} mb-2.5`}>
         <span className="text-ink-2 w-12 text-[13.5px] font-bold">{symbol}</span>
         <input

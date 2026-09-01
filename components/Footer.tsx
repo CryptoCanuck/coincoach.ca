@@ -75,6 +75,18 @@ export default function Footer() {
         <span>
           © {new Date().getFullYear()} {siteMetadata.headerTitle} — Not financial advice.
         </span>
+        {/* Required attribution for CoinGecko market data (their API terms). */}
+        <span>
+          Market data{' '}
+          <a
+            href="https://www.coingecko.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent transition-colors"
+          >
+            Powered by CoinGecko
+          </a>
+        </span>
         <span>Terms · Privacy · Disclaimer</span>
       </div>
     </footer>

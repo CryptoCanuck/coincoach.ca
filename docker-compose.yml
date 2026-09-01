@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
     image: coincoach:latest
     container_name: coincoach
     restart: unless-stopped
@@ -18,6 +19,9 @@ services:
       # and prices/charts fail. COINGECKO_API_PLAN=pro only for a paid Pro key.
       - COINGECKO_API_KEY=${COINGECKO_API_KEY}
       - COINGECKO_API_PLAN=${COINGECKO_API_PLAN}
+      # Market data is served from Postgres (DB-only on the request path); the
+      # collector is the sole CoinGecko caller. See docs/market-data.md.
+      - DATABASE_URL=postgres://coincoach:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@coincoach-db:5432/coincoach
       # - BUTTONDOWN_API_KEY=${BUTTONDOWN_API_KEY}
     healthcheck:
       test:
@@ -42,3 +46,63 @@ services:
           memory: 256M
     # Place behind a reverse proxy (Caddy/nginx) terminating TLS for coincoach.ca,
     # proxying to host port 4600.
+
+  coincoach-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: collector
+    image: coincoach-collector:latest
+    container_name: coincoach-collector
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://coincoach:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@coincoach-db:5432/coincoach
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY}
+      - COINGECKO_API_PLAN=${COINGECKO_API_PLAN}
+      # Defaults target the CoinGecko Demo plan (~333 calls/day); see
+      # collector/config.mjs for the cadence knobs.
+      # - COLLECTOR_MAX_CALLS_PER_DAY=320
+      # - COLLECTOR_MARKETS_MINUTES=10
+    depends_on:
+      coincoach-db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  coincoach-db:
+    image: postgres:17-alpine
+    container_name: coincoach-db
+    restart: unless-stopped
+    # No host port: the database is reachable only on the compose network.
+    environment:
+      - POSTGRES_USER=coincoach
+      - POSTGRES_DB=coincoach
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      # Named volume so market-data history survives stack redeploys, which
+      # rebuild containers but keep volumes.
+      - coincoach-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U coincoach -d coincoach']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+volumes:
+  coincoach-pgdata:

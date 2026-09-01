@@ -1,3 +1,5 @@
+import { dbFearGreed, dbFearGreedHistory } from './dbReads'
+
 export interface FearGreed {
   value: number
   label: string
@@ -15,22 +17,11 @@ export function mapFearGreed(payload: FngPayload): FearGreed | null {
   return { value, label: latest.value_classification || 'Neutral' }
 }
 
-// Server-side, ISR-cached (1 h — the index updates daily). Null on failure.
+// DB-only (spec 1a): the collector fills the fear_greed table; views read it
+// fresh-or-stale, or null when empty. No per-view alternative.me fetch.
 export async function getFearGreed(): Promise<FearGreed | null> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch('https://api.alternative.me/fng/?limit=1&format=json', {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return null
-    return mapFearGreed(await res.json())
-  } catch {
-    return null
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const db = await dbFearGreed()
+  return db?.data ?? null
 }
 
 export interface FearGreedPoint {
@@ -52,20 +43,8 @@ export function mapFearGreedHistory(payload: FngPayload): FearGreedPoint[] {
   return points.reverse()
 }
 
-// Server-side, ISR-cached (1 h). Up to ~1 year of daily points. [] on failure.
+// DB-only (spec 1a). Up to ~1 year of daily points; [] when the table is empty.
 export async function getFearGreedHistory(limit = 365): Promise<FearGreedPoint[]> {
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 5000)
-  try {
-    const res = await fetch(`https://api.alternative.me/fng/?limit=${limit}&format=json`, {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    })
-    if (!res.ok) return []
-    return mapFearGreedHistory(await res.json())
-  } catch {
-    return []
-  } finally {
-    clearTimeout(timeoutId)
-  }
+  const db = await dbFearGreedHistory(limit)
+  return db?.data ?? []
 }

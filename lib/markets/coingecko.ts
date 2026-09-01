@@ -1,4 +1,4 @@
-import { cgFetch } from './cgFetch'
+import { dbTopCoins, dbMarketsByIds, dbMarketTable } from './dbReads'
 
 export interface Coin {
   id: string
@@ -41,21 +41,13 @@ export function mapCoins(payload: CoinGeckoMarket[]): Coin[] {
   })
 }
 
-function marketsUrl(perPage: number): string {
-  return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&price_change_percentage=24h`
-}
-
-// Markets endpoint scoped to specific CoinGecko ids (article "coins in this story").
+// Markets endpoint scoped to specific CoinGecko ids (article "coins in this
+// story"). Retained for the collector / tests; views no longer call the API.
 export function marketsByIdsUrl(ids: string[]): string {
   // Encode each id but keep literal commas — CoinGecko expects a bare
   // comma-separated list (an encoded %2C would be read as a single unknown id).
   const idParam = ids.map(encodeURIComponent).join(',')
   return `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${idParam}&order=market_cap_desc&price_change_percentage=24h`
-}
-
-async function fetchMarkets(perPage: number): Promise<Coin[]> {
-  const r = await cgFetch<CoinGeckoMarket[]>(marketsUrl(perPage), { revalidate: 60 })
-  return r.ok ? mapCoins(r.data) : []
 }
 
 export function splitMovers(coins: Coin[], n = 4): { gainers: Coin[]; losers: Coin[] } {
@@ -69,26 +61,29 @@ export function pickCoin(coins: Coin[], id: string): Coin | null {
   return coins.find((c) => c.id === id) ?? null
 }
 
-// Top 10 by market cap — shared by the ticker and the homepage coin table
-// (same URL, so Next dedupes the fetch). ISR-cached. Movers fetches separately.
+// Top 10 by market cap — shared by the ticker and the homepage coin table.
+// DB-only (spec 1a): fresh or stale DB rows, or [] when the DB has nothing.
+// The collector is the sole API caller; views never fetch.
 export async function getTopCoins(): Promise<Coin[]> {
-  return fetchMarkets(10)
+  const db = await dbTopCoins(10)
+  return db?.data ?? []
 }
 
-// Biggest movers among the top 100 by market cap.
+// Biggest movers among the top 100 by market cap. DB-only.
 export async function getMovers(): Promise<{ gainers: Coin[]; losers: Coin[] }> {
-  return splitMovers(await fetchMarkets(100))
+  const db = await dbTopCoins(100)
+  return splitMovers(db?.data ?? [])
 }
 
-// Live data for a specific set of coins (by id), server-side + ISR-cached (60s).
-// [] for an empty id list or on failure. Reuses mapCoins (drops empty-id rows).
+// Live data for a specific set of coins (by id). DB-only. [] for an empty id
+// list or when the DB doesn't cover the set.
 export async function getMarketsByIds(ids: string[]): Promise<Coin[]> {
-  // Trim, drop blanks, and dedupe so messy `coins:` frontmatter can't trigger a
-  // wasted call (e.g. ['', '  ']) or a bloated ids param with repeats.
+  // Trim, drop blanks, and dedupe so messy `coins:` frontmatter can't bloat the
+  // lookup (e.g. ['', '  ']) or repeat ids.
   const normalizedIds = [...new Set(ids.map((id) => id.trim()).filter(Boolean))]
   if (!normalizedIds.length) return []
-  const r = await cgFetch<CoinGeckoMarket[]>(marketsByIdsUrl(normalizedIds), { revalidate: 60 })
-  return r.ok ? mapCoins(r.data) : []
+  const db = await dbMarketsByIds(normalizedIds)
+  return db?.data ?? []
 }
 
 export interface MarketCoin {
@@ -156,9 +151,9 @@ export function mapMarketCoins(payload: CoinGeckoMarketRow[]): MarketCoin[] {
   })
 }
 
-// Top `perPage` coins by market cap with 24h/7d change + sparkline. Server-side,
-// ISR-cached (120s). [] on failure.
+// Top `perPage` coins by market cap with 24h/7d change + sparkline. DB-only
+// (spec 1a). [] when the DB has nothing.
 export async function getMarketTable(perPage = 100): Promise<MarketCoin[]> {
-  const r = await cgFetch<CoinGeckoMarketRow[]>(marketTableUrl(perPage), { revalidate: 120 })
-  return r.ok ? mapMarketCoins(r.data) : []
+  const db = await dbMarketTable(perPage)
+  return db?.data ?? []
 }
