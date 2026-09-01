@@ -19,7 +19,10 @@ export default function CatBar() {
   const pathname = usePathname()
 
   return (
-    <div className="bg-paper border-line sticky top-[74px] z-40 border-b">
+    <nav
+      aria-label="Content sections"
+      className="bg-paper border-line sticky top-[74px] z-40 border-b"
+    >
       <div className="no-scrollbar mx-auto flex h-[52px] max-w-[1440px] items-center gap-2.5 overflow-x-auto px-5 sm:px-10">
         {ITEMS.map((item) => {
           const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)
@@ -27,6 +30,7 @@ export default function CatBar() {
             <Link
               key={item.label}
               href={item.href}
+              aria-current={active ? 'page' : undefined}
               className={`flex h-[30px] shrink-0 items-center rounded-full border px-3.5 text-[13px] font-semibold whitespace-nowrap transition-colors ${
                 active
                   ? 'border-accent bg-accent text-[#2a1c05]'
@@ -37,8 +41,7 @@ export default function CatBar() {
             </Link>
           )
         })}
-        <span className="text-ink-3 ml-auto shrink-0 pl-2 text-[13px] font-semibold">More ▾</span>
       </div>
-    </div>
+    </nav>
   )
 }
